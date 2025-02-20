@@ -1,0 +1,9 @@
+.container {
+    max-width: var(--container-width);
+    padding-inline: var(--container-inline-clearance);
+    margin-inline: auto;
+}
+
+.containerSpaced {
+    padding-block: var(--container-block-clearance);
+}
