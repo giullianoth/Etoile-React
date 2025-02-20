@@ -8,6 +8,15 @@
     transition: var(--transition-duration-default);
 }
 
+.headerAuthenticated {
+    background-color: var(--color-murrey) !important;
+    background-image: none;
+}
+
+.headerAuthenticated .header__container {
+    padding-block: 20px;
+}
+
 .headerScrolling {
     background-color: var(--color-night);
 }
