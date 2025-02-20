@@ -31,7 +31,7 @@
   --color-error-text: #790707;
 
   --color-night-overlay: #13101199;
-  --color-night-gradient: linear-gradient(--color-night, #13101100);
+  --color-night-gradient: linear-gradient(var(--color-night), #13101100);
 
   /* TYPOGRAPHY */
   --font-cinzel: "Cinzel", serif;

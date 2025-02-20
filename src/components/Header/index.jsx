@@ -38,7 +38,9 @@ const Header = () => {
 
                     <div className={styles.navigation__overlay}>
                         <div className={styles.navigation__menuWrapper}>
-                            <MainMenu />
+                            <MainMenu
+                                menuClassName={styles.menu}
+                                menuItemClassName={styles.menuItem} />
                         </div>
                     </div>
                 </nav>

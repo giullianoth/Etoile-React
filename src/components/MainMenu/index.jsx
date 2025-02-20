@@ -1,10 +1,16 @@
+import MainMenuItem from "../MainMenuItem"
+
 const menu = [
     {
-        menu: "",
+        menu: "Home",
         url: "#"
     },
     {
-        menu: "",
+        menu: "Pratos",
+        url: "#"
+    },
+    {
+        menu: "Meu perfil",
         url: "#"
     },
 ]
@@ -12,7 +18,13 @@ const menu = [
 const MainMenu = ({ menuClassName, menuItemClassName }) => {
     return (
         <ul className={menuClassName}>
-            
+            {menu.map((item, index) => (
+                <MainMenuItem
+                    key={`main-menu-item-${index + 1}`}
+                    menu={item.menu}
+                    url={item.url}
+                    className={menuItemClassName} />
+            ))}
         </ul>
     )
 }
