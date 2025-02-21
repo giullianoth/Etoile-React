@@ -1,5 +1,7 @@
 import Footer from "../../components/Footer"
 import Header from "../../components/Header"
+import PlatesSection from "../../components/pages/plates/PlatesSection"
+import PageTitle from "../../components/PageTitle"
 import ScrollUp from "../../components/ScrollUp"
 
 const Plates = () => {
@@ -7,9 +9,10 @@ const Plates = () => {
         <>
             <Header />
             <main>
-                <div>Plates</div>
+                <PageTitle>Pratos</PageTitle>
+                <PlatesSection />
             </main>
-            <Footer />            
+            <Footer />
             <ScrollUp />
         </>
     )

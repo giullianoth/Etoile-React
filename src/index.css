@@ -31,6 +31,7 @@
   --color-error-text: #790707;
 
   --color-night-overlay: #13101199;
+  --color-old-gold-overlay: #E2BF4E80;
   --color-night-gradient: linear-gradient(var(--color-night), #13101100);
 
   /* TYPOGRAPHY */
