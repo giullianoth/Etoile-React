@@ -94,6 +94,16 @@ img {
   max-width: 100%;
 }
 
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+#root > main {
+  flex-grow: 1;
+}
+
 .button {
   display: inline-block;
   padding: 12px 24px;

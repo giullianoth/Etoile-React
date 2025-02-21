@@ -3,15 +3,15 @@ import MainMenuItem from "../MainMenuItem"
 const menu = [
     {
         menu: "Home",
-        url: "#"
+        url: "/"
     },
     {
         menu: "Pratos",
-        url: "#"
+        url: "/pratos"
     },
     {
         menu: "Meu perfil",
-        url: "#"
+        url: "/perfil"
     },
 ]
 

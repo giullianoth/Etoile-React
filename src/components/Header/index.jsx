@@ -8,6 +8,7 @@ import { Hamburger } from '../../assets/svg/hamburger'
 import { Close } from '../../assets/svg/close'
 import { useState } from 'react'
 import { LogoAlt } from '../../assets/svg/logo-alt'
+import { Link } from 'react-router-dom'
 
 const Header = ({ authenticated }) => {
 
@@ -24,22 +25,22 @@ const Header = ({ authenticated }) => {
                 <div className={styles.header__logo}>
                     <h1 className={styles.header__title}>Étoile Bistrò</h1>
 
-                    <a href="#">
+                    <Link to="/">
                         {authenticated ? <LogoAlt /> : <Logo />}
-                    </a>
+                    </Link>
                 </div>
 
                 <nav className={styles.navigation + (openMenu ? ` ${styles.navigationOpenMenu}` : "")}>
                     <div className={styles.navigation__profile}>
-                        <a href="#">
+                        <Link to="/perfil">
                             <UserCircle />
-                        </a>
+                        </Link>
                     </div>
 
                     <div className={styles.navigation__cart}>
-                        <a href="#">
+                        <Link to="/carrinho">
                             <ShoppingCartSimple />
-                        </a>
+                        </Link>
                     </div>
 
                     <div className={styles.navigation__menuIcon} onClick={handleOpenMenu}>

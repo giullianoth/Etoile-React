@@ -1,7 +1,9 @@
+import { Link } from "react-router-dom"
+
 const MainMenuItem = ({ menu, url, className }) => {
     return (
         <li className={className}>
-            <a href={url}>{menu}</a>
+            <Link to={url}>{menu}</Link>
         </li>
     )
 }
