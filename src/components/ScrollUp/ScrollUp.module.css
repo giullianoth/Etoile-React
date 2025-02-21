@@ -1,0 +1,21 @@
+.scrollUp {
+    position: fixed;
+    bottom: 0;
+    right: 20px;
+    width: 30px;
+    height: 30px;
+    background-color: var(--color-night);
+    cursor: pointer;
+    visibility: hidden;
+    opacity: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: var(--transition-duration-default)
+}
+
+.scrollUpVisible {
+    bottom: 20px;
+    visibility: visible;
+    opacity: 1;
+}
