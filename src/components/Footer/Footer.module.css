@@ -7,10 +7,11 @@
 
 .footer__container {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
     row-gap: 40px;
+    padding-bottom: 40px;
 }
 
 .footer__logo {
@@ -32,9 +33,43 @@
     flex-basis: 100%;
 }
 
+.footer__menuTitle {
+    margin-bottom: 20px;
+}
+
+.footer__menuTitle h2 {
+    color: var(--color-old-gold);
+}
+
+.footer__menuList {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px 60px;
+}
+
+.footer__menuItem a {
+    font-weight: var(--font-weight-text-bold);
+    color: var(--color-old-gold);
+}
+
+.footer__attribution {
+    padding: 20px;
+    font-size: 0.7em;
+}
+
+.footer__attribution a {
+    font-weight: var(--font-weight-text-bold);
+}
+
 @media screen and (min-width: 768px) {
     .footer__logo svg {
         width: 160px;
+    }
+    
+    .footer__menuList {
+        flex-direction: row;
     }
 }
 
