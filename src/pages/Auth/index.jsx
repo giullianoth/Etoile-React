@@ -1,5 +1,6 @@
 import Footer from "../../components/Footer"
 import Header from "../../components/Header"
+import Authentication from "../../components/pages/auth/Authentication"
 import ScrollUp from "../../components/ScrollUp"
 
 const Auth = () => {
@@ -7,7 +8,7 @@ const Auth = () => {
         <>
             <Header />
             <main>
-                <div>Auth</div>
+                <Authentication />
             </main>
             <Footer />
             <ScrollUp />

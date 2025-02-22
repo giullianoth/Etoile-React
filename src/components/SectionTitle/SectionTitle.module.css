@@ -9,7 +9,7 @@
 
 @media screen and (min-width: 768px) {
     .sectionTitle h1 {
-        font-size: 1.8em;
+        font-size: 1.6em;
     }
 }
 
@@ -19,6 +19,6 @@
     }
 
     .sectionTitle h1 {
-        font-size: 2.2em;
+        font-size: 1.8em;
     }
 }

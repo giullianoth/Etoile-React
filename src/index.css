@@ -95,6 +95,17 @@ img {
   max-width: 100%;
 }
 
+input {
+  padding: 12px;
+  background: none;
+  border: 1px solid var(--color-night);
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+  outline: none;
+}
+
 #root {
   min-height: 100vh;
   display: flex;
@@ -135,4 +146,14 @@ img {
 .button.secondary {
   background-color: var(--color-old-gold);
   color: var(--color-night);
+}
+
+.simple-link {
+  display: inline;
+  background: none;
+  border: none;
+  color: var(--color-claret);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
 }

@@ -1,0 +1,37 @@
+.login, .register {
+    width: 100%;
+}
+
+.login p, .register p {
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.login form, .register form {
+    max-width: 480px;
+    margin-inline: auto;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    row-gap: 20px;
+}
+
+@media screen and (min-width: 768px) {
+    .login button, .register button {
+        align-self: center;
+    }
+}
+
+@media screen and (min-width: 992px) {
+    .login p, .register p {
+        text-align: left;
+    }
+
+    .login form, .register form {
+        margin: 0;
+    }
+
+    .login button, .register button {
+        align-self: flex-start;
+    }
+}
