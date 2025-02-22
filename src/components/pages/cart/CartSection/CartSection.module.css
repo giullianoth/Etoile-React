@@ -1,0 +1,27 @@
+.cartSection {
+    width: 100%;
+}
+
+.cartSection__empty {
+    text-align: center;
+}
+
+.cartSection__list {
+    margin-bottom: 40px;
+}
+
+.cartSection__action {
+    width: 100%;
+}
+
+@media screen and (min-width: 576px) {
+    .cartSection__action {
+        width: auto;
+    }
+}
+
+@media screen and (min-width: 992px) {
+    .cartSection__empty {
+        text-align: left;
+    }
+}

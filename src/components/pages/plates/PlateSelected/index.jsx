@@ -4,8 +4,8 @@ import { ShoppingCartSimple } from '../../../../assets/svg/shopping-cart-simple'
 
 const PlateSelected = () => {
   return (
-    <section className={styles.modal}>
-        <div className={styles.modal__wrapper}>
+    <section className="modal">
+        <div className="modal__wrapper">
             <article className={styles.plateSelected}>
                 <div className={styles.plateSelected__image}>
                     <img src={plateImage} alt="Shrimp and Vegetable Salad" />

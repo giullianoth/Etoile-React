@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import Container from '../../../Container'
 import styles from './Hero.module.css'
 
@@ -15,7 +16,7 @@ const Hero = () => {
 
         <div className={styles.hero__cta}>
           <a href="#" className={`${styles.hero__ctaButton} button primary`}>Faça seu pedido</a>
-          <a href="#" className={`${styles.hero__ctaButton} button secondary`}>Nossos pratos</a>
+          <Link to="/pratos" className={`${styles.hero__ctaButton} button secondary`}>Nossos pratos</Link>
         </div>
       </Container>
     </section>

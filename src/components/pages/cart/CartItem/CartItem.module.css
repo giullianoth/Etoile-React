@@ -1,0 +1,135 @@
+.cartItem {
+    display: flex;
+    column-gap: 20px;
+    padding: 10px;
+}
+
+.cartItem:nth-child(odd) {
+    background-color: var(--color-lavender-blush);
+}
+
+.cartItem__image {
+    flex-basis: 70px;
+}
+
+.cartItem__image img {
+    width: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.cartItem__info {
+    flex-basis: calc(100% - 70px - 20px);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    row-gap: 20px;
+}
+
+.cartItem__text {
+    flex-basis: 100%;
+}
+
+.cartItem__name {
+    margin-bottom: 10px;
+}
+
+.cartItem__name h2 {
+    font-size: 1.1em;
+}
+
+.cartItem__ingredients {
+    margin-bottom: 20px;
+    font-weight: var(--font-weight-text-bold);
+}
+
+.cartItem__actions {
+    flex-basis: 100%;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+.cartItem__quantity {
+    flex-basis: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cartItem__quantityButton {
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cartItem__quantityQt {
+    flex-basis: calc(100% - 60px);
+    text-align: center;
+    font-size: 1.1em;
+    font-weight: var(--font-weight-text-bold);
+    width: 60px;
+}
+
+.cartItem__button {
+    flex-basis: 100%;
+    padding: 6px 18px;
+}
+
+@media screen and (max-width: 350px) {
+    .cartItem__button {
+        font-size: 0.8em;
+    }
+}
+
+@media screen and (min-width: 576px) {
+    .cartItem {
+        column-gap: 10px;
+    }
+    
+    .cartItem__image {
+        flex-basis: 120px;
+    }
+
+    .cartItem__image img {
+        height: 100%;
+    }
+
+    .cartItem__info {
+        flex-basis: calc(100% - 120px - 10px);
+    }
+
+    .cartItem__actions, .cartItem__quantity {
+        flex-basis: unset;
+    }
+
+    .cartItem__quantityButton {
+        flex-basis: 30px;
+    }
+
+    .cartItem__button {
+        flex-basis: unset;
+    }
+}
+
+@media screen and (min-width: 992px) {
+    .cartItem__info {
+        flex-wrap: nowrap;
+    }
+
+    .cartItem__text {
+        flex-basis: unset;
+    }
+
+    .cartItem__name h2 {
+        font-size: 1.4em;
+    }
+
+    .cartItem__actions {
+        justify-content: flex-end;
+    }
+}

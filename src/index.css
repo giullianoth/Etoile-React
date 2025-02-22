@@ -106,6 +106,10 @@ input {
   outline: none;
 }
 
+strong {
+  font-weight: var(--font-weight-text-bold);
+}
+
 #root {
   min-height: 100vh;
   display: flex;
@@ -130,10 +134,6 @@ input {
   color: var(--color-white-smoke);
 }
 
-.button.outline {
-  background-color: transparent;
-}
-
 .button.primary {
   background-color: var(--color-murrey);
   border-color: var(--color-murrey);
@@ -148,6 +148,10 @@ input {
   color: var(--color-night);
 }
 
+.button.outline {
+  background-color: transparent;
+}
+
 .simple-link {
   display: inline;
   background: none;
@@ -156,4 +160,25 @@ input {
   cursor: pointer;
   font-family: inherit;
   font-size: inherit;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 110;
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-night-overlay);
+}
+
+.modal__wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 600px;
+  margin-inline: auto;
+  padding-inline: 20px;
 }
