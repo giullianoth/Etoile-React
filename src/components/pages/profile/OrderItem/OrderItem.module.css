@@ -1,0 +1,33 @@
+.orderItem {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    column-gap: 20px;
+}
+
+.orderItem__image {
+    flex-basis: 60px;
+}
+
+.orderItem__image img {
+    border-radius: 50%;
+}
+
+.orderItem__info {
+    flex-basis: calc(100% - 60px - 20px);
+}
+
+.orderItem__name {
+    margin-bottom: 10px;
+}
+
+.orderItem__name h2 {
+    color: inherit;
+    font-family: inherit;
+    font-size: 1.2em;
+    font-weight: var(--font-weight-text-bold);
+}
+
+.orderItem__portions {
+    font-size: 0.8em;
+}

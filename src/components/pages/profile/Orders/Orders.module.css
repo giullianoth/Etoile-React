@@ -1,0 +1,17 @@
+.orders {
+    width: 100%;
+}
+
+.orders__container {
+    padding-top: 0;
+}
+
+.orders__empty {
+    text-align: center;
+}
+
+@media screen and (min-width: 992px) {
+    .orders__empty {
+        text-align: left;
+    }
+}
