@@ -118,6 +118,7 @@ strong {
 
 #root > main {
   flex-grow: 1;
+  position: relative;
 }
 
 .button {
