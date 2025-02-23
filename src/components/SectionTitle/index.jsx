@@ -1,8 +1,8 @@
 import styles from './SectionTitle.module.css'
 
-const SectionTitle = ({ children }) => {
+const SectionTitle = ({ children, className }) => {
     return (
-        <header className={styles.sectionTitle}>
+        <header className={styles.sectionTitle + (className ? ` ${className}` : "")}>
             <h1>{children}</h1>
         </header>
     )

@@ -1,5 +1,6 @@
 import Footer from "../../components/Footer"
 import Header from "../../components/Header"
+import User from "../../components/pages/profile/User"
 import ScrollUp from "../../components/ScrollUp"
 
 const Profile = () => {
@@ -7,7 +8,7 @@ const Profile = () => {
         <>
             <Header authenticated={true} />
             <main>
-                <div>Profile</div>
+                <User />
             </main>
             <Footer authenticated={true} />
             <ScrollUp />

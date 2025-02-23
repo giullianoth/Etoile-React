@@ -1,0 +1,47 @@
+.user {
+    width: 100%;
+}
+
+.user__container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    row-gap: 20px;
+    padding-top: 140px;
+}
+
+.user__photo {
+    flex-basis: 120px;
+}
+
+.user__photo img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    object-position: center;
+    border: 3px solid var(--color-claret);
+    border-radius: 50%;
+}
+
+.user__info {
+    flex-basis: 100px;
+    text-align: center;
+    color: var(--color-claret);
+}
+
+.user__name {
+    margin-bottom: 10px;
+}
+
+@media screen and (min-width: 992px) {
+    .user__container {
+        justify-content: space-between;
+        flex-direction: row-reverse;
+    }
+
+    .user__info {
+        flex-basis: unset;
+        text-align: left;
+    }
+}
