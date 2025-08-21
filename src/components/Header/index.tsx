@@ -2,9 +2,13 @@ import { Link, NavLink } from "react-router-dom"
 import Container from "../Container"
 import styles from "./Header.module.css"
 import logo from "/images/logo.svg"
-import { PiList, PiShoppingCartSimple, PiUserCircle } from "react-icons/pi"
+import { PiList, PiShoppingCartSimple, PiUserCircle, PiX } from "react-icons/pi"
+import { useRef, useState } from "react"
 
 const Header = () => {
+    const [menuIsOpen, setMenuIsOpen] = useState<boolean>(false)
+    const overlayRef = useRef<HTMLDivElement | null>(null)
+
     return (
         <header className={styles.header}>
             <Container className={styles.header__container}>
@@ -16,7 +20,8 @@ const Header = () => {
                     </Link>
                 </div>
 
-                <div className={styles.header__navigation}>
+                <div
+                    className={styles.header__navigation + (menuIsOpen ? ` ${styles.menuOpen}` : "")}>
                     <nav>
                         <div className={styles.header__navigationProfile}>
                             <Link to="/perfil">
@@ -30,11 +35,16 @@ const Header = () => {
                             </Link>
                         </div>
 
-                        <div className={styles.header__navigationMenuIcon}>
-                            <PiList />
+                        <div
+                            className={styles.header__navigationMenuIcon}
+                            onClick={() => setMenuIsOpen(!menuIsOpen)}>
+                            {menuIsOpen ? <PiX /> : <PiList />}
                         </div>
 
-                        <div className={styles.header__overlay}>
+                        <div
+                            ref={overlayRef}
+                            className={styles.header__overlay}
+                            onClick={event => event.target === overlayRef.current && setMenuIsOpen(false)}>
                             <div className={styles.header__menuWrapper}>
                                 <ul className={styles.header__menu}>
                                     <li className={styles.header__menuItem}>
