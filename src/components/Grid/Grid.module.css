@@ -1,0 +1,26 @@
+.grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    max-width: 480px;
+    margin-inline: auto;
+}
+
+@media screen and (min-width: 768px) {
+    .grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .grid.narrow {
+        grid-template-columns: 1fr;
+    }
+
+    .grid:not(.narrow) {
+        max-width: none;
+    }
+}
+
+@media screen and (min-width: 992px) {
+    .grid {
+        max-width: none;
+    }
+}

@@ -9,7 +9,7 @@ import { useWindowBehavior } from "../../hooks/useWindowBehavior"
 const Header = () => {
     const [menuIsOpen, setMenuIsOpen] = useState<boolean>(false)
     const overlayRef = useRef<HTMLDivElement | null>(null)
-    const scrolling = useWindowBehavior()
+    const { scrolling } = useWindowBehavior()
 
     return (
         <header className={styles.header + (scrolling ? ` ${styles.scrolling}` : "")}>

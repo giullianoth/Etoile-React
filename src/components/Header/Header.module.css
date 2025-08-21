@@ -10,7 +10,7 @@
 
 .header.authenticated {
     background-image: none;
-    background-color: var(--color-murrey);
+    background-color: var(--color-murrey) !important;
     color: var(--color-white-smoke);
 }
 
