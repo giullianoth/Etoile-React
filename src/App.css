@@ -1,42 +1,87 @@
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+#root > main {
+  flex-grow: 1;
+  position: relative;
+}
+
+.button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  column-gap: 10px;
+  padding: 12px 24px;
+  background-color: var(--color-battleship-gray);
+  cursor: pointer;
+  border: 1px solid transparent;
+  font-family: var(--font-cinzel);
+  font-size: 1.1em;
+  color: var(--color-white-smoke);
+  transition: var(--transition);
+}
+
+.button:hover {
+  background-color: var(--color-white-smoke) !important;
+}
+
+.button.primary {
+  background-color: var(--color-murrey);
+  border-color: var(--color-murrey);
+}
+
+.button.primary:hover, .button.primary.outline, .button.primary.clear {
+  color: var(--color-murrey);
+}
+
+.button.secondary {
+  background-color: var(--color-old-gold);
+  color: var(--color-night);
+}
+
+.button.secondary:hover {
+  color: var(--color-old-gold);
+}
+
+.button.outline {
+  background-color: transparent;
+}
+
+.button.small {
+  padding: 6px;
+  font-size: 0.8em;
+}
+
+.button.clear {
+  padding: 0;
+  background: none;
+  border: none;
+}
+
+.section-heading {
   text-align: center;
+  margin-bottom: 40px;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.section-heading h2 {
+  font-size: 1.4em;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
+@media screen and (min-width: 768px) {
+  .section-heading h2 {
+    font-size: 1.6em;
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+@media screen and (min-width: 992px) {
+  .section-heading {
+    text-align: left;
   }
-}
 
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
+  .section-heading h2 {
+    font-size: 1.8em;
+  }
 }

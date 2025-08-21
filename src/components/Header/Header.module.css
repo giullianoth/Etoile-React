@@ -1,0 +1,178 @@
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
+    background-image: var(--color-night-gradient);
+    transition: var(--transition);
+}
+
+.header.scrolling {
+    background-color: var(--color-night);
+}
+
+.header.scrolling .header__container {
+    padding-block: 10px !important;
+}
+
+.header__container {
+    padding-block: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: var(--transition);
+}
+
+.header__logo h1 {
+    display: none;
+}
+
+.header__logo img {
+    width: 120px;
+}
+
+.header__navigation.menuOpen .header__overlay {
+    visibility: visible;
+    opacity: 1;
+}
+
+.header__navigation.menuOpen .header__menuWrapper {
+    right: 0;
+}
+
+.header__navigation nav {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    column-gap: 20px;
+}
+
+.header__navigationProfile, .header__navigationCart, .header__navigationMenuIcon, .header__navigationLogout {
+    position: relative;
+    z-index: 110;
+}
+
+.header__navigationProfile > a, .header__navigationCart > a, .header__navigationMenuIcon > a, .header__navigationLogout > a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--color-white-smoke);
+}
+
+.header__navigationProfile svg, .header__navigationCart svg, .header__navigationMenuIcon svg, .header__navigationLogout svg {
+    font-size: 1.2em;
+}
+
+.header__navigationProfile {
+    display: none;
+}
+
+.header__navigationMenuIcon {
+    cursor: pointer;
+    color: var(--color-white-smoke);
+    font-size: 1.4em;
+}
+
+.header__overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    background-color: var(--color-night-overlay);
+    visibility: hidden;
+    opacity: 0;
+    transition: var(--transition);
+}
+
+.header__menuWrapper {
+    width: 100%;
+    max-width: 560px;
+    background-color: var(--color-murrey);
+    position: absolute;
+    top: 0;
+    right: -100%;
+    padding: 110px 20px 20px 20px;
+    transition: var(--transition);
+}
+
+.header__menu {
+    overflow-y: auto;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 60px 40px;
+}
+
+.header__menuItem {
+    text-align: right;
+}
+
+.header__menuItem a {
+    font-family: var(--font-cinzel);
+    color: var(--color-white-smoke);
+    font-size: 2.2em;
+}
+
+@media screen and (min-width: 768px) {
+    .header__logo img {
+        width: 160px;
+    }
+
+    .header__navigation nav {
+        column-gap: 40px;
+    }
+
+    .header__menuWrapper {
+        padding-inline: 60px;
+    }
+}
+
+@media screen and (min-width: 992px) {
+    .header__navigation nav {
+        flex-direction: row-reverse;
+    }
+
+    .header__navigationProfile svg, .header__navigationCart svg, .header__navigationMenuIcon svg, .header__navigationLogout svg {
+        font-size: 1em;
+    }
+
+    .header__navigationProfile {
+        display: block;
+    }
+
+    .header__navigationMenuIcon {
+        display: none;
+    }
+
+    .header__overlay {
+        position: static;
+        visibility: visible !important;
+        opacity: 1 !important;
+        background: none;
+    }
+
+    .header__menuWrapper {
+        max-width: none;
+        background: none;
+        position: static;
+        padding: 0;
+    }
+
+    .header__menu {
+        height: auto;
+        flex-direction: row;
+    }
+
+    .header__menuItem:last-child {
+        display: none;
+    }
+
+    .header__menuItem a {
+        font-family: var(--font-cormorant-garamond);
+        font-weight: var(--font-weight-text-bold);
+        font-size: 1.2em;
+    }
+}
