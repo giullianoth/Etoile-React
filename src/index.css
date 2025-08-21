@@ -27,7 +27,7 @@
   --color-old-gold-overlay: rgba(226, 191, 78, 0.5);
   --color-night-gradient: linear-gradient(var(--color-night), rgba(19, 16, 17, 0));
   --color-night-gradient-2: linear-gradient(rgba(19, 16, 17, 0), var(--color-night));
-  --color-murrey-subtle-shadow: rgba(--color: --color-murrey, --alpha: 0.1);
+  --color-murrey-subtle-shadow: rgba(154, 2, 68, 0.1);
 
   /* TYPOGRAPHY */
   --font-cinzel: "Cinzel", serif;
@@ -65,7 +65,12 @@ body {
   background-color: var(--color-white-smoke);
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-cinzel-decorative);
   font-weight: var(--font-weight-title);
   color: var(--color-claret);
@@ -90,7 +95,7 @@ img {
   max-width: 100%;
 }
 
-label c{
+label c {
   cursor: pointer;
 }
 
@@ -104,7 +109,8 @@ input {
   outline: none;
 }
 
-input[type="checkbox"], input[type="radio"] {
+input[type="checkbox"],
+input[type="radio"] {
   accent-color: var(--color-murrey);
   width: 20px;
   height: 20px;
