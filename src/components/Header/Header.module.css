@@ -8,6 +8,20 @@
     transition: var(--transition);
 }
 
+.header.authenticated {
+    background-image: none;
+    background-color: var(--color-murrey);
+    color: var(--color-white-smoke);
+}
+
+.header.authenticated .header__container {
+    padding-block: 20px;
+}
+
+.header.authenticated .header__navigation nav {
+    flex-direction: row-reverse;
+}
+
 .header.scrolling {
     background-color: var(--color-night);
 }

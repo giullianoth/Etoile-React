@@ -4,13 +4,15 @@ import styles from "./Header.module.css"
 import logo from "/images/logo.svg"
 import { PiList, PiShoppingCartSimple, PiUserCircle, PiX } from "react-icons/pi"
 import { useRef, useState } from "react"
+import { useWindowBehavior } from "../../hooks/useWindowBehavior"
 
 const Header = () => {
     const [menuIsOpen, setMenuIsOpen] = useState<boolean>(false)
     const overlayRef = useRef<HTMLDivElement | null>(null)
+    const scrolling = useWindowBehavior()
 
     return (
-        <header className={styles.header}>
+        <header className={styles.header + (scrolling ? ` ${styles.scrolling}` : "")}>
             <Container className={styles.header__container}>
                 <div className={styles.header__logo}>
                     <h1>Étoile Bistrò</h1>
