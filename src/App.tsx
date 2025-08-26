@@ -8,6 +8,9 @@ import Cart from './pages/Cart'
 import Login from './pages/Auth/Login'
 import Register from './pages/Auth/Register'
 import Profile from './pages/Profile'
+import Modal from "react-modal"
+
+Modal.setAppElement("#root")
 
 function App() {
   return (
