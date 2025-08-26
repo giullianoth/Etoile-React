@@ -1,6 +1,12 @@
+import CartList from "../../components/pages/cart/CartList"
+import PageTitle from "../../components/PageTitle"
+
 const Cart = () => {
   return (
-    <div>Cart</div>
+    <>
+      <PageTitle>Carrinho</PageTitle>
+      <CartList />
+    </>
   )
 }
 
