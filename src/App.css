@@ -22,6 +22,7 @@
   font-size: 1.1em;
   color: var(--color-white-smoke);
   transition: var(--transition);
+  vertical-align: middle;
 }
 
 .button:hover {
@@ -55,10 +56,10 @@
   font-size: 0.8em;
 }
 
-.button.clear {
+.button.clear, .button.clear:hover {
   padding: 0;
-  background: none;
-  border: none;
+  background: none !important;
+  border: none !important;
 }
 
 .section-heading {

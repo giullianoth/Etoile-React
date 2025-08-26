@@ -1,0 +1,37 @@
+.edit {
+    background-color: var(--color-white-smoke);
+    padding: 20px;
+}
+
+.edit__title {
+    margin-bottom: 20px;
+}
+
+.edit__form, .edit__formPassword {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.edit__formCheck {
+    display: flex;
+    align-items: center;
+    column-gap: 10px;
+}
+
+.edit__formSubmit {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+@media screen and (min-width: 768px) {
+    .edit {
+        padding: 30px;
+    }
+
+    .edit__formSubmit {
+        flex-direction: row;
+        justify-content: flex-end;
+    }
+}

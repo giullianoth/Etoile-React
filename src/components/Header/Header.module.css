@@ -9,6 +9,7 @@
 }
 
 .header.authenticated {
+    position: sticky;
     background-image: none;
     background-color: var(--color-murrey) !important;
     color: var(--color-white-smoke);
@@ -20,6 +21,14 @@
 
 .header.authenticated .header__navigation nav {
     flex-direction: row-reverse;
+}
+
+.header.authenticated .header__navigationProfile {
+    display: block;
+}
+
+.header.authenticated .header__navigationWelcome {
+    display: none;
 }
 
 .header.scrolling {
@@ -88,6 +97,10 @@
     font-size: 1.4em;
 }
 
+.header__navigationLogout {
+    vertical-align: middle;
+}
+
 .header__overlay {
     position: fixed;
     top: 0;
@@ -147,6 +160,10 @@
 }
 
 @media screen and (min-width: 992px) {
+    .header.authenticated .header__navigationWelcome {
+        display: block;
+    }
+
     .header__navigation nav {
         flex-direction: row-reverse;
     }

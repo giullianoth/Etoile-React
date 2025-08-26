@@ -2,7 +2,8 @@ import { Link, NavLink } from "react-router-dom"
 import Container from "../Container"
 import styles from "./Header.module.css"
 import logo from "/images/logo.svg"
-import { PiList, PiShoppingCartSimple, PiUserCircle, PiX } from "react-icons/pi"
+import logoAlt from "/images/logo-alt.svg"
+import { PiList, PiShoppingCartSimple, PiSignOut, PiUserCircle, PiX } from "react-icons/pi"
 import { useRef, useState } from "react"
 import { useWindowBehavior } from "../../hooks/useWindowBehavior"
 
@@ -11,58 +12,78 @@ const Header = () => {
     const overlayRef = useRef<HTMLDivElement | null>(null)
     const { scrolling } = useWindowBehavior()
 
+    const auth = true
+
     return (
-        <header className={styles.header + (scrolling ? ` ${styles.scrolling}` : "")}>
+        <header
+            className={styles.header
+                + (scrolling ? ` ${styles.scrolling}` : "")
+                + (auth ? ` ${styles.authenticated}` : "")}>
             <Container className={styles.header__container}>
                 <div className={styles.header__logo}>
                     <h1>Étoile Bistrò</h1>
 
                     <Link to="/">
-                        <img src={logo} alt="Étoile Bistrò" />
+                        <img src={auth ? logoAlt : logo} alt="Étoile Bistrò" />
                     </Link>
                 </div>
 
                 <div
                     className={styles.header__navigation + (menuIsOpen ? ` ${styles.menuOpen}` : "")}>
                     <nav>
+                        {auth &&
+                            <div className={styles.header__navigationLogout}>
+                                <button className="button clear" title="Sair">
+                                    <PiSignOut />
+                                </button>
+                            </div>}
+
                         <div className={styles.header__navigationProfile}>
-                            <Link to="/perfil">
+                            <Link to="/perfil" title="Meu perfil">
                                 <PiUserCircle />
                             </Link>
                         </div>
 
                         <div className={styles.header__navigationCart}>
-                            <Link to="/carrinho">
+                            <Link to="/carrinho" title="Carrinho">
                                 <PiShoppingCartSimple />
                             </Link>
                         </div>
 
-                        <div
-                            className={styles.header__navigationMenuIcon}
-                            onClick={() => setMenuIsOpen(!menuIsOpen)}>
-                            {menuIsOpen ? <PiX /> : <PiList />}
-                        </div>
+                        {auth &&
+                            <p className={styles.header__navigationWelcome}>
+                                Bem-vindo, <strong>Giulliano</strong>!
+                            </p>}
 
-                        <div
-                            ref={overlayRef}
-                            className={styles.header__overlay}
-                            onClick={event => event.target === overlayRef.current && setMenuIsOpen(false)}>
-                            <div className={styles.header__menuWrapper}>
-                                <ul className={styles.header__menu}>
-                                    <li className={styles.header__menuItem}>
-                                        <NavLink to="/">Home</NavLink>
-                                    </li>
+                        {!auth &&
+                            <>
+                                <div
+                                    className={styles.header__navigationMenuIcon}
+                                    onClick={() => setMenuIsOpen(!menuIsOpen)}>
+                                    {menuIsOpen ? <PiX /> : <PiList />}
+                                </div>
 
-                                    <li className={styles.header__menuItem}>
-                                        <NavLink to="/pratos">Pratos</NavLink>
-                                    </li>
+                                <div
+                                    ref={overlayRef}
+                                    className={styles.header__overlay}
+                                    onClick={event => event.target === overlayRef.current && setMenuIsOpen(false)}>
+                                    <div className={styles.header__menuWrapper}>
+                                        <ul className={styles.header__menu}>
+                                            <li className={styles.header__menuItem}>
+                                                <NavLink to="/">Home</NavLink>
+                                            </li>
 
-                                    <li className={styles.header__menuItem}>
-                                        <NavLink to="/perfil">Meu perfil</NavLink>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
+                                            <li className={styles.header__menuItem}>
+                                                <NavLink to="/pratos">Pratos</NavLink>
+                                            </li>
+
+                                            <li className={styles.header__menuItem}>
+                                                <NavLink to="/perfil">Meu perfil</NavLink>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </>}
                     </nav>
                 </div>
             </Container>
