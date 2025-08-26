@@ -1,5 +1,5 @@
 import { useState, type FormEvent, type MouseEventHandler } from "react"
-import styles from "./EditProfile.module.css"
+import styles from "./Edit.module.css"
 import Collapse from "react-animate-height"
 
 type Props = {

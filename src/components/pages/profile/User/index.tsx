@@ -3,10 +3,10 @@ import Container from "../../../Container"
 import styles from "./User.module.css"
 import Modal from "react-modal"
 import { useState } from "react"
-import EditProfile from "../EditProfile"
+import EditProfile from "../Edit"
 
 const User = () => {
-    const [modalIsOpen, setModalIsOpen] = useState<boolean>(true)
+    const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
 
     return (
         <>
