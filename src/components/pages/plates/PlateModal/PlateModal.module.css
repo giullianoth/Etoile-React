@@ -1,0 +1,46 @@
+.plate {
+    background-color: var(--color-white-smoke);
+    padding: 20px;
+    text-align: center;
+}
+
+.plate__image, .plate__name, .plate__description {
+    margin-bottom: 20px;
+}
+
+.plate__image img {
+    width: 100%;
+}
+
+.plate__action {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+    row-gap: 20px;
+}
+
+.plate__price {
+    font-size: 1.8em;
+    font-family: var(--font-cinzel);
+    font-weight: var(--font-weight-title);
+    color: var(--color-claret);
+}
+
+.plate__action button {
+    width: 100%;
+}
+
+@media screen and (min-width: 576px) {
+    .plate {
+        text-align: left;
+    }
+
+    .plate__action {
+        flex-direction: row;
+    }
+
+    .plate__action button {
+        width: auto;
+    }
+}
