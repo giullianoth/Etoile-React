@@ -1,6 +1,7 @@
 import { useState, type FormEvent, type MouseEventHandler } from "react"
 import styles from "./Edit.module.css"
 import Collapse from "react-animate-height"
+import Checkbox from "../../../Checkbox"
 
 type Props = {
     onCancel: MouseEventHandler
@@ -34,8 +35,12 @@ const EditProfile = ({ onCancel }: Props) => {
                     onChange={event => setName(event.target.value)} />
 
                 <label className={styles.edit__formCheck}>
-                    <input
+                    {/* <input
                         type="checkbox"
+                        name="changePassword"
+                        checked={changePassword}
+                        onChange={event => setChangePassword(event.target.checked)} /> */}
+                    <Checkbox
                         name="changePassword"
                         checked={changePassword}
                         onChange={event => setChangePassword(event.target.checked)} />

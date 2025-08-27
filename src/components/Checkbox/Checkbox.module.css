@@ -1,0 +1,22 @@
+.checkbox {
+    position: relative;
+    transition: var(--transition);
+    font-size: 0.8em;
+    color: var(--color-white-smoke);
+}
+
+.checkbox.checked {
+    background-color: var(--color-murrey);
+}
+
+.checkbox input {
+    appearance: none;
+}
+
+.checkbox svg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
