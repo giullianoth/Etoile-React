@@ -1,0 +1,49 @@
+.confirm {
+    background-color: var(--color-white-smoke);
+    padding: 20px;
+    text-align: center;
+}
+
+.confirm__title,
+.confirm__text {
+    margin-bottom: 20px;
+}
+
+.confirm__form {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    row-gap: 20px;
+}
+
+.confirm__form input {
+    flex-basis: 100%;
+}
+
+.confirm__actions {
+    flex-basis: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 20px;
+}
+
+@media screen and (min-width: 576px) {
+    .confirm {
+        text-align: left;
+    }
+
+    .confirm__title {
+        font-size: 1.6em;
+    }
+
+    .confirm__form input {
+        flex-basis: unset;
+    }
+
+    .confirm__actions {
+        flex-basis: unset;
+        flex-direction: row;
+    }
+}

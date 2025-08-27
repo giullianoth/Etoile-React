@@ -35,11 +35,6 @@ const EditProfile = ({ onCancel }: Props) => {
                     onChange={event => setName(event.target.value)} />
 
                 <label className={styles.edit__formCheck}>
-                    {/* <input
-                        type="checkbox"
-                        name="changePassword"
-                        checked={changePassword}
-                        onChange={event => setChangePassword(event.target.checked)} /> */}
                     <Checkbox
                         name="changePassword"
                         checked={changePassword}

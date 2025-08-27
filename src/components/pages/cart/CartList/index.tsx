@@ -3,8 +3,13 @@ import Container from "../../../Container"
 import styles from "./CartList.module.css"
 import CartItem from "../CartItem"
 import { PiCheck } from "react-icons/pi"
+import { useState } from "react"
+import Modal from "react-modal"
+import Confirm from "../Confirm"
 
 const CartList = () => {
+    const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
+
     return (
         <>
             <section className={styles.cart}>
@@ -26,7 +31,9 @@ const CartList = () => {
                         </div>
 
                         <div className={styles.cart__action}>
-                            <button className="button primary">
+                            <button
+                                className="button primary"
+                                onClick={() => setModalIsOpen(true)}>
                                 <PiCheck />
                                 Confirmar pedido
                             </button>
@@ -34,6 +41,15 @@ const CartList = () => {
                     </div>
                 </Container>
             </section>
+
+            <Modal
+                isOpen={modalIsOpen}
+                onRequestClose={() => setModalIsOpen(false)}
+                closeTimeoutMS={300}
+                className="modal"
+                overlayClassName="modal-overlay">
+                <Confirm onCancel={() => setModalIsOpen(false)} />
+            </Modal>
         </>
     )
 }
