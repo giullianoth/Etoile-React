@@ -70,15 +70,15 @@ const Header = () => {
                                     <div className={styles.header__menuWrapper}>
                                         <ul className={styles.header__menu}>
                                             <li className={styles.header__menuItem}>
-                                                <NavLink to="/">Home</NavLink>
+                                                <NavLink to="/" onClick={() => setMenuIsOpen(false)}>Home</NavLink>
                                             </li>
 
                                             <li className={styles.header__menuItem}>
-                                                <NavLink to="/pratos">Pratos</NavLink>
+                                                <NavLink to="/pratos" onClick={() => setMenuIsOpen(false)}>Pratos</NavLink>
                                             </li>
 
                                             <li className={styles.header__menuItem}>
-                                                <NavLink to="/perfil">Meu perfil</NavLink>
+                                                <NavLink to="/perfil" onClick={() => setMenuIsOpen(false)}>Meu perfil</NavLink>
                                             </li>
                                         </ul>
                                     </div>
