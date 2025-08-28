@@ -3,6 +3,8 @@
     transition: var(--transition);
     font-size: 0.8em;
     color: var(--color-white-smoke);
+    width: 20px;
+    height: 20px;
 }
 
 .checkbox.checked {

@@ -79,17 +79,17 @@
   height: 100%;
   z-index: 110;
   background-color: var(--color-night-overlay);
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .modal {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   width: 100%;
+  height: auto;
   max-width: 600px;
-  margin-inline: auto;
-  padding-inline: var(--container-inline-clearance);
+  max-height: 100%;
   outline: none;
 }
 

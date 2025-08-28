@@ -19,7 +19,7 @@ const CartList = () => {
                     </header>
 
                     {/* <p className={styles.cart__empty}>
-                        Você ainda não adicionou items no carrinho.&nbsp;
+                        Você ainda não adicionou itens no carrinho.&nbsp;
                         <Link to="/pratos">Clique aqui e veja nossas espeialidades!</Link>
                     </p> */}
 

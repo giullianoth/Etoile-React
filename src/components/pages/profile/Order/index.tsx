@@ -1,12 +1,16 @@
 import { PiClock, PiNotePencil, PiTrash } from "react-icons/pi"
 import Bullet from "../../../Bullet"
 import styles from "./Order.module.css"
+import type { MouseEventHandler } from "react"
 
 type Props = {
     className?: string
+    onEdit?: MouseEventHandler
+    onDelete?: MouseEventHandler
+    onCancel?: MouseEventHandler
 }
 
-const Order = ({ className }: Props) => {
+const Order = ({ className, onEdit, onDelete, /*onCancel*/ }: Props) => {
     return (
         <article className={styles.order + (className ? ` ${className}` : "")}>
             <div className={styles.order__status}>
@@ -59,12 +63,12 @@ const Order = ({ className }: Props) => {
             </article>
 
             <div className={styles.order__actions}>
-                <Bullet type="info">
+                <Bullet type="info" onClick={onEdit}>
                     <PiNotePencil />
                     Editar
                 </Bullet>
 
-                <Bullet type="error">
+                <Bullet type="error" onClick={onDelete}>
                     <PiTrash />
                     Excluir
                 </Bullet>

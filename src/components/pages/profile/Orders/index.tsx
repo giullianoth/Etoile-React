@@ -3,26 +3,89 @@ import Container from "../../../Container"
 import styles from "./Orders.module.css"
 import Grid from "../../../Grid"
 import Order from "../Order"
+import { useState } from "react"
+import Modal from "react-modal"
+import EditOrder from "../Edit/Order"
+import DeleteOrder from "../Edit/DeleteOrder"
+import CancelItem from "../Edit/CancelItem"
+import CancelOrder from "../Edit/CancelOrder"
 
 const Orders = () => {
-    return (
-        <section className={styles.orders}>
-            <Container className={styles.orders__container}>
-                <header className="section-heading">
-                    <h2>Meus pedidos</h2>
-                </header>
+    const [editIsOpen, setEditIsOpen] = useState<boolean>(false)
+    const [cancelOrderIsOpen, setCancelOrderIsOpen] = useState<boolean>(false)
+    const [cancelItemIsOpen, setCancelItemIsOpen] = useState<boolean>(false)
+    const [deleteOrderIsOpen, setDeleteOrderIsOpen] = useState<boolean>(false)
 
-                {/* <p className={styles.order__empty}>
+    return (
+        <>
+            <section className={styles.orders}>
+                <Container className={styles.orders__container}>
+                    <header className="section-heading">
+                        <h2>Meus pedidos</h2>
+                    </header>
+
+                    {/* <p className={styles.order__empty}>
                     Você ainda não tem pedidos. <Link to="/pratos">Clique aqui e veja nossas especialidades!</Link>
                 </p> */}
 
-                <Grid columns={3}>
-                    <Order className={styles.orders__order} />
-                    <Order className={styles.orders__order} />
-                    <Order className={styles.orders__order} />
-                </Grid>
-            </Container>
-        </section>
+                    <Grid columns={3}>
+                        <Order
+                            className={styles.orders__order}
+                            onEdit={() => setEditIsOpen(true)}
+                            onCancel={() => setCancelOrderIsOpen(true)} />
+
+                        <Order
+                            className={styles.orders__order}
+                            onEdit={() => setEditIsOpen(true)}
+                            onDelete={() => setDeleteOrderIsOpen(true)} />
+
+                        <Order
+                            className={styles.orders__order}
+                            onEdit={() => setEditIsOpen(true)}
+                            onDelete={() => setDeleteOrderIsOpen(true)} />
+                    </Grid>
+                </Container>
+            </section>
+
+            <Modal
+                isOpen={editIsOpen}
+                onRequestClose={() => setEditIsOpen(false)}
+                closeTimeoutMS={300}
+                className="modal"
+                overlayClassName="modal-overlay">
+                <EditOrder
+                    onCancelOrder={() => setCancelItemIsOpen(true)}
+                    onCancelItem={() => setCancelItemIsOpen(true)}
+                    onClose={() => setEditIsOpen(false)} />
+            </Modal>
+
+            <Modal
+                isOpen={deleteOrderIsOpen}
+                onRequestClose={() => setDeleteOrderIsOpen(false)}
+                closeTimeoutMS={300}
+                className="modal"
+                overlayClassName="modal-overlay">
+                <DeleteOrder onCancel={() => setDeleteOrderIsOpen(false)} />
+            </Modal>
+
+            <Modal
+                isOpen={cancelItemIsOpen}
+                onRequestClose={() => setCancelItemIsOpen(false)}
+                closeTimeoutMS={300}
+                className="modal"
+                overlayClassName="modal-overlay">
+                <CancelItem onCancel={() => setCancelItemIsOpen(false)} />
+            </Modal>
+
+            <Modal
+                isOpen={cancelOrderIsOpen}
+                onRequestClose={() => setCancelOrderIsOpen(false)}
+                closeTimeoutMS={300}
+                className="modal"
+                overlayClassName="modal-overlay">
+                    <CancelOrder onCancel={() => setCancelOrderIsOpen(false)} />
+                </Modal>
+        </>
     )
 }
 
