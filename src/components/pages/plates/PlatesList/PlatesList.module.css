@@ -21,6 +21,10 @@
 }
 
 .plates__listTitle {
+    padding-inline: var(--container-inline-clearance);
+}
+
+.plates__listDescription {
     margin-bottom: 40px;
     padding-inline: var(--container-inline-clearance);
 }
@@ -50,7 +54,7 @@
         padding-inline: var(--container-inline-clearance);
     }
 
-    .plates__title, .plates__description, .plates__listTitle, .plates__carousel {
+    .plates__title, .plates__description, .plates__listTitle, .plates__listDescription, .plates__carousel {
         padding-inline: 0;
     }
 }

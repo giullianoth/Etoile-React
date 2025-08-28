@@ -1,22 +1,38 @@
 import { PiShoppingCartSimple } from "react-icons/pi"
 import styles from "./PlateModal.module.css"
+import type { IPlate } from "../../../../interfaces/plate"
+import { useCurrency } from "../../../../hooks/useCurrency"
 
-const PlateModal = () => {
+type Props = {
+    plate: IPlate
+}
+
+const PlateModal = ({ plate }: Props) => {
+    const currency = useCurrency()
+
     return (
         <section className={styles.plate}>
             <div className={styles.plate__image}>
-                <img src="/images/plate.jpg" alt="Shrimp and Vegetable Salad" />
+                <img src={plate.image ? `/images/plates/${plate.image}` : "/images/no-image.jpg"} alt={plate.name} />
             </div>
 
             <header className={styles.plate__name}>
-                <h2>Shrimp and Vegetable Salad</h2>
+                <h2>{plate.name}</h2>
             </header>
 
-            <p className={styles.plate__description}>A fresh mixed salad with cooked shrimp, seasonal vegetables, and a secret dressing that will
-                make your lunch or dinner shine!</p>
+            <p className={styles.plate__ingredients}>
+                {plate.ingredients.map((ingredient, index) => (
+                    <span key={`ingredient-${index + 1}`}>
+                        {ingredient}
+                        {index + 1 < plate.ingredients.length && <>, </>}
+                    </span>
+                ))}
+            </p>
+
+            <p className={styles.plate__description}>{plate.description}</p>
 
             <div className={styles.plate__action}>
-                <p className={styles.plate__price}>$ 10,99</p>
+                <p className={styles.plate__price}>{currency(plate.price)}</p>
 
                 <button className="button primary">
                     <PiShoppingCartSimple />

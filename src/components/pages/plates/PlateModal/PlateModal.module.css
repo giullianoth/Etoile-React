@@ -1,4 +1,6 @@
 .plate {
+    height: 100%;
+    overflow-y: auto;
     background-color: var(--color-white-smoke);
     padding: 20px;
     text-align: center;
@@ -8,8 +10,23 @@
     margin-bottom: 20px;
 }
 
+.plate__image {
+    height: 200px;
+}
+
 .plate__image img {
     width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.plate__ingredients {
+    margin-bottom: 10px;
+    font-size: 0.7em;
+    font-weight: var(--font-weight-text-bold);
+    font-family: var(--font-cinzel);
+    color: var(--color-murrey);
 }
 
 .plate__action {
@@ -34,6 +51,10 @@
 @media screen and (min-width: 576px) {
     .plate {
         text-align: left;
+    }
+
+    .plate__image {
+        height: 340px;
     }
 
     .plate__action {

@@ -8,9 +8,13 @@ import Plate from "../Plate"
 import { useState } from "react"
 import Modal from "react-modal"
 import PlateModal from "../PlateModal"
+import { availableCategories } from "../../../../data/categories"
+import { plates } from "../../../../data/plates"
+import type { IPlate } from "../../../../interfaces/plate"
 
 const PlatesList = () => {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
+  const [plateToShow, setPlateToShow] = useState<IPlate | null>(null)
 
   const responsiveCarousel: ResponsiveType = {
     desktop: {
@@ -30,6 +34,11 @@ const PlatesList = () => {
     },
   }
 
+  const handleSelectPlate = (plate: IPlate) => {
+    setPlateToShow(plate)
+    setModalIsOpen(true)
+  }
+
   return (
     <>
       <section className={styles.plates}>
@@ -44,105 +53,36 @@ const PlatesList = () => {
 
           <Divider />
 
-          <article className={styles.plates__list}>
-            <header className={styles.plates__listTitle}>
-              <h3>Entradas</h3>
-            </header>
+          {availableCategories.map(category => (
+            <article key={`category-${category.id}`} className={styles.plates__list}>
+              <header className={styles.plates__listTitle}>
+                <h3>{category.name}</h3>
+              </header>
 
-            <div className={styles.plates__byCategory}>
-              <Carousel
-                arrows
-                swipeable
-                draggable
-                partialVisible
-                customLeftArrow={<ListButton direction="prev" />}
-                customRightArrow={<ListButton direction="next" />}
-                responsive={responsiveCarousel}
-                className={styles.plates__carousel}
-                itemClass={styles.plates__carouselItem}>
-                <Plate onClick={() => setModalIsOpen(true)} />
-                <Plate onClick={() => setModalIsOpen(true)} />
-                <Plate onClick={() => setModalIsOpen(true)} />
-                <Plate onClick={() => setModalIsOpen(true)} />
-                <Plate onClick={() => setModalIsOpen(true)} />
-              </Carousel>
-            </div>
-          </article>
+              <p className={styles.plates__listDescription}>{category.description}</p>
 
-          <article className={styles.plates__list}>
-            <header className={styles.plates__listTitle}>
-              <h3>Prato Principal</h3>
-            </header>
-
-            <div className={styles.plates__byCategory}>
-              <Carousel
-                arrows
-                swipeable
-                draggable
-                partialVisible
-                customLeftArrow={<ListButton direction="prev" />}
-                customRightArrow={<ListButton direction="next" />}
-                responsive={responsiveCarousel}
-                className={styles.plates__carousel}
-                itemClass={styles.plates__carouselItem}>
-                <Plate onClick={() => setModalIsOpen(true)} />
-                <Plate onClick={() => setModalIsOpen(true)} />
-                <Plate onClick={() => setModalIsOpen(true)} />
-                <Plate onClick={() => setModalIsOpen(true)} />
-                <Plate onClick={() => setModalIsOpen(true)} />
-              </Carousel>
-            </div>
-          </article>
-
-          <article className={styles.plates__list}>
-            <header className={styles.plates__listTitle}>
-              <h3>Acompanhamentos</h3>
-            </header>
-
-            <div className={styles.plates__byCategory}>
-              <Carousel
-                arrows
-                swipeable
-                draggable
-                partialVisible
-                customLeftArrow={<ListButton direction="prev" />}
-                customRightArrow={<ListButton direction="next" />}
-                responsive={responsiveCarousel}
-                className={styles.plates__carousel}
-                itemClass={styles.plates__carouselItem}>
-                <Plate onClick={() => setModalIsOpen(true)} />
-                <Plate onClick={() => setModalIsOpen(true)} />
-                <Plate onClick={() => setModalIsOpen(true)} />
-                <Plate onClick={() => setModalIsOpen(true)} />
-                <Plate onClick={() => setModalIsOpen(true)} />
-              </Carousel>
-            </div>
-          </article>
-
-          <article className={styles.plates__list}>
-            <header className={styles.plates__listTitle}>
-              <h3>Outros</h3>
-            </header>
-
-            <div className={styles.plates__byCategory}>
-              <Carousel
-                arrows
-                swipeable
-                draggable
-                partialVisible
-                customLeftArrow={<ListButton direction="prev" />}
-                customRightArrow={<ListButton direction="next" />}
-                responsive={responsiveCarousel}
-                className={styles.plates__carousel}
-                itemClass={styles.plates__carouselItem}>
-                <Plate onClick={() => setModalIsOpen(true)} />
-                <Plate onClick={() => setModalIsOpen(true)} />
-                <Plate onClick={() => setModalIsOpen(true)} />
-                <Plate onClick={() => setModalIsOpen(true)} />
-                <Plate onClick={() => setModalIsOpen(true)} />
-              </Carousel>
-            </div>
-          </article>
+              <div className={styles.plates__byCategory}>
+                <Carousel
+                  arrows
+                  swipeable
+                  draggable
+                  partialVisible
+                  customLeftArrow={<ListButton direction="prev" />}
+                  customRightArrow={<ListButton direction="next" />}
+                  responsive={responsiveCarousel}
+                  className={styles.plates__carousel}
+                  itemClass={styles.plates__carouselItem}>
+                  {plates.filter(plate => plate.categoryId === category.id).map(plate => (
+                    plate.available &&
+                    <Plate
+                      key={`plate-${plate.id}`}
+                      plate={plate}
+                      onClick={() => handleSelectPlate(plate)} />
+                  ))}
+                </Carousel>
+              </div>
+            </article>
+          ))}
         </Container>
       </section>
 
@@ -152,7 +92,7 @@ const PlatesList = () => {
         closeTimeoutMS={300}
         overlayClassName="modal-overlay"
         className="modal">
-        <PlateModal />
+        <PlateModal plate={plateToShow!} />
       </Modal>
     </>
   )

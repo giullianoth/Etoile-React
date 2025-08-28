@@ -87,10 +87,13 @@
 
 .modal {
   width: 100%;
-  height: auto;
+  height: 100%;
   max-width: 600px;
   max-height: 100%;
   outline: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .ReactModal__Overlay {
