@@ -1,10 +1,11 @@
-import { Link } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
 import Container from "../Container"
 import styles from "./Footer.module.css"
 import logo from "/images/logo.svg"
 
 const Footer = () => {
-    const auth = true
+    const { pathname } = useLocation()
+    const auth:boolean = pathname === "/perfil"
 
     return (
         <footer className={styles.footer}>

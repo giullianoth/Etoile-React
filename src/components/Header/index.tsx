@@ -1,4 +1,4 @@
-import { Link, NavLink } from "react-router-dom"
+import { Link, NavLink, useLocation } from "react-router-dom"
 import Container from "../Container"
 import styles from "./Header.module.css"
 import logo from "/images/logo.svg"
@@ -11,8 +11,8 @@ const Header = () => {
     const [menuIsOpen, setMenuIsOpen] = useState<boolean>(false)
     const overlayRef = useRef<HTMLDivElement | null>(null)
     const { scrolling } = useWindowBehavior()
-
-    const auth = true
+    const { pathname } = useLocation()
+    const auth:boolean = pathname === "/perfil"
 
     return (
         <header
