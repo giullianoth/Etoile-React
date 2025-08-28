@@ -45,6 +45,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    transition: var(--transition);
 }
 
 .user__info {
