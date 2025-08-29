@@ -1,14 +1,16 @@
-// import { Link } from "react-router-dom"
+import { Link } from "react-router-dom"
 import Container from "../../../Container"
 import styles from "./CartList.module.css"
 import CartItem from "../CartItem"
 import { PiCheck } from "react-icons/pi"
 import { useState } from "react"
 import Modal from "react-modal"
-import Confirm from "../Confirm"
+import Confirm from "../Confirm/Confirm"
+import { useAppContext } from "../../../../context/context"
 
 const CartList = () => {
     const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
+    const { cart } = useAppContext().cart
 
     return (
         <>
@@ -18,26 +20,32 @@ const CartList = () => {
                         <h2>Meus itens</h2>
                     </header>
 
-                    {/* <p className={styles.cart__empty}>
-                        Você ainda não adicionou itens no carrinho.&nbsp;
-                        <Link to="/pratos">Clique aqui e veja nossas espeialidades!</Link>
-                    </p> */}
-
                     <div>
-                        <div className={styles.cart__list}>
-                            <CartItem className={styles.cart__item} />
-                            <CartItem className={styles.cart__item} />
-                            <CartItem className={styles.cart__item} />
-                        </div>
+                        {cart && cart.length
+                            ? <>
+                                <div className={styles.cart__list}>
+                                    {cart.map((item, index) => (
+                                        <CartItem
+                                            key={`cart-item-${index + 1}`}
+                                            className={styles.cart__item}
+                                            cartItem={item} />
+                                    ))}
+                                </div>
 
-                        <div className={styles.cart__action}>
-                            <button
-                                className="button primary"
-                                onClick={() => setModalIsOpen(true)}>
-                                <PiCheck />
-                                Confirmar pedido
-                            </button>
-                        </div>
+                                <div className={styles.cart__action}>
+                                    <button
+                                        className="button primary"
+                                        onClick={() => setModalIsOpen(true)}>
+                                        <PiCheck />
+                                        Confirmar pedido
+                                    </button>
+                                </div>
+                            </>
+
+                            : <p className={styles.cart__empty}>
+                                Você ainda não adicionou itens no carrinho.&nbsp;
+                                <Link to="/pratos">Clique aqui e veja nossas espeialidades!</Link>
+                            </p>}
                     </div>
                 </Container>
             </section>
@@ -50,6 +58,8 @@ const CartList = () => {
                 overlayClassName="modal-overlay">
                 <Confirm onCancel={() => setModalIsOpen(false)} />
             </Modal>
+
+            
         </>
     )
 }

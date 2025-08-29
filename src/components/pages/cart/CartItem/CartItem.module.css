@@ -94,8 +94,12 @@
         flex-basis: calc(100% - 120px - 20px);
     }
 
-    .cartItem__actions, .cartItem__quantity, .cartItem__remove {
+    .cartItem__actions, .cartItem__remove {
         flex-basis: unset;
+    }
+
+    .cartItem__quantity {
+        flex-basis: 160px;
     }
 
     .cartItem__quantity button {

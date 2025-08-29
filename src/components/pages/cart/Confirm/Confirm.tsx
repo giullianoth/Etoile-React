@@ -1,16 +1,37 @@
-import { useState, type FormEvent, type MouseEventHandler } from "react"
+import { useState, type FormEvent } from "react"
 import styles from "./Confirm.module.css"
+import { useAppContext } from "../../../../context/context"
+import type { IOrder, IOrderItem } from "../../../../interfaces/order"
+import { users } from "../../../../data/users"
 
 type Props = {
-    onCancel?: MouseEventHandler
+    onCancel: () => void
 }
 
 const Confirm = ({ onCancel }: Props) => {
     const [pickupTime, setPickupTime] = useState<string>("")
+    const { cart } = useAppContext().cart
+    const user = users[0]
 
     const handleSubmit = (event: FormEvent) => {
         event.preventDefault()
-        console.log({ pickupTime })
+
+        const order: IOrder = {
+            id: 1,
+            userId: user.id,
+            pickupTime,
+            pickupStatus: "Pendente"
+        }
+
+        const orderItems: IOrderItem[] = cart.map((item, index) => ({
+            id: index + 1,
+            plateId: item.plateId,
+            orderId: order.id,
+            quantity: item.quantity
+        }))
+
+        console.log(order, ...orderItems)
+        onCancel()
     }
 
     return (
@@ -20,7 +41,7 @@ const Confirm = ({ onCancel }: Props) => {
             </header>
 
             <p className={styles.confirm__text}>
-                Confirme seu pedido para a seguinte data: <strong>18/02/2025</strong>. Qual horário você virá buscar seu pedido?
+                Confirme seu pedido para a seguinte data: <strong>18/02/2025</strong>. Qual horário você virá para a refeição?
             </p>
 
             <form className={styles.confirm__form} onSubmit={handleSubmit}>
