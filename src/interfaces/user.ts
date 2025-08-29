@@ -1,9 +1,9 @@
 export interface IUser {
     id: number
-    name: string
+    fullname: string
     email: string
     password?: string
     photo?: string
     phone?: string
-    role: "admin" | "user"
+    role: string
 }

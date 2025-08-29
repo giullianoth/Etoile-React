@@ -2,7 +2,11 @@ import { PiCamera, PiCheckBold, PiXBold } from "react-icons/pi"
 import styles from "./Photo.module.css"
 import { useState, type ChangeEvent, type FormEvent } from "react"
 
-const Photo = () => {
+type Props = {
+    currentPhoto?: string
+}
+
+const Photo = ({ currentPhoto }: Props) => {
     const [photo, setPhoto] = useState<File | undefined>(undefined)
     const [photoPreview, setPhotoPreview] = useState<File | undefined>(undefined)
     const [confirm, setConfirm] = useState<boolean>(false)
@@ -32,7 +36,10 @@ const Photo = () => {
     return (
         <div className={styles.photo}>
             <img
-                src={photoPreview ? URL.createObjectURL(photoPreview) : "/images/user.png"}
+                src={photoPreview || currentPhoto
+                    ? (photoPreview ? URL.createObjectURL(photoPreview) : `/images/users/${currentPhoto}`)
+                    : "/images/user.png"
+                }
                 alt="Giulliano Guimarães" />
 
             <form onSubmit={handleSubmit}>

@@ -1,23 +1,32 @@
-import { useState, type FormEvent, type MouseEventHandler } from "react"
+import { useEffect, useState, type FormEvent, type MouseEventHandler } from "react"
 import styles from "./Edit.module.css"
 import Collapse from "react-animate-height"
 import Checkbox from "../../../Checkbox"
+import type { IUser } from "../../../../interfaces/user"
 
 type Props = {
     onCancel: MouseEventHandler
+    user: IUser
 }
 
-const EditProfile = ({ onCancel }: Props) => {
-    const [name, setName] = useState<string>("Giulliano Guimarães")
-    const [phone, setPhone] = useState<string>("61900000000")
+const EditProfile = ({ onCancel, user }: Props) => {
+    const [fullname, setFullname] = useState<string>("")
+    const [phone, setPhone] = useState<string>("")
     const [currentPassword, setCurrentPassword] = useState<string>("")
     const [newPassword, setNewPassword] = useState<string>("")
     const [confirmPassword, setConfirnPassword] = useState<string>("")
     const [changePassword, setChangePassword] = useState<boolean>(false)
 
+    useEffect(() => {
+        if (user) {
+            setFullname(user.fullname)
+            setPhone(user.phone ?? "")
+        }
+    }, [])
+
     const handleSubmit = (event: FormEvent) => {
         event.preventDefault()
-        console.log({ name, phone, changePassword, currentPassword, newPassword, confirmPassword })
+        console.log({ fullname, phone, changePassword, currentPassword, newPassword, confirmPassword })
     }
 
     return (
@@ -32,8 +41,8 @@ const EditProfile = ({ onCancel }: Props) => {
                     name="name"
                     placeholder="Nome"
                     required
-                    value={name ?? ""}
-                    onChange={event => setName(event.target.value)} />
+                    value={fullname ?? ""}
+                    onChange={event => setFullname(event.target.value)} />
 
                 <input
                     type="tel"

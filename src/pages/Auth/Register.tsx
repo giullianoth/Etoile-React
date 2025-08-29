@@ -5,14 +5,14 @@ import styles from "./Auth.module.css"
 import { useState, type FormEvent } from "react"
 
 const Register = () => {
-  const [name, setName] = useState<string>("")
+  const [fullname, setFullname] = useState<string>("")
   const [email, setEmail] = useState<string>("")
   const [password, setPassword] = useState<string>("")
   const [confirmPassword, setConfirmPassword] = useState<string>("")
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault()
-    console.log({ name, email, password, confirmPassword })
+    console.log({ fullname, email, password, confirmPassword })
   }
 
   return (
@@ -36,8 +36,8 @@ const Register = () => {
               name="name"
               placeholder="Nome completo *"
               required
-              value={name ?? ""}
-              onChange={event => setName(event.target.value)} />
+              value={fullname ?? ""}
+              onChange={event => setFullname(event.target.value)} />
 
             <input
               type="email"

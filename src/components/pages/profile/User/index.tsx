@@ -5,23 +5,28 @@ import Modal from "react-modal"
 import { useState } from "react"
 import EditProfile from "../Edit/Profile"
 import Photo from "../Photo"
+import type { IUser } from "../../../../interfaces/user"
 
-const User = () => {
+type Props = {
+    user: IUser
+}
+
+const User = ({ user }: Props) => {
     const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
 
     return (
         <>
             <section className={styles.user}>
                 <Container className={styles.user__container}>
-                    <Photo />
+                    <Photo currentPhoto={user.photo} />
 
                     <div className={styles.user__info}>
                         <header className={styles.user__name}>
-                            <h2>Perfil de Giulliano Guimarães</h2>
+                            <h2>Perfil de {user.fullname}</h2>
                         </header>
 
                         <div className={styles.user__email}>
-                            <span>giulliano@email.com</span>
+                            <span>{user.email}</span>
 
                             <button className="button primary outline small" onClick={() => setModalIsOpen(true)}>
                                 <PiNotePencil />
@@ -38,7 +43,9 @@ const User = () => {
                 closeTimeoutMS={300}
                 className="modal"
                 overlayClassName="modal-overlay">
-                <EditProfile onCancel={() => setModalIsOpen(false)} />
+                <EditProfile
+                    onCancel={() => setModalIsOpen(false)}
+                    user={user} />
             </Modal>
         </>
     )

@@ -212,5 +212,22 @@
                 "açúcar caramelizado"
             ]
         }
+    ],
+    "users": [
+        {
+            "id": 1,
+            "fullname": "Giulliano Guimarães",
+            "email": "giulliano@email.com",
+            "photo": "avatar.jpg",
+            "phone": "61900000000",
+            "role": "admin"
+        },
+        {
+            "id": 2,
+            "fullname": "Ivo Robotnik",
+            "email": "robotnik@email.com",
+            "phone": "61999999999",
+            "role": "user"
+        }
     ]
 }

@@ -6,11 +6,15 @@ import logoAlt from "/images/logo-alt.svg"
 import { PiList, PiShoppingCartSimple, PiSignOut, PiUserCircle, PiX } from "react-icons/pi"
 import { useRef, useState } from "react"
 import { useWindowBehavior } from "../../hooks/useWindowBehavior"
+import { users } from "../../data/users"
+import { useFirstName } from "../../hooks/useFirstName"
 
 const Header = () => {
     const [menuIsOpen, setMenuIsOpen] = useState<boolean>(false)
     const overlayRef = useRef<HTMLDivElement | null>(null)
+    const user = users[0]
     const { scrolling } = useWindowBehavior()
+    const firstName = useFirstName()
     const { pathname } = useLocation()
     const auth:boolean = pathname === "/perfil"
 
@@ -52,7 +56,7 @@ const Header = () => {
 
                         {auth &&
                             <p className={styles.header__navigationWelcome}>
-                                Bem-vindo, <strong>Giulliano</strong>!
+                                Bem-vindo, <strong>{firstName(user.fullname)}</strong>!
                             </p>}
 
                         {!auth &&
