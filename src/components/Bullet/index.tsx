@@ -3,9 +3,11 @@ import styles from "./Bullet.module.css"
 
 type Props = {
     children?: ReactNode
-    type: "success" | "info" | "warning" | "error"
+    type: BulletType
     onClick?: MouseEventHandler
 }
+
+export type BulletType = "success" | "info" | "warning" | "error"
 
 const Bullet = ({ children, type, onClick }: Props) => {
     return (

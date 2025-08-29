@@ -1,4 +1,4 @@
-// import { Link } from "react-router-dom"
+import { Link } from "react-router-dom"
 import Container from "../../../Container"
 import styles from "./Orders.module.css"
 import Grid from "../../../Grid"
@@ -9,8 +9,13 @@ import EditOrder from "../Edit/Order"
 import DeleteOrder from "../Edit/DeleteOrder"
 import CancelItem from "../Edit/CancelItem"
 import CancelOrder from "../Edit/CancelOrder"
+import type { IOrder } from "../../../../interfaces/order"
 
-const Orders = () => {
+type Props = {
+    orders: IOrder[]
+}
+
+const Orders = ({ orders }: Props) => {
     const [editIsOpen, setEditIsOpen] = useState<boolean>(false)
     const [cancelOrderIsOpen, setCancelOrderIsOpen] = useState<boolean>(false)
     const [cancelItemIsOpen, setCancelItemIsOpen] = useState<boolean>(false)
@@ -24,26 +29,21 @@ const Orders = () => {
                         <h2>Meus pedidos</h2>
                     </header>
 
-                    {/* <p className={styles.order__empty}>
-                    Você ainda não tem pedidos. <Link to="/pratos">Clique aqui e veja nossas especialidades!</Link>
-                </p> */}
+                    {orders && orders.length
+                        ? <Grid columns={3}>
+                            {orders.map(order => (
+                                <Order
+                                    key={`order-${order.id}`}
+                                    className={styles.orders__order}
+                                    onEdit={() => setEditIsOpen(true)}
+                                    onCancel={() => setCancelOrderIsOpen(true)}
+                                    order={order} />
+                            ))}
+                        </Grid>
 
-                    <Grid columns={3}>
-                        <Order
-                            className={styles.orders__order}
-                            onEdit={() => setEditIsOpen(true)}
-                            onCancel={() => setCancelOrderIsOpen(true)} />
-
-                        <Order
-                            className={styles.orders__order}
-                            onEdit={() => setEditIsOpen(true)}
-                            onDelete={() => setDeleteOrderIsOpen(true)} />
-
-                        <Order
-                            className={styles.orders__order}
-                            onEdit={() => setEditIsOpen(true)}
-                            onDelete={() => setDeleteOrderIsOpen(true)} />
-                    </Grid>
+                        : <p className={styles.order__empty}>
+                            Você ainda não tem pedidos. <Link to="/pratos">Clique aqui e veja nossas especialidades!</Link>
+                        </p>}
                 </Container>
             </section>
 
@@ -83,8 +83,8 @@ const Orders = () => {
                 closeTimeoutMS={300}
                 className="modal"
                 overlayClassName="modal-overlay">
-                    <CancelOrder onCancel={() => setCancelOrderIsOpen(false)} />
-                </Modal>
+                <CancelOrder onCancel={() => setCancelOrderIsOpen(false)} />
+            </Modal>
         </>
     )
 }

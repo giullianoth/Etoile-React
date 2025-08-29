@@ -1,22 +1,51 @@
-import { PiClock, PiNotePencil, PiTrash } from "react-icons/pi"
-import Bullet from "../../../Bullet"
+import { PiCheck, PiClock, PiNotePencil, PiTrash, PiWarningCircle } from "react-icons/pi"
+import Bullet, { type BulletType } from "../../../Bullet"
 import styles from "./Order.module.css"
-import type { MouseEventHandler } from "react"
+import { useEffect, useState, type MouseEventHandler, type ReactNode } from "react"
+import type { IOrder } from "../../../../interfaces/order"
+import type { IconType } from "react-icons"
+import { orderItems } from "../../../../data/order-items"
+import OrderItem from "../OrderItem"
 
 type Props = {
     className?: string
     onEdit?: MouseEventHandler
     onDelete?: MouseEventHandler
     onCancel?: MouseEventHandler
+    order: IOrder
 }
 
-const Order = ({ className, onEdit, onDelete, /*onCancel*/ }: Props) => {
+const Order = ({ className, onEdit, onDelete, /*onCancel,*/ order }: Props) => {
+    const [bulletType, setBulletType] = useState<BulletType | null>(null)
+    const [OrderStatusIcon, setOrderStatusIcon] = useState<IconType | null>(null)
+
+    useEffect(() => {
+        if (order) {
+            switch (order.status) {
+                case "Pendente":
+                    setBulletType("warning")
+                    setOrderStatusIcon(PiClock)
+                    break
+
+                case "Cancelado":
+                    setBulletType("error")
+                    setOrderStatusIcon(PiWarningCircle)
+                    break
+
+                case "Concluído":
+                    setBulletType("success")
+                    setOrderStatusIcon(PiCheck)
+                    break
+            }
+        }
+    }, [order])
+
     return (
         <article className={styles.order + (className ? ` ${className}` : "")}>
             <div className={styles.order__status}>
-                <Bullet type="warning">
-                    <PiClock />
-                    Pendente
+                <Bullet type={bulletType as BulletType}>
+                    {OrderStatusIcon as ReactNode}
+                    {order.status}
                 </Bullet>
             </div>
 
@@ -26,41 +55,15 @@ const Order = ({ className, onEdit, onDelete, /*onCancel*/ }: Props) => {
                 </p>
 
                 <p>
-                    Para retirar às <strong>12:30</strong>
+                    Presença confirmada às <strong>{order.time}</strong>
                 </p>
             </div>
 
-            <article className={styles.order__item}>
-                <div className={styles.order__itemImage}>
-                    <img src="/images/presentation-image-1.jpg" alt="Shrimp and Vegetable Salad" />
-                </div>
-
-                <div className={styles.order__itemInfo}>
-                    <header className={styles.order__itemName}>
-                        <h3>Shrimp and Vegetable Salad</h3>
-                    </header>
-
-                    <p className={styles.order__itemPortions}>
-                        <strong>Porções:</strong> 1
-                    </p>
-                </div>
-            </article>
-
-            <article className={styles.order__item}>
-                <div className={styles.order__itemImage}>
-                    <img src="/images/presentation-image-1.jpg" alt="Shrimp and Vegetable Salad" />
-                </div>
-
-                <div className={styles.order__itemInfo}>
-                    <header className={styles.order__itemName}>
-                        <h3>Shrimp and Vegetable Salad</h3>
-                    </header>
-
-                    <p className={styles.order__itemPortions}>
-                        <strong>Porções:</strong> 2
-                    </p>
-                </div>
-            </article>
+            {orderItems.filter(item => item.orderId === order.id).map(item => (
+                <OrderItem
+                    key={`order-item-${item.id}`}
+                    orderItem={item} />
+            ))}
 
             <div className={styles.order__actions}>
                 <Bullet type="info" onClick={onEdit}>

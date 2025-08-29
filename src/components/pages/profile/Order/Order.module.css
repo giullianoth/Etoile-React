@@ -19,40 +19,6 @@
     font-weight: 700;
 }
 
-.order__item {
-    margin-bottom: 20px;
-    display: flex;
-    column-gap: 20px;
-}
-
-.order__itemImage {
-    flex-basis: 60px;
-}
-
-.order__itemImage img {
-    border-radius: 50%;
-}
-
-.order__itemInfo {
-    flex-basis: calc(100% - 60px - 20px);
-}
-
-.order__itemName {
-    margin-bottom: 10px;
-}
-
-.order__itemName h3 {
-    color: inherit;
-    font-family: inherit;
-    font-size: 1.2em;
-    font-weight: var(--font-weight-text-bold);
-    line-height: 1;
-}
-
-.order__itemPortions {
-    font-size: 0.8em;
-}
-
 .order__actions {
     margin-top: auto;
     display: flex;
