@@ -1,8 +1,8 @@
 export interface IOrder {
     id: number
     userId: number
-    pickupTime: string
-    pickupStatus: string
+    time: string
+    status: string
 }
 
 export interface IOrderItem {

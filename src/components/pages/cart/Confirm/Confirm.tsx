@@ -9,7 +9,7 @@ type Props = {
 }
 
 const Confirm = ({ onCancel }: Props) => {
-    const [pickupTime, setPickupTime] = useState<string>("")
+    const [time, setTime] = useState<string>("")
     const { cart } = useAppContext().cart
     const user = users[0]
 
@@ -19,8 +19,8 @@ const Confirm = ({ onCancel }: Props) => {
         const order: IOrder = {
             id: 1,
             userId: user.id,
-            pickupTime,
-            pickupStatus: "Pendente"
+            time,
+            status: "Pendente"
         }
 
         const orderItems: IOrderItem[] = cart.map((item, index) => ({
@@ -47,9 +47,9 @@ const Confirm = ({ onCancel }: Props) => {
             <form className={styles.confirm__form} onSubmit={handleSubmit}>
                 <input
                     type="time"
-                    name="pickupTime"
-                    value={pickupTime}
-                    onChange={event => setPickupTime(event.target.value)} />
+                    name="time"
+                    value={time}
+                    onChange={event => setTime(event.target.value)} />
 
                 <div className={styles.confirm__actions}>
                     <span className="button primary outline" onClick={onCancel}>Cancelar</span>

@@ -229,5 +229,45 @@
             "phone": "61999999999",
             "role": "user"
         }
+    ],
+    "orders": [
+        {
+            "id": 1,
+            "userId": 1,
+            "time": "20:00",
+            "status": "Concluído"
+        },
+        {
+            "id": 2,
+            "userId": 1,
+            "time": "20:00",
+            "status": "Pendente"
+        }
+    ],
+    "orderItems": [
+        {            
+            "id": 1,
+            "plateId": 1,
+            "orderId": 1,
+            "quantity": 2
+        },
+        {            
+            "id": 2,
+            "plateId": 4,
+            "orderId": 1,
+            "quantity": 2
+        },
+        {            
+            "id": 3,
+            "plateId": 10,
+            "orderId": 1,
+            "quantity": 2
+        },
+        {            
+            "id": 4,
+            "plateId": 3,
+            "orderId": 2,
+            "quantity": 1
+        }
     ]
 }
