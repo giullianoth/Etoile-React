@@ -9,27 +9,30 @@ import Login from './pages/Auth/Login'
 import Register from './pages/Auth/Register'
 import Profile from './pages/Profile'
 import Modal from "react-modal"
+import { ContextProvider } from './context/context'
 
 Modal.setAppElement("#root")
 
 function App() {
   return (
-    <BrowserRouter>
-      <Header />
+    <ContextProvider>
+      <BrowserRouter>
+        <Header />
 
-      <main>
-        <Routes>
-          <Route path='/' element={<Home />} />
-          <Route path='/pratos' element={<Plates />} />
-          <Route path='/carrinho' element={<Cart />} />
-          <Route path='/login' element={<Login />} />
-          <Route path='/cadastrar' element={<Register />} />
-          <Route path='/perfil' element={<Profile />} />
-        </Routes>
-      </main>
+        <main>
+          <Routes>
+            <Route path='/' element={<Home />} />
+            <Route path='/pratos' element={<Plates />} />
+            <Route path='/carrinho' element={<Cart />} />
+            <Route path='/login' element={<Login />} />
+            <Route path='/cadastrar' element={<Register />} />
+            <Route path='/perfil' element={<Profile />} />
+          </Routes>
+        </main>
 
-      <Footer />
-    </BrowserRouter>
+        <Footer />
+      </BrowserRouter>
+    </ContextProvider>
   )
 }
 
