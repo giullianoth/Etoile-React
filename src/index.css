@@ -25,6 +25,7 @@
 
   --color-night-overlay: rgba(19, 16, 17, 0.6);
   --color-old-gold-overlay: rgba(226, 191, 78, 0.5);
+  --color-battleship-gray-overlay: rgba(138, 138, 138, 0.5);
   --color-night-gradient: linear-gradient(var(--color-night), rgba(19, 16, 17, 0));
   --color-night-gradient-2: linear-gradient(rgba(19, 16, 17, 0), var(--color-night));
   --color-murrey-subtle-shadow: rgba(154, 2, 68, 0.1);

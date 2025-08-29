@@ -9,6 +9,7 @@ type Props = {
 
 const EditProfile = ({ onCancel }: Props) => {
     const [name, setName] = useState<string>("Giulliano Guimarães")
+    const [phone, setPhone] = useState<string>("61900000000")
     const [currentPassword, setCurrentPassword] = useState<string>("")
     const [newPassword, setNewPassword] = useState<string>("")
     const [confirmPassword, setConfirnPassword] = useState<string>("")
@@ -16,7 +17,7 @@ const EditProfile = ({ onCancel }: Props) => {
 
     const handleSubmit = (event: FormEvent) => {
         event.preventDefault()
-        console.log({ name, changePassword, currentPassword, newPassword, confirmPassword })
+        console.log({ name, phone, changePassword, currentPassword, newPassword, confirmPassword })
     }
 
     return (
@@ -33,6 +34,14 @@ const EditProfile = ({ onCancel }: Props) => {
                     required
                     value={name ?? ""}
                     onChange={event => setName(event.target.value)} />
+
+                <input
+                    type="tel"
+                    name="phone"
+                    placeholder="Telefone"
+                    required
+                    value={phone ?? ""}
+                    onChange={event => setPhone(event.target.value)} />
 
                 <label className={styles.edit__formCheck}>
                     <Checkbox

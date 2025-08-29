@@ -130,7 +130,7 @@
         {
             "id": 6,
             "name": "Ravioli de Ricota e Espinafre ao Sugo",
-            "image": "creme-brulee-de-baunilha.png",
+            "image": "ravioli-de-ricota-e-espinafre-ao-sugo.png",
             "categoryId": 3,
             "description": "Massa artesanal recheada, servida com molho de tomate fresco e manjericão.",
             "price": 95.00,
@@ -147,6 +147,7 @@
         {
             "id": 7,
             "name": "Bacalhau Confitado ao Azeite de Ervas",
+            "image": "bacalhau-confitado-ao-azeite-de-ervas.png",
             "categoryId": 5,
             "description": "Lombo de bacalhau cozido lentamente no azeite de ervas, acompanhado de batatas ao murro.",
             "price": 175.00,
@@ -163,6 +164,7 @@
         {
             "id": 8,
             "name": "Vieiras Grelhadas com Purê de Couve-Flor",
+            "image": "vieiras-grelhadas-com-pure-de-couve-flor.png",
             "categoryId": 5,
             "description": "Vieiras caramelizadas servidas com purê aveludado e crocante de amêndoas.",
             "price": 185.00,
@@ -179,6 +181,7 @@
         {
             "id": 9,
             "name": "Ópera de Chocolate e Café",
+            "image": "opera-de-chocolate-e-cafe.png",
             "categoryId": 6,
             "description": "Clássica sobremesa francesa em camadas de ganache de chocolate e creme de café.",
             "price": 58.00,
@@ -195,6 +198,7 @@
         {
             "id": 10,
             "name": "Crème Brûlée de Baunilha",
+            "image": "creme-brulee-de-baunilha.png",
             "categoryId": 6,
             "description": "Creme aveludado de baunilha com crosta de açúcar caramelizado.",
             "price": 52.00,

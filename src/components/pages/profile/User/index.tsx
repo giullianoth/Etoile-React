@@ -1,9 +1,10 @@
-import { PiCamera, PiNotePencil } from "react-icons/pi"
+import { PiNotePencil } from "react-icons/pi"
 import Container from "../../../Container"
 import styles from "./User.module.css"
 import Modal from "react-modal"
 import { useState } from "react"
 import EditProfile from "../Edit/Profile"
+import Photo from "../Photo"
 
 const User = () => {
     const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
@@ -12,14 +13,7 @@ const User = () => {
         <>
             <section className={styles.user}>
                 <Container className={styles.user__container}>
-                    <div className={styles.user__photo}>
-                        <img src="/images/avatar.jpg" alt="Giulliano Guimarães" />
-
-                        <label className={styles.user__photoChange} title="Alterar foto de perfil">
-                            <PiCamera />
-                            <input type="file" name="photo" />
-                        </label>
-                    </div>
+                    <Photo />
 
                     <div className={styles.user__info}>
                         <header className={styles.user__name}>
