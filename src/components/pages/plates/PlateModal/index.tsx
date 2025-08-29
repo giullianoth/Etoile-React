@@ -5,9 +5,10 @@ import { useCurrency } from "../../../../hooks/useCurrency"
 
 type Props = {
     plate: IPlate
+    onAddPlate: (plate: IPlate) => void
 }
 
-const PlateModal = ({ plate }: Props) => {
+const PlateModal = ({ plate, onAddPlate }: Props) => {
     const currency = useCurrency()
 
     return (
@@ -34,7 +35,7 @@ const PlateModal = ({ plate }: Props) => {
             <div className={styles.plate__action}>
                 <p className={styles.plate__price}>{currency(plate.price)}</p>
 
-                <button className="button primary">
+                <button className="button primary" onClick={() => onAddPlate(plate)}>
                     <PiShoppingCartSimple />
                     Adicionar
                 </button>

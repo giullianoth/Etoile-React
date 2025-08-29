@@ -11,10 +11,13 @@ import PlateModal from "../PlateModal"
 import { availableCategories } from "../../../../data/categories"
 import { plates } from "../../../../data/plates"
 import type { IPlate } from "../../../../interfaces/plate"
+import { useAppContext } from "../../../../context/context"
+import type { ICartItem } from "../../../../interfaces/cart-item"
 
 const PlatesList = () => {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
   const [plateToShow, setPlateToShow] = useState<IPlate | null>(null)
+  const { addToCart } = useAppContext().cart
 
   const responsiveCarousel: ResponsiveType = {
     desktop: {
@@ -37,6 +40,16 @@ const PlatesList = () => {
   const handleSelectPlate = (plate: IPlate) => {
     setPlateToShow(plate)
     setModalIsOpen(true)
+  }
+
+  const handleAddPlate = (plate: IPlate) => {
+    const cartItem: ICartItem = {
+      plateId: plate.id,
+      quantity: 1
+    }
+
+    addToCart(cartItem)
+    setModalIsOpen(false)
   }
 
   return (
@@ -92,7 +105,9 @@ const PlatesList = () => {
         closeTimeoutMS={300}
         overlayClassName="modal-overlay"
         className="modal">
-        <PlateModal plate={plateToShow!} />
+        <PlateModal
+          plate={plateToShow!}
+          onAddPlate={handleAddPlate} />
       </Modal>
     </>
   )

@@ -11,7 +11,7 @@ export const useCart = () => {
         if (cart.some(item => item.quantity === data.quantity)) {
             updated = cart.map(item => {
                 if (item.quantity === data.quantity) {
-                    item.quantity +=1
+                    item.quantity += data.quantity
                 }
                 return item
             })
