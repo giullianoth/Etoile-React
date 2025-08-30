@@ -4,21 +4,24 @@ import styles from "./Header.module.css"
 import logo from "/images/logo.svg"
 import logoAlt from "/images/logo-alt.svg"
 import { PiList, PiShoppingCartSimple, PiSignOut, PiUserCircle, PiX } from "react-icons/pi"
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useWindowBehavior } from "../../hooks/useWindowBehavior"
-import { users } from "../../data/users"
 import { useFirstName } from "../../hooks/useFirstName"
 import { useAppContext } from "../../context/context"
 
 const Header = () => {
-    const [menuIsOpen, setMenuIsOpen] = useState<boolean>(false)
     const overlayRef = useRef<HTMLDivElement | null>(null)
-    const user = users[0]
+    const { user, authenticated } = useAppContext().auth
     const { scrolling } = useWindowBehavior()
     const firstName = useFirstName()
     const { pathname } = useLocation()
-    const auth: boolean = pathname === "/perfil"
     const { cart } = useAppContext().cart
+    const [menuIsOpen, setMenuIsOpen] = useState<boolean>(false)
+    const [auth, setAuth] = useState<boolean>(false)
+
+    useEffect(() => {
+        setAuth(authenticated && pathname === "/perfil")
+    }, [user, authenticated, pathname])
 
     return (
         <header
@@ -63,7 +66,7 @@ const Header = () => {
 
                         {auth &&
                             <p className={styles.header__navigationWelcome}>
-                                Bem-vindo, <strong>{firstName(user.fullname)}</strong>!
+                                Bem-vindo, <strong>{firstName(user?.fullname!)}</strong>!
                             </p>}
 
                         {!auth &&

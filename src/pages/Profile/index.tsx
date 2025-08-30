@@ -1,15 +1,16 @@
 import Orders from "../../components/pages/profile/Orders"
 import User from "../../components/pages/profile/User"
+import { useAppContext } from "../../context/context"
 import { orders } from "../../data/orders"
-import { users } from "../../data/users"
+import type { IUser } from "../../interfaces/user"
 
 const Profile = () => {
-  const user = users[0]
-  const userOrders = orders.filter(order => order.userId === user.id)
+  const { user } = useAppContext().auth
+  const userOrders = orders.filter(order => order.userId === user?.id)
 
   return (
     <>
-      <User user={user} />
+      <User user={user as IUser} />
       <Orders orders={userOrders} />
     </>
   )

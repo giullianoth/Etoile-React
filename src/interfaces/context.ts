@@ -1,4 +1,5 @@
 import type { ICartItem } from "./cart-item";
+import type { IUser } from "./user";
 
 export interface IContext {
     cart: {
@@ -7,5 +8,10 @@ export interface IContext {
         removeFromCart: (data: ICartItem) => void
         updateQuantity: (data: ICartItem, quantity: number) => void
         clearCart: () => void
+    }
+
+    auth: {
+        user: IUser | null
+        authenticated: boolean
     }
 }
