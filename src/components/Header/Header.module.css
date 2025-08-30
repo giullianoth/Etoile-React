@@ -88,9 +88,9 @@
 }
 
 .header__navigationCartQt {
-    width: 15px;
-    height: 15px;
-    background-color: var(--color-murrey);
+    width: 18px;
+    height: 18px;
+    background-color: var(--color-claret);
     font-family: var(--font-cinzel);
     font-weight: var(--font-weight-title);
     font-size: 0.6em;
@@ -99,8 +99,8 @@
     align-items: center;
     border-radius: 50%;
     position: absolute;
-    top: -5px;
-    right: -5px;
+    top: -8px;
+    right: -8px;
 }
 
 .header__navigationProfile {

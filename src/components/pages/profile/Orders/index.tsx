@@ -20,6 +20,12 @@ const Orders = ({ orders }: Props) => {
     const [cancelOrderIsOpen, setCancelOrderIsOpen] = useState<boolean>(false)
     const [cancelItemIsOpen, setCancelItemIsOpen] = useState<boolean>(false)
     const [deleteOrderIsOpen, setDeleteOrderIsOpen] = useState<boolean>(false)
+    const [orderToEdit, setOrderToEdit] = useState<IOrder | null>(null)
+
+    const handleOpenEditOrder = (order: IOrder) => {
+        setEditIsOpen(true)
+        setOrderToEdit(order)
+    }
 
     return (
         <>
@@ -35,8 +41,9 @@ const Orders = ({ orders }: Props) => {
                                 <Order
                                     key={`order-${order.id}`}
                                     className={styles.orders__order}
-                                    onEdit={() => setEditIsOpen(true)}
+                                    onEdit={() => handleOpenEditOrder(order)}
                                     onCancel={() => setCancelOrderIsOpen(true)}
+                                    onDelete={() => setDeleteOrderIsOpen(true)}
                                     order={order} />
                             ))}
                         </Grid>
@@ -54,9 +61,10 @@ const Orders = ({ orders }: Props) => {
                 className="modal"
                 overlayClassName="modal-overlay">
                 <EditOrder
-                    onCancelOrder={() => setCancelItemIsOpen(true)}
+                    onCancelOrder={() => setCancelOrderIsOpen(true)}
                     onCancelItem={() => setCancelItemIsOpen(true)}
-                    onClose={() => setEditIsOpen(false)} />
+                    onClose={() => setEditIsOpen(false)}
+                    order={orderToEdit as IOrder} />
             </Modal>
 
             <Modal

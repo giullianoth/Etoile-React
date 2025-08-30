@@ -1,21 +1,32 @@
-import { useState, type FormEvent, type MouseEventHandler } from "react"
+import { useEffect, useState, type FormEvent, type MouseEventHandler } from "react"
 import styles from "./Edit.module.css"
 import { PiTrash } from "react-icons/pi"
 import Checkbox from "../../../Checkbox"
+import type { IOrder } from "../../../../interfaces/order"
+import { orderItems } from "../../../../data/order-items"
+import OrderItem from "../OrderItem"
 
 type Props = {
     onCancelOrder?: MouseEventHandler
     onCancelItem?: MouseEventHandler
     onClose?: MouseEventHandler
+    order: IOrder
 }
 
-const EditOrder = ({ onCancelOrder, onCancelItem, onClose }: Props) => {
-    const [pickupTime, setPickupTime] = useState<string>("12:30")
+const EditOrder = ({ onCancelOrder, onCancelItem, onClose, order }: Props) => {
+    const [time, setTime] = useState<string>("12:30")
     const [receipt, setReceipt] = useState<boolean>(false)
+    const orderItemsToEdit = orderItems.filter(item => item.orderId === order.id)
+
+    useEffect(() => {
+        if (order) {
+            setTime(order.time)
+        }
+    }, [order])
 
     const handleSubmit = (event: FormEvent) => {
         event.preventDefault()
-        console.log({ pickupTime, receipt })
+        console.log({ time, receipt })
     }
 
     return (
@@ -25,60 +36,27 @@ const EditOrder = ({ onCancelOrder, onCancelItem, onClose }: Props) => {
             </header>
 
             <div className={styles.edit__orders}>
-                <article className={styles.edit__order}>
-                    <div className={styles.edit__orderImage}>
-                        <img src="/images/presentation-image-1.jpg" alt="Shrimp and Vegetable Salad" />
+                {orderItemsToEdit && orderItemsToEdit.map(item => (
+                    <div key={`order-item-${item.id}`} className={styles.edit__order}>
+                        <OrderItem orderItem={item} />
+
+                        <button
+                            className="button primary clear"
+                            title="Cancelar este item"
+                            onClick={onCancelItem}>
+                            <PiTrash />
+                        </button>
                     </div>
-
-                    <div className={styles.edit__orderInfo}>
-                        <header className={styles.edit__orderName}>
-                            <h3>Shrimp and Vegetable Salad</h3>
-                        </header>
-
-                        <p className={styles.edit__orderPortions}>
-                            <strong>Porções:</strong> 2
-                        </p>
-                    </div>
-
-                    <button
-                        className="button primary clear"
-                        title="Cancelar este item"
-                        onClick={onCancelItem}>
-                        <PiTrash />
-                    </button>
-                </article>
-
-                <article className={styles.edit__order}>
-                    <div className={styles.edit__orderImage}>
-                        <img src="/images/presentation-image-1.jpg" alt="Shrimp and Vegetable Salad" />
-                    </div>
-
-                    <div className={styles.edit__orderInfo}>
-                        <header className={styles.edit__orderName}>
-                            <h3>Shrimp and Vegetable Salad</h3>
-                        </header>
-
-                        <p className={styles.edit__orderPortions}>
-                            <strong>Porções:</strong> 2
-                        </p>
-                    </div>
-
-                    <button
-                        className="button primary clear"
-                        title="Cancelar este item"
-                        onClick={onCancelItem}>
-                        <PiTrash />
-                    </button>
-                </article>
+                ))}
             </div>
 
             <form onSubmit={handleSubmit} className={styles.edit__form}>
                 <div className={styles.edit__formOrder}>
                     <input
                         type="time"
-                        name="pickupTime"
-                        value={pickupTime}
-                        onChange={event => setPickupTime(event.target.value)} />
+                        name="time"
+                        value={time}
+                        onChange={event => setTime(event.target.value)} />
 
                     <p>
                         <strong>Atenção:</strong> Não é possível selecionar horário anterior ao já selecionado.

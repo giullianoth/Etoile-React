@@ -16,35 +16,12 @@
 .edit__order {
     margin-bottom: 20px;
     display: flex;
+    justify-content: space-between;
     column-gap: 20px;
 }
 
-.edit__orderImage {
-    flex-basis: 60px;
-}
-
-.edit__orderImage img {
-    border-radius: 50%;
-}
-
-.edit__orderInfo {
-    flex-basis: calc(100% - 60px - 20px);
-}
-
-.edit__orderName {
-    margin-bottom: 10px;
-}
-
-.edit__orderName h3 {
-    color: inherit;
-    font-family: inherit;
-    font-size: 1.2em;
-    font-weight: var(--font-weight-text-bold);
-    line-height: 1;
-}
-
-.edit__orderPortions {
-    font-size: 0.8em;
+.edit__order button {
+    margin-bottom: 20px;
 }
 
 .edit__form, .edit__formPassword {
