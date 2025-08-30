@@ -8,6 +8,7 @@ import { useRef, useState } from "react"
 import { useWindowBehavior } from "../../hooks/useWindowBehavior"
 import { users } from "../../data/users"
 import { useFirstName } from "../../hooks/useFirstName"
+import { useAppContext } from "../../context/context"
 
 const Header = () => {
     const [menuIsOpen, setMenuIsOpen] = useState<boolean>(false)
@@ -16,7 +17,8 @@ const Header = () => {
     const { scrolling } = useWindowBehavior()
     const firstName = useFirstName()
     const { pathname } = useLocation()
-    const auth:boolean = pathname === "/perfil"
+    const auth: boolean = pathname === "/perfil"
+    const { cart } = useAppContext().cart
 
     return (
         <header
@@ -51,6 +53,11 @@ const Header = () => {
                         <div className={styles.header__navigationCart}>
                             <Link to="/carrinho" title="Carrinho">
                                 <PiShoppingCartSimple />
+
+                                {cart && cart.length > 0 &&
+                                    <span className={styles.header__navigationCartQt}>
+                                        {cart.length}
+                                    </span>}
                             </Link>
                         </div>
 

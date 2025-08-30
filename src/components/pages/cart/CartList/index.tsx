@@ -17,7 +17,10 @@ const CartList = () => {
             <section className={styles.cart}>
                 <Container>
                     <header className="section-heading">
-                        <h2>Meus itens</h2>
+                        <h2>
+                            Meus itens&nbsp;
+                            {cart && cart.length && `(${cart.length})`}
+                        </h2>
                     </header>
 
                     <div>
@@ -59,7 +62,7 @@ const CartList = () => {
                 <Confirm onCancel={() => setModalIsOpen(false)} />
             </Modal>
 
-            
+
         </>
     )
 }
