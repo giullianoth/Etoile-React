@@ -13,11 +13,14 @@ import { plates } from "../../../../data/plates"
 import type { IPlate } from "../../../../interfaces/plate"
 import { useAppContext } from "../../../../context/context"
 import type { ICartItem } from "../../../../interfaces/cart-item"
+import Trigger from "../../../Trigger"
+import { useTrigger } from "../../../../hooks/useTrigger"
 
 const PlatesList = () => {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
   const [plateToShow, setPlateToShow] = useState<IPlate | null>(null)
   const { addToCart } = useAppContext().cart
+  const { showTrigger, triggerIsVisible } = useTrigger()
 
   const responsiveCarousel: ResponsiveType = {
     desktop: {
@@ -50,6 +53,7 @@ const PlatesList = () => {
 
     addToCart(cartItem)
     setModalIsOpen(false)
+    showTrigger()
   }
 
   return (
@@ -109,6 +113,11 @@ const PlatesList = () => {
           plate={plateToShow!}
           onAddPlate={handleAddPlate} />
       </Modal>
+
+      {triggerIsVisible &&
+        <Trigger type="success" floating>
+          Prato adicionado ao carrinho.
+        </Trigger>}
     </>
   )
 }

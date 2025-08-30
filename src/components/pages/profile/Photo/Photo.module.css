@@ -50,10 +50,10 @@
 }
 
 .photo__confirm span {
-    color: var(--color-error-text);
+    color: var(--color-white-smoke);
     cursor: pointer;
 }
 
 .photo__confirm button {
-    color: var(--color-success-text);
+    color: var(--color-white-smoke);
 }

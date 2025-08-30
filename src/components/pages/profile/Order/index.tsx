@@ -3,7 +3,6 @@ import Bullet, { type BulletType } from "../../../Bullet"
 import styles from "./Order.module.css"
 import { useEffect, useState, type MouseEventHandler, type ReactNode } from "react"
 import type { IOrder } from "../../../../interfaces/order"
-import type { IconType } from "react-icons"
 import { orderItems } from "../../../../data/order-items"
 import OrderItem from "../OrderItem"
 
@@ -17,24 +16,24 @@ type Props = {
 
 const Order = ({ className, onEdit, onDelete, /*onCancel,*/ order }: Props) => {
     const [bulletType, setBulletType] = useState<BulletType | null>(null)
-    const [OrderStatusIcon, setOrderStatusIcon] = useState<IconType | null>(null)
+    const [orderStatusIcon, setOrderStatusIcon] = useState<ReactNode | null>(null)
 
     useEffect(() => {
         if (order) {
             switch (order.status) {
                 case "Pendente":
                     setBulletType("warning")
-                    setOrderStatusIcon(PiClock)
+                    setOrderStatusIcon(<PiClock />)
                     break
 
                 case "Cancelado":
                     setBulletType("error")
-                    setOrderStatusIcon(PiWarningCircle)
+                    setOrderStatusIcon(<PiWarningCircle />)
                     break
 
                 case "Concluído":
                     setBulletType("success")
-                    setOrderStatusIcon(PiCheck)
+                    setOrderStatusIcon(<PiCheck />)
                     break
             }
         }
@@ -43,8 +42,10 @@ const Order = ({ className, onEdit, onDelete, /*onCancel,*/ order }: Props) => {
     return (
         <article className={styles.order + (className ? ` ${className}` : "")}>
             <div className={styles.order__status}>
-                <Bullet type={bulletType as BulletType}>
-                    {OrderStatusIcon as ReactNode}
+                <Bullet
+                    type={bulletType as BulletType}
+                    iconComponent={orderStatusIcon}
+                    small>
                     {order.status}
                 </Bullet>
             </div>
@@ -66,13 +67,19 @@ const Order = ({ className, onEdit, onDelete, /*onCancel,*/ order }: Props) => {
             ))}
 
             <div className={styles.order__actions}>
-                <Bullet type="info" onClick={onEdit}>
-                    <PiNotePencil />
+                <Bullet
+                    type="info"
+                    onClick={onEdit}
+                    iconComponent={<PiNotePencil />}
+                    small>
                     Editar
                 </Bullet>
 
-                <Bullet type="error" onClick={onDelete}>
-                    <PiTrash />
+                <Bullet
+                    type="error"
+                    onClick={onDelete}
+                    iconComponent={<PiTrash />}
+                    small>
                     Excluir
                 </Bullet>
             </div>

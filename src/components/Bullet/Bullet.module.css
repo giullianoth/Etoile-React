@@ -1,14 +1,17 @@
 .bullet {
-    padding: 1px 6px;
+    padding: 12px 24px;
     background-color: var(--color-battleship-gray);
     display: inline-flex;
     justify-content: center;
     align-items: center;
     gap: 4px;
     border: none;
+    font-weight: 800;
+}
+
+.bullet.small {
+    padding: 1px 6px;
     font-size: 0.8em;
-    font-weight: var(-font-weight-text-bold);
-    border-radius: 5px;
 }
 
 .bullet.success {
