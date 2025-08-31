@@ -5,22 +5,25 @@ import styles from "./PlatesList.module.css"
 import 'react-multi-carousel/lib/styles.css'
 import ListButton from "../ListButton"
 import Plate from "../Plate"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Modal from "react-modal"
 import PlateModal from "../PlateModal"
-import { availableCategories } from "../../../../data/categories"
-import { plates } from "../../../../data/plates"
 import type { IPlate } from "../../../../interfaces/plate"
 import { useAppContext } from "../../../../context/context"
 import type { ICartItem } from "../../../../interfaces/cart-item"
 import Trigger from "../../../Trigger"
 import { useTrigger } from "../../../../hooks/useTrigger"
+import Loading from "../../../Loading"
 
 const PlatesList = () => {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
   const [plateToShow, setPlateToShow] = useState<IPlate | null>(null)
   const { addToCart } = useAppContext().cart
   const { showTrigger, triggerIsVisible } = useTrigger()
+  const { categoriesState, getAvailableCategories } = useAppContext().categories
+  const { platesState, getAvailablePlates } = useAppContext().plates
+  const { categories } = categoriesState
+  const { plates, loading } = platesState
 
   const responsiveCarousel: ResponsiveType = {
     desktop: {
@@ -40,6 +43,14 @@ const PlatesList = () => {
     },
   }
 
+  useEffect(() => {
+    getAvailableCategories()
+  }, [categoriesState])
+
+  useEffect(() => {
+    getAvailablePlates()
+  }, [platesState])
+
   const handleSelectPlate = (plate: IPlate) => {
     setPlateToShow(plate)
     setModalIsOpen(true)
@@ -47,7 +58,7 @@ const PlatesList = () => {
 
   const handleAddPlate = (plate: IPlate) => {
     const cartItem: ICartItem = {
-      plateId: plate.id,
+      plateId: plate._id,
       quantity: 1
     }
 
@@ -70,36 +81,41 @@ const PlatesList = () => {
 
           <Divider />
 
-          {availableCategories.map(category => (
-            <article key={`category-${category.id}`} className={styles.plates__list}>
-              <header className={styles.plates__listTitle}>
-                <h3>{category.name}</h3>
-              </header>
+          {loading
+            ? <div className={styles.plates__loading}>
+              <Loading />
+            </div>
 
-              <p className={styles.plates__listDescription}>{category.description}</p>
+            : categories && categories.length > 0 &&
+            categories.map(category => (
+              <article key={`category-${category._id}`} className={styles.plates__list}>
+                <header className={styles.plates__listTitle}>
+                  <h3>{category.name}</h3>
+                </header>
 
-              <div className={styles.plates__byCategory}>
-                <Carousel
-                  arrows
-                  swipeable
-                  draggable
-                  partialVisible
-                  customLeftArrow={<ListButton direction="prev" />}
-                  customRightArrow={<ListButton direction="next" />}
-                  responsive={responsiveCarousel}
-                  className={styles.plates__carousel}
-                  itemClass={styles.plates__carouselItem}>
-                  {plates.filter(plate => plate.categoryId === category.id).map(plate => (
-                    plate.available &&
-                    <Plate
-                      key={`plate-${plate.id}`}
-                      plate={plate}
-                      onClick={() => handleSelectPlate(plate)} />
-                  ))}
-                </Carousel>
-              </div>
-            </article>
-          ))}
+                <p className={styles.plates__listDescription}>{category.description}</p>
+
+                <div className={styles.plates__byCategory}>
+                  <Carousel
+                    arrows
+                    swipeable
+                    draggable
+                    partialVisible
+                    customLeftArrow={<ListButton direction="prev" />}
+                    customRightArrow={<ListButton direction="next" />}
+                    responsive={responsiveCarousel}
+                    className={styles.plates__carousel}
+                    itemClass={styles.plates__carouselItem}>
+                    {plates.filter(plate => plate.categoryId === category._id).map(plate => (
+                      <Plate
+                        key={`plate-${plate._id}`}
+                        plate={plate}
+                        onClick={() => handleSelectPlate(plate)} />
+                    ))}
+                  </Carousel>
+                </div>
+              </article>
+            ))}
         </Container>
       </section>
 

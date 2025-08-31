@@ -1,4 +1,4 @@
 export interface ICartItem {
-    plateId: number
+    plateId: string
     quantity: number
 }

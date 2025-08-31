@@ -19,7 +19,7 @@ const CartList = () => {
                     <header className="section-heading">
                         <h2>
                             Meus itens&nbsp;
-                            {cart && cart.length && `(${cart.length})`}
+                            {cart && cart.length > 0 && `(${cart.length})`}
                         </h2>
                     </header>
 
@@ -61,8 +61,6 @@ const CartList = () => {
                 overlayClassName="modal-overlay">
                 <Confirm onCancel={() => setModalIsOpen(false)} />
             </Modal>
-
-
         </>
     )
 }

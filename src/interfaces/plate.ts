@@ -1,8 +1,8 @@
 export interface IPlate {
-    id: number
+    _id: string
     name: string
     image?: string
-    categoryId: number
+    categoryId: string
     description: string
     price: number
     available: boolean
