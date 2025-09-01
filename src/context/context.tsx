@@ -4,6 +4,7 @@ import { useCart } from "../hooks/useCart"
 import { useAuth } from "../hooks/useAuth"
 import { categoriesReducer } from "../reducers/categoriesReducer"
 import { platesReducer } from "../reducers/platesReducer"
+import { ordersReducer } from "../reducers/ordersReducer"
 
 type Props = {
     children?: ReactNode
@@ -16,12 +17,14 @@ export const ContextProvider = ({ children }: Props) => {
     const auth = useAuth()
     const categories = categoriesReducer()
     const plates = platesReducer()
+    const orders = ordersReducer()
 
     const contextValues: IContext = {
         cart,
         auth,
         categories,
-        plates
+        plates,
+        orders
     }
 
     return (

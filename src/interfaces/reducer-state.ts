@@ -1,4 +1,5 @@
 import type { ICategory } from "./category"
+import type { IOrder } from "./order"
 import type { IPlate } from "./plate"
 
 export interface IReducerInitialState {
@@ -21,4 +22,9 @@ export interface ICategoryState extends IReducerInitialState {
 export interface IPlateState extends IReducerInitialState {
     plates: IPlate[]
     plate: IPlate | null
+}
+
+export interface IOrderState extends IReducerInitialState {
+    orders: IOrder[]
+    order: IOrder | null
 }

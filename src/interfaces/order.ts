@@ -1,13 +1,18 @@
+import type { IPlate } from "./plate"
+import type { IUser } from "./user"
+
 export interface IOrder {
-    id: number
-    userId: number
+    _id: string
+    userDetails: IUser
+    orderItems: IOrderItem[]
     time: string
     status: string
 }
 
 export interface IOrderItem {
-    id: number
+    _id: string
     plateId: number
     orderId: number
     quantity: number
+    itemDetails: IPlate[]
 }

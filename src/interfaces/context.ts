@@ -1,7 +1,8 @@
 import type { ICartItem } from "./cart-item";
 import type { ICategory } from "./category";
+import type { IOrder } from "./order";
 import type { IPlate } from "./plate";
-import type { ICategoryState, IPlateState } from "./reducer-state";
+import type { ICategoryState, IOrderState, IPlateState } from "./reducer-state";
 import type { IUser } from "./user";
 
 export interface IContext {
@@ -34,5 +35,14 @@ export interface IContext {
         addPlate: (plateData: Partial<IPlate>) => void
         updatePlate: (plateId: string, plateData: Partial<IPlate>) => void
         deletePlate: (plateId: string) => void
+    }
+
+    orders: {
+        ordersState: IOrderState
+        getOrders: () => void
+        getOrdersByUser: (userId: string) => void
+        addOrder: (orderData: Partial<IOrder>) => void
+        updateOrder: (orderId: string, orderData: Partial<IPlate>) => void
+        deleteOrder: (orderId: string) => void
     }
 }
