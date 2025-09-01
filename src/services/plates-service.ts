@@ -6,7 +6,9 @@ const getPlates = async () => {
         const res = await fetch(`${apiUrl}/plates`, {
             method: "GET",
             headers: {}
-        }).then(res => res.json())
+        })
+        .then(res => res.json())
+        .catch(err => err)
 
         return res
     } catch (error) {
@@ -19,7 +21,9 @@ const getAvailablePlates = async () => {
         const res = await fetch(`${apiUrl}/plates/available`, {
             method: "GET",
             headers: {}
-        }).then(res => res.json())
+        })
+        .then(res => res.json())
+        .catch(err => err)
 
         return res
     } catch (error) {
@@ -33,7 +37,9 @@ const addPlate = async (plateData: Partial<IPlate>) => {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(plateData)
-        }).then(res => res.json())
+        })
+        .then(res => res.json())
+        .catch(err => err)
 
         return res
     } catch (error) {
@@ -47,7 +53,9 @@ const updatePlate = async (plateId: string, plateData: Partial<IPlate>) => {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(plateData)
-        }).then(res => res.json())
+        })
+        .then(res => res.json())
+        .catch(err => err)
 
         return res
     } catch (error) {
@@ -60,7 +68,9 @@ const deletePlate = async (plateId: string) => {
         const res = await fetch(`${apiUrl}/plates/${plateId}`, {
             method: "DELETE",
             headers: {}
-        }).then(res => res.json())
+        })
+        .then(res => res.json())
+        .catch(err => err)
 
         return res
     } catch (error) {

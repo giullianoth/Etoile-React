@@ -6,7 +6,9 @@ const getOrders = async () => {
         const res = await fetch(`${apiUrl}/orders`, {
             method: "GET",
             headers: {}
-        }).then(res => res.json())
+        })
+        .then(res => res.json())
+        .catch(err => err)
 
         return res
     } catch (error) {
@@ -19,7 +21,9 @@ const getOrdersByUser = async (userId: string) => {
         const res = await fetch(`${apiUrl}/orders/by-user/${userId}`, {
             method: "GET",
             headers: {}
-        }).then(res => res.json())
+        })
+        .then(res => res.json())
+        .catch(err => err)
 
         return res
     } catch (error) {
@@ -33,7 +37,9 @@ const addOrder = async (orderData: Partial<IOrder>) => {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(orderData)
-        }).then(res => res.json())
+        })
+        .then(res => res.json())
+        .catch(err => err)
 
         return res
     } catch (error) {
@@ -46,7 +52,9 @@ const deleteOrder = async (orderId: string) => {
         const res = await fetch(`${apiUrl}/orders/${orderId}`, {
             method: "DELETE",
             headers: {}
-        }).then(res => res.json())
+        })
+        .then(res => res.json())
+        .catch(err => err)
 
         return res
     } catch (error) {

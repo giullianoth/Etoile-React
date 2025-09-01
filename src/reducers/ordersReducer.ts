@@ -26,8 +26,8 @@ const ordersReducerActions = (state: IOrderState, action: IReducerAction) => {
                 ...state,
                 success: true,
                 loading: false,
-                orders: action.payload.data,
-                order: action.payload.single,
+                orders: action.payload.data ?? state.orders,
+                order: action.payload.single ?? state.order,
                 successMessage: action.payload.message,
                 errorMessage: null
             }
@@ -73,10 +73,7 @@ export const ordersReducer = () => {
 
         dispatch({
             status: "fulfilled",
-            payload: {
-                data: res.body,
-                single: ordersState.order
-            }
+            payload: { data: res.body }
         })
     }
 
@@ -97,10 +94,7 @@ export const ordersReducer = () => {
 
         dispatch({
             status: "fulfilled",
-            payload: {
-                data: res.body,
-                single: ordersState.order
-            }
+            payload: { single: res.body }
         })
     }
 
@@ -123,11 +117,7 @@ export const ordersReducer = () => {
 
         dispatch({
             status: "fulfilled",
-            payload: {
-                data: ordersState.orders,
-                single: ordersState.order,
-                message: "Pedido registrado com sucesso."
-            }
+            payload: { message: "Pedido registrado com sucesso." }
         })
     }
 
@@ -152,11 +142,7 @@ export const ordersReducer = () => {
 
         dispatch({
             status: "fulfilled",
-            payload: {
-                data: ordersState.orders,
-                single: ordersState.order,
-                message: "Pedido excluído com sucesso."
-            }
+            payload: { message: "Pedido excluído com sucesso." }
         })
     }
 

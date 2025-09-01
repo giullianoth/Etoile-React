@@ -6,7 +6,9 @@ const getCategories = async () => {
         const res = await fetch(`${apiUrl}/categories`, {
             method: "GET",
             headers: {}
-        }).then(res => res.json())
+        })
+        .then(res => res.json())
+        .catch(err => err)
 
         return res
     } catch (error) {
@@ -20,7 +22,9 @@ const addCategory = async (categoryData: Partial<ICategory>) => {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(categoryData)
-        }).then(res => res.json())
+        })
+        .then(res => res.json())
+        .catch(err => err)
 
         return res
     } catch (error) {
@@ -34,7 +38,9 @@ const updateCategory = async (categoryId: string, categoryData: Partial<ICategor
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(categoryData)
-        }).then(res => res.json())
+        })
+        .then(res => res.json())
+        .catch(err => err)
 
         return res
     } catch (error) {
@@ -47,7 +53,9 @@ const deleteCategory = async (categoryId: string) => {
         const res = await fetch(`${apiUrl}/categories/${categoryId}`, {
             method: "DELETE",
             headers: {}
-        }).then(res => res.json())
+        })
+        .then(res => res.json())
+        .catch(err => err)
 
         return res
     } catch (error) {
