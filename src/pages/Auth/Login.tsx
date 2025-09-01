@@ -1,17 +1,39 @@
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import Container from "../../components/Container"
 import PageTitle from "../../components/PageTitle"
 import styles from "./Auth.module.css"
-import { useState, type FormEvent } from "react"
+import { useEffect, useState, type FormEvent } from "react"
 import { PiSignIn } from "react-icons/pi"
+import { useAppContext } from "../../context/context"
+import { useTrigger } from "../../hooks/useTrigger"
+import type { IUser } from "../../interfaces/user"
+import Loading from "../../components/Loading"
+import Trigger from "../../components/Trigger"
 
 const Login = () => {
   const [email, setEmail] = useState<string>("")
   const [password, setPassword] = useState<string>("")
+  const { authState, login } = useAppContext().auth
+  const { errorMessage, loading, success, successMessage } = authState
+  const { showTrigger, triggerIsVisible } = useTrigger()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (success) {
+      showTrigger()
+      navigate("/perfil")
+    }
+  }, [authState])
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault()
-    console.log({ email, password })
+
+    const userData: Partial<IUser> = {
+      email,
+      password
+    }
+
+    login(userData)
   }
 
   return (
@@ -46,13 +68,21 @@ const Login = () => {
               value={password ?? ""}
               onChange={event => setPassword(event.target.value)} />
 
-            <button className="button primary">
-              <PiSignIn />
-              Entrar
+            <button type="submit" className="button primary" disabled={loading}>
+              {loading
+                ? <Loading inButton />
+                : <>
+                  <PiSignIn />
+                  Entrar
+                </>}
             </button>
+
+            {errorMessage && <Trigger type="error">{errorMessage}</Trigger>}
           </form>
         </Container>
       </section>
+
+      {triggerIsVisible && <Trigger type="success" floating>{successMessage}</Trigger>}
     </>
   )
 }

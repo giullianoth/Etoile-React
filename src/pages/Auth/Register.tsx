@@ -1,18 +1,42 @@
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import Container from "../../components/Container"
 import PageTitle from "../../components/PageTitle"
 import styles from "./Auth.module.css"
-import { useState, type FormEvent } from "react"
+import { useEffect, useState, type FormEvent } from "react"
+import { useAppContext } from "../../context/context"
+import Trigger from "../../components/Trigger"
+import type { IUserRegister } from "../../interfaces/user"
+import { useTrigger } from "../../hooks/useTrigger"
+import Loading from "../../components/Loading"
 
 const Register = () => {
   const [fullname, setFullname] = useState<string>("")
   const [email, setEmail] = useState<string>("")
   const [password, setPassword] = useState<string>("")
   const [confirmPassword, setConfirmPassword] = useState<string>("")
+  const { authState, register } = useAppContext().auth
+  const { success, errorMessage, loading, successMessage } = authState
+  const { showTrigger, triggerIsVisible } = useTrigger()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (success) {
+      showTrigger()
+      navigate("/perfil")
+    }
+  }, [authState])
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault()
-    console.log({ fullname, email, password, confirmPassword })
+
+    const userData: Partial<IUserRegister> = {
+      fullname,
+      email,
+      password,
+      confirmPassword
+    }
+
+    register(userData)
   }
 
   return (
@@ -63,10 +87,16 @@ const Register = () => {
               value={confirmPassword ?? ""}
               onChange={event => setConfirmPassword(event.target.value)} />
 
-            <button className="button primary">Cadastrar</button>
+            <button type="submit" className="button primary" disabled={loading}>
+              {loading ? <Loading inButton /> : "Cadastrar"}
+            </button>
+
+            {errorMessage && <Trigger type="error">{errorMessage}</Trigger>}
           </form>
         </Container>
       </section>
+
+      {triggerIsVisible && <Trigger type="success" floating>{successMessage}</Trigger>}
     </>
   )
 }

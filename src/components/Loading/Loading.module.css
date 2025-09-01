@@ -1,7 +1,4 @@
 .loading {
-    position: absolute;
-    top: 0;
-    left: 0;
     width: 100%;
     height: 100%;
     display: flex;
@@ -28,6 +25,28 @@
     border-top-color: var(--color-murrey);
     border-radius: 50%;
     animation: loading-spin 1s infinite linear;
+}
+
+*:has(> .loading.inButton) {
+    position: relative;
+}
+
+.loading.inButton {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.loading.inButton .circle {
+    width: 24px;
+    height: 24px;
+    border-width: 2px;
+}
+
+.loading.inButton .spinner {
+    width: calc(100% + 4px);
+    height: calc(100% + 4px);
+    border-width: 2px;
 }
 
 @keyframes loading-spin {

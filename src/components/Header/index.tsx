@@ -1,4 +1,4 @@
-import { Link, NavLink, useLocation } from "react-router-dom"
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom"
 import Container from "../Container"
 import styles from "./Header.module.css"
 import logo from "/images/logo.svg"
@@ -11,17 +11,25 @@ import { useAppContext } from "../../context/context"
 
 const Header = () => {
     const overlayRef = useRef<HTMLDivElement | null>(null)
-    const { user, authenticated } = useAppContext().auth
+    const { authState, logout } = useAppContext().auth
+    const { user } = authState
+    const { authenticated } = useAppContext().useAuth
     const { scrolling } = useWindowBehavior()
     const firstName = useFirstName()
     const { pathname } = useLocation()
     const { cart } = useAppContext().cart
+    const navigate = useNavigate()
     const [menuIsOpen, setMenuIsOpen] = useState<boolean>(false)
     const [auth, setAuth] = useState<boolean>(false)
 
     useEffect(() => {
         setAuth(authenticated && pathname === "/perfil")
     }, [user, authenticated, pathname])
+
+    const handleLogout = () => {
+        logout()
+        navigate("/")
+    }
 
     return (
         <header
@@ -42,7 +50,7 @@ const Header = () => {
                     <nav>
                         {auth &&
                             <div className={styles.header__navigationLogout}>
-                                <button className="button clear" title="Sair">
+                                <button className="button clear" title="Sair" onClick={handleLogout}>
                                     <PiSignOut />
                                 </button>
                             </div>}
