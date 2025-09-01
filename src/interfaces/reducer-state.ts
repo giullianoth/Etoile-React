@@ -36,5 +36,4 @@ export interface IAuthState extends IReducerInitialState {
 
 export interface IUserState extends IReducerInitialState {
     users: IUser[]
-    user: Partial<IUser> | null
 }

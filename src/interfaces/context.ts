@@ -2,7 +2,7 @@ import type { ICartItem } from "./cart-item";
 import type { ICategory } from "./category";
 import type { IOrder } from "./order";
 import type { IPlate } from "./plate";
-import type { IAuthState, ICategoryState, IOrderState, IPlateState } from "./reducer-state";
+import type { IAuthState, ICategoryState, IOrderState, IPlateState, IUserState } from "./reducer-state";
 import type { IUser, IUserRegister } from "./user";
 
 export interface IContext {
@@ -51,5 +51,11 @@ export interface IContext {
         register: (authData: Partial<IUserRegister>) => void
         login: (authData: Partial<IUser>) => void
         logout: () => void
+    }
+
+    users: {
+        usersState: IUserState
+        getUsers: () => void
+        updateUser: (userId: string, userData: Partial<IUser>) => void
     }
 }

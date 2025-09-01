@@ -11,3 +11,8 @@ export interface IUser {
 export interface IUserRegister extends IUser {
     confirmPassword?: string
 }
+
+export interface IUserUpdate extends IUserRegister {
+    changePassword?: boolean
+    newPassword?: string
+}

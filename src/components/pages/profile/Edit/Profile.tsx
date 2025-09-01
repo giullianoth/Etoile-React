@@ -1,11 +1,14 @@
-import { useEffect, useState, type FormEvent, type MouseEventHandler } from "react"
+import { useEffect, useState, type FormEvent } from "react"
 import styles from "./Edit.module.css"
 import Collapse from "react-animate-height"
 import Checkbox from "../../../Checkbox"
-import type { IUser } from "../../../../interfaces/user"
+import type { IUser, IUserUpdate } from "../../../../interfaces/user"
+import { useAppContext } from "../../../../context/context"
+import Loading from "../../../Loading"
+import Trigger from "../../../Trigger"
 
 type Props = {
-    onCancel: MouseEventHandler
+    onCancel: () => void
     user: IUser
 }
 
@@ -16,17 +19,38 @@ const EditProfile = ({ onCancel, user }: Props) => {
     const [newPassword, setNewPassword] = useState<string>("")
     const [confirmPassword, setConfirnPassword] = useState<string>("")
     const [changePassword, setChangePassword] = useState<boolean>(false)
+    const { usersState, updateUser } = useAppContext().users
+    const { errorMessage, loading, success } = usersState
 
     useEffect(() => {
         if (user) {
             setFullname(user.fullname)
             setPhone(user.phone ?? "")
         }
-    }, [])
+    }, [user])
+
+    useEffect(() => {
+        if (success) {
+            onCancel()
+        }
+    }, [usersState])
 
     const handleSubmit = (event: FormEvent) => {
         event.preventDefault()
-        console.log({ fullname, phone, changePassword, currentPassword, newPassword, confirmPassword })
+        
+        const userData: Partial<IUserUpdate> = { fullname, confirmPassword }
+
+        if (phone) {
+            userData.phone = phone
+        }
+
+        if (confirmPassword) {
+            userData.password = currentPassword
+            userData.newPassword = newPassword
+            userData.confirmPassword = confirmPassword
+        }
+
+        updateUser(user._id, userData)
     }
 
     return (
@@ -92,9 +116,14 @@ const EditProfile = ({ onCancel, user }: Props) => {
 
                 <div className={styles.edit__formSubmit}>
                     <span className="button primary outline" onClick={onCancel}>Cancelar</span>
-                    <button type="submit" className="button primary">Atualizar</button>
+
+                    <button type="submit" className="button primary" disabled={loading}>
+                        {loading ? <Loading inButton /> : "Atualizar"}
+                    </button>
                 </div>
             </form>
+
+            {errorMessage && <Trigger type="error">{errorMessage}</Trigger>}
         </section>
     )
 }

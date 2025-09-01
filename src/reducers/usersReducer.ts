@@ -1,6 +1,6 @@
 import { useReducer, useState } from "react";
 import type { IReducerAction, IUserState } from "../interfaces/reducer-state";
-import type { IUser } from "../interfaces/user";
+import type { IUserUpdate } from "../interfaces/user";
 import usersService from "../services/users-service";
 
 const state: IUserState = {
@@ -8,8 +8,7 @@ const state: IUserState = {
     loading: false,
     errorMessage: null,
     successMessage: null,
-    users: [],
-    user: null
+    users: []
 }
 
 const usersReducerActions = (state: IUserState, action: IReducerAction) => {
@@ -26,8 +25,7 @@ const usersReducerActions = (state: IUserState, action: IReducerAction) => {
                 ...state,
                 success: true,
                 loading: false,
-                users: action.payload.data ?? state.users,
-                user: action.payload.single ?? state.user,
+                users: action.payload ?? state.users,
                 successMessage: action.payload.message,
                 errorMessage: null
             }
@@ -39,8 +37,7 @@ const usersReducerActions = (state: IUserState, action: IReducerAction) => {
                 loading: false,
                 errorMessage: action.payload,
                 successMessage: null,
-                users: [],
-                user: null
+                users: []
             }
 
         default:
@@ -69,11 +66,11 @@ export const usersReducer = () => {
 
         dispatch({
             status: "fulfilled",
-            payload: { data: res.body, }
+            payload: res.body
         })
     }
 
-    const updateUser = async (userId: string, userData: Partial<IUser>) => {
+    const updateUser = async (userId: string, userData: Partial<IUserUpdate>) => {
         if (cancelled) {
             setCancelled(false)
             return
@@ -81,7 +78,36 @@ export const usersReducer = () => {
 
         dispatch({ status: "pending" })
 
-        const res = await usersService.updateUser(userId, userData)
+        if (!userData.fullname) {
+            dispatch({ status: "rejected", payload: "Digite o nome." })
+            return
+        }
+
+        if (userData.confirmPassword) {
+            if (!userData.password) {
+                dispatch({ status: "rejected", payload: "Digite a senha." })
+                return
+            }
+
+            if (!userData.newPassword) {
+                dispatch({ status: "rejected", payload: "Digite a sua nova senha." })
+                return
+            }
+
+            if (!userData.confirmPassword) {
+                dispatch({ status: "rejected", payload: "Confirme a sua nova senha." })
+                return
+            }
+
+            if (userData.newPassword !== userData.confirmPassword) {
+                dispatch({ status: "rejected", payload: "As senhas digitadas não conferem." })
+                return
+            }
+        }
+
+        const { changePassword, password, confirmPassword, ...userDataRest } = userData
+
+        const res = await usersService.updateUser(userId, userDataRest)
 
         if (!res.success) {
             dispatch({ status: "rejected", payload: "Erro ao atualizar perfil." })

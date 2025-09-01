@@ -6,6 +6,7 @@ import { categoriesReducer } from "../reducers/categoriesReducer"
 import { platesReducer } from "../reducers/platesReducer"
 import { ordersReducer } from "../reducers/ordersReducer"
 import { authReducer } from "../reducers/authReducer"
+import { usersReducer } from "../reducers/usersReducer"
 
 type Props = {
     children?: ReactNode
@@ -20,7 +21,8 @@ export const ContextProvider = ({ children }: Props) => {
         categories: categoriesReducer(),
         plates: platesReducer(),
         orders: ordersReducer(),
-        auth: authReducer()
+        auth: authReducer(),
+        users: usersReducer()
     }
 
     return (
