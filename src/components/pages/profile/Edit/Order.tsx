@@ -3,20 +3,17 @@ import styles from "./Edit.module.css"
 import { PiTrash } from "react-icons/pi"
 import Checkbox from "../../../Checkbox"
 import type { IOrder } from "../../../../interfaces/order"
-import { orderItems } from "../../../../data/order-items"
 import OrderItem from "../OrderItem"
 
 type Props = {
-    onCancelOrder?: MouseEventHandler
-    onCancelItem?: MouseEventHandler
+    onDeleteOrder?: MouseEventHandler
     onClose?: MouseEventHandler
     order: IOrder
 }
 
-const EditOrder = ({ onCancelOrder, onCancelItem, onClose, order }: Props) => {
+const EditOrder = ({ onDeleteOrder, onClose, order }: Props) => {
     const [time, setTime] = useState<string>("12:30")
     const [receipt, setReceipt] = useState<boolean>(false)
-    const orderItemsToEdit = orderItems.filter(item => item.orderId === order.id)
 
     useEffect(() => {
         if (order) {
@@ -36,16 +33,9 @@ const EditOrder = ({ onCancelOrder, onCancelItem, onClose, order }: Props) => {
             </header>
 
             <div className={styles.edit__orders}>
-                {orderItemsToEdit && orderItemsToEdit.map(item => (
-                    <div key={`order-item-${item.id}`} className={styles.edit__order}>
+                {order.orderItems && order.orderItems.map(item => (
+                    <div key={`order-item-${item._id}`} className={styles.edit__order}>
                         <OrderItem orderItem={item} />
-
-                        <button
-                            className="button primary clear"
-                            title="Cancelar este item"
-                            onClick={onCancelItem}>
-                            <PiTrash />
-                        </button>
                     </div>
                 ))}
             </div>
@@ -84,9 +74,9 @@ const EditOrder = ({ onCancelOrder, onCancelItem, onClose, order }: Props) => {
                     <p>
                         <span
                             className={`button primary clear ${styles.edit__formOrderCancel}`}
-                            onClick={onCancelOrder}>
+                            onClick={onDeleteOrder}>
                             <PiTrash />
-                            Cancelar pedido
+                            Excluir pedido
                         </span>
                     </p>
                 </div>

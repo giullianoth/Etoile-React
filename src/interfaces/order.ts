@@ -11,8 +11,8 @@ export interface IOrder {
 
 export interface IOrderItem {
     _id: string
-    plateId: number
-    orderId: number
+    plateId: string
+    orderId: string
     quantity: number
     itemDetails: IPlate[]
 }
