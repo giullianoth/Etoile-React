@@ -2,8 +2,8 @@ import type { ICartItem } from "./cart-item";
 import type { ICategory } from "./category";
 import type { IOrder } from "./order";
 import type { IPlate } from "./plate";
-import type { ICategoryState, IOrderState, IPlateState } from "./reducer-state";
-import type { IUser } from "./user";
+import type { IAuthState, ICategoryState, IOrderState, IPlateState } from "./reducer-state";
+import type { IUser, IUserRegister } from "./user";
 
 export interface IContext {
     cart: {
@@ -14,9 +14,9 @@ export interface IContext {
         clearCart: () => void
     }
 
-    auth: {
-        user: IUser | null
-        authenticated: boolean
+    useAuth: {
+        authenticated: boolean,
+        loading: boolean
     }
 
     categories: {
@@ -44,5 +44,12 @@ export interface IContext {
         addOrder: (orderData: Partial<IOrder>) => void
         updateOrder: (orderId: string, orderData: Partial<IPlate>) => void
         deleteOrder: (orderId: string) => void
+    }
+
+    auth: {
+        authState: IAuthState
+        register: (authData: Partial<IUserRegister>) => void
+        login: (authData: Partial<IUser>) => void
+        logout: () => void
     }
 }

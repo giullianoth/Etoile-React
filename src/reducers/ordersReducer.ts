@@ -3,7 +3,7 @@ import type { IOrderState, IReducerAction } from "../interfaces/reducer-state";
 import ordersService from "../services/orders-service";
 import type { IOrder } from "../interfaces/order";
 
-const orderState: IOrderState = {
+const state: IOrderState = {
     success: false,
     loading: false,
     errorMessage: null,
@@ -49,7 +49,7 @@ const ordersReducerActions = (state: IOrderState, action: IReducerAction) => {
 }
 
 export const ordersReducer = () => {
-    const [ordersState, dispatch] = useReducer<IOrderState, [action: IReducerAction]>(ordersReducerActions, orderState)
+    const [ordersState, dispatch] = useReducer<IOrderState, [action: IReducerAction]>(ordersReducerActions, state)
     const [cancelled, setCancelled] = useState<boolean>(false)
 
     useEffect(() => {

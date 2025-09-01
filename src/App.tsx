@@ -9,11 +9,13 @@ import Login from './pages/Auth/Login'
 import Register from './pages/Auth/Register'
 import Profile from './pages/Profile'
 import Modal from "react-modal"
-import { ContextProvider } from './context/context'
+import { ContextProvider, useAppContext } from './context/context'
 
 Modal.setAppElement("#root")
 
 function App() {
+  const { authenticated } = useAppContext().useAuth
+
   return (
     <ContextProvider>
       <BrowserRouter>
@@ -24,9 +26,9 @@ function App() {
             <Route path='/' element={<Home />} />
             <Route path='/pratos' element={<Plates />} />
             <Route path='/carrinho' element={<Cart />} />
-            <Route path='/login' element={<Login />} />
-            <Route path='/cadastrar' element={<Register />} />
-            <Route path='/perfil' element={<Profile />} />
+            <Route path='/login' element={authenticated ? <Profile /> : <Login />} />
+            <Route path='/cadastrar' element={authenticated ? <Profile /> : <Register />} />
+            <Route path='/perfil' element={authenticated ? <Profile /> : <Login />} />
           </Routes>
         </main>
 

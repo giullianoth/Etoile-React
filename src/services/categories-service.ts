@@ -7,8 +7,8 @@ const getCategories = async () => {
             method: "GET",
             headers: {}
         })
-        .then(res => res.json())
-        .catch(err => err)
+            .then(res => res.json())
+            .catch(err => err)
 
         return res
     } catch (error) {
@@ -23,8 +23,8 @@ const addCategory = async (categoryData: Partial<ICategory>) => {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(categoryData)
         })
-        .then(res => res.json())
-        .catch(err => err)
+            .then(res => res.json())
+            .catch(err => err)
 
         return res
     } catch (error) {
@@ -39,8 +39,8 @@ const updateCategory = async (categoryId: string, categoryData: Partial<ICategor
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(categoryData)
         })
-        .then(res => res.json())
-        .catch(err => err)
+            .then(res => res.json())
+            .catch(err => err)
 
         return res
     } catch (error) {
@@ -54,8 +54,8 @@ const deleteCategory = async (categoryId: string) => {
             method: "DELETE",
             headers: {}
         })
-        .then(res => res.json())
-        .catch(err => err)
+            .then(res => res.json())
+            .catch(err => err)
 
         return res
     } catch (error) {

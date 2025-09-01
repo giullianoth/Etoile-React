@@ -7,8 +7,8 @@ const getOrders = async () => {
             method: "GET",
             headers: {}
         })
-        .then(res => res.json())
-        .catch(err => err)
+            .then(res => res.json())
+            .catch(err => err)
 
         return res
     } catch (error) {
@@ -22,8 +22,8 @@ const getOrdersByUser = async (userId: string) => {
             method: "GET",
             headers: {}
         })
-        .then(res => res.json())
-        .catch(err => err)
+            .then(res => res.json())
+            .catch(err => err)
 
         return res
     } catch (error) {
@@ -38,8 +38,8 @@ const addOrder = async (orderData: Partial<IOrder>) => {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(orderData)
         })
-        .then(res => res.json())
-        .catch(err => err)
+            .then(res => res.json())
+            .catch(err => err)
 
         return res
     } catch (error) {
@@ -53,8 +53,8 @@ const deleteOrder = async (orderId: string) => {
             method: "DELETE",
             headers: {}
         })
-        .then(res => res.json())
-        .catch(err => err)
+            .then(res => res.json())
+            .catch(err => err)
 
         return res
     } catch (error) {

@@ -7,3 +7,7 @@ export interface IUser {
     phone?: string
     role: string
 }
+
+export interface IUserRegister extends IUser {
+    confirmPassword?: string
+}
