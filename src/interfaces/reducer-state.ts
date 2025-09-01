@@ -33,3 +33,8 @@ export interface IOrderState extends IReducerInitialState {
 export interface IAuthState extends IReducerInitialState {
     user: Partial<IUser> | null
 }
+
+export interface IUserState extends IReducerInitialState {
+    users: IUser[]
+    user: Partial<IUser> | null
+}
