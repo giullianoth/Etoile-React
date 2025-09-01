@@ -26,7 +26,10 @@ const platesReducerActions = (state: IPlateState, action: IReducerAction) => {
                 ...state,
                 success: true,
                 loading: false,
-                plates: action.payload
+                plates: action.payload.data ?? state.plates,
+                plate: action.payload.single ?? state.plate,
+                successMessage: action.payload.message,
+                errorMessage: null
             }
 
         case "rejected":
@@ -34,7 +37,10 @@ const platesReducerActions = (state: IPlateState, action: IReducerAction) => {
                 ...state,
                 success: false,
                 loading: false,
-                errorMessage: action.payload
+                errorMessage: action.payload,
+                successMessage: null,
+                plates: [],
+                plate: null
             }
 
         default:
@@ -52,6 +58,7 @@ export const platesReducer = () => {
 
     const getPlates = async () => {
         if (cancelled) {
+            setCancelled(false)
             return
         }
 
@@ -64,11 +71,15 @@ export const platesReducer = () => {
             return
         }
 
-        dispatch({ status: "fulfilled", payload: res.body })
+        dispatch({
+            status: "fulfilled",
+            payload: { data: res.body, }
+        })
     }
 
     const getAvailablePlates = async () => {
         if (cancelled) {
+            setCancelled(false)
             return
         }
 
@@ -81,19 +92,79 @@ export const platesReducer = () => {
             return
         }
 
-        dispatch({ status: "fulfilled", payload: res.body })
+        dispatch({
+            status: "fulfilled",
+            payload: { data: res.body, }
+        })
     }
 
     const addPlate = async (plateData: Partial<IPlate>) => {
+        if (cancelled) {
+            setCancelled(false)
+            return
+        }
 
+        dispatch({ status: "pending" })
+
+        const res = await platesServices.addPlate(plateData)
+
+        if (!res.success) {
+            dispatch({ status: "rejected", payload: "Erro ao adicionar prato." })
+            return
+        }
+
+        await getPlates()
+
+        dispatch({
+            status: "fulfilled",
+            payload: { message: "Prato adicionado com sucesso." }
+        })
     }
 
     const updatePlate = async (plateId: string, plateData: Partial<IPlate>) => {
+        if (cancelled) {
+            setCancelled(false)
+            return
+        }
 
+        dispatch({ status: "pending" })
+
+        const res = await platesServices.updatePlate(plateId, plateData)
+
+        if (!res.success) {
+            dispatch({ status: "rejected", payload: "Erro ao atualizar prato." })
+            return
+        }
+
+        await getPlates()
+
+        dispatch({
+            status: "fulfilled",
+            payload: { message: "Prato atualizado com sucesso." }
+        })
     }
 
     const deletePlate = async (plateId: string) => {
+        if (cancelled) {
+            setCancelled(false)
+            return
+        }
 
+        dispatch({ status: "pending" })
+
+        const res = await platesServices.deletePlate(plateId)
+
+        if (!res.success) {
+            dispatch({ status: "rejected", payload: "Erro ao excluir prato." })
+            return
+        }
+
+        await getPlates()
+
+        dispatch({
+            status: "fulfilled",
+            payload: { message: "Prato excluído com sucesso." }
+        })
     }
 
     return { platesState, getPlates, getAvailablePlates, addPlate, updatePlate, deletePlate }

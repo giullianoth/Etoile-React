@@ -28,7 +28,8 @@ const ordersReducerActions = (state: IOrderState, action: IReducerAction) => {
                 loading: false,
                 orders: action.payload.data,
                 order: action.payload.single,
-                successMessage: action.payload.message
+                successMessage: action.payload.message,
+                errorMessage: null
             }
 
         case "rejected":
@@ -37,6 +38,7 @@ const ordersReducerActions = (state: IOrderState, action: IReducerAction) => {
                 success: false,
                 loading: false,
                 errorMessage: action.payload,
+                successMessage: null,
                 orders: [],
                 order: null
             }
@@ -69,7 +71,13 @@ export const ordersReducer = () => {
             return
         }
 
-        dispatch({ status: "fulfilled", payload: { data: res.body } })
+        dispatch({
+            status: "fulfilled",
+            payload: {
+                data: res.body,
+                single: ordersState.order
+            }
+        })
     }
 
     const getOrdersByUser = async (userId: string) => {
@@ -87,7 +95,13 @@ export const ordersReducer = () => {
             return
         }
 
-        dispatch({ status: "fulfilled", payload: { single: res.body } })
+        dispatch({
+            status: "fulfilled",
+            payload: {
+                data: res.body,
+                single: ordersState.order
+            }
+        })
     }
 
     const addOrder = async (orderData: Partial<IOrder>) => {
@@ -111,6 +125,7 @@ export const ordersReducer = () => {
             status: "fulfilled",
             payload: {
                 data: ordersState.orders,
+                single: ordersState.order,
                 message: "Pedido registrado com sucesso."
             }
         })
@@ -139,6 +154,7 @@ export const ordersReducer = () => {
             status: "fulfilled",
             payload: {
                 data: ordersState.orders,
+                single: ordersState.order,
                 message: "Pedido excluído com sucesso."
             }
         })

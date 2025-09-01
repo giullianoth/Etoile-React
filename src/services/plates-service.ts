@@ -1,3 +1,4 @@
+import type { IPlate } from "../interfaces/plate"
 import { apiUrl } from "./api-config"
 
 const getPlates = async () => {
@@ -26,9 +27,53 @@ const getAvailablePlates = async () => {
     }
 }
 
+const addPlate = async (plateData: Partial<IPlate>) => {
+    try {
+        const res = await fetch(`${apiUrl}/plates`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(plateData)
+        }).then(res => res.json())
+
+        return res
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+const updatePlate = async (plateId: string, plateData: Partial<IPlate>) => {
+    try {
+        const res = await fetch(`${apiUrl}/plates/${plateId}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(plateData)
+        }).then(res => res.json())
+
+        return res
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+const deletePlate = async (plateId: string) => {
+    try {
+        const res = await fetch(`${apiUrl}/plates/${plateId}`, {
+            method: "DELETE",
+            headers: {}
+        }).then(res => res.json())
+
+        return res
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 const platesServices = {
     getPlates,
-    getAvailablePlates
+    getAvailablePlates,
+    addPlate,
+    updatePlate,
+    deletePlate
 }
 
 export default platesServices
