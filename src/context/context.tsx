@@ -1,7 +1,6 @@
 import { createContext, useContext, type ReactNode } from "react"
 import type { IContext } from "../interfaces/context"
 import { useCart } from "../hooks/useCart"
-import { useAuth } from "../hooks/useAuth"
 import { categoriesReducer } from "../reducers/categoriesReducer"
 import { platesReducer } from "../reducers/platesReducer"
 import { ordersReducer } from "../reducers/ordersReducer"
@@ -17,7 +16,6 @@ const Context = createContext<IContext | undefined>(undefined)
 export const ContextProvider = ({ children }: Props) => {
     const contextValues: IContext = {
         cart: useCart(),
-        useAuth: useAuth(),
         categories: categoriesReducer(),
         plates: platesReducer(),
         orders: ordersReducer(),
@@ -34,7 +32,7 @@ export const ContextProvider = ({ children }: Props) => {
 
 export const useAppContext = () => {
     const context = useContext(Context)
-
+    
     if (!context) {
         throw new Error("Out of context, please use ContextProvider component.")
     }

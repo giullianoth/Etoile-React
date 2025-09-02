@@ -8,12 +8,13 @@ import { useEffect, useRef, useState } from "react"
 import { useWindowBehavior } from "../../hooks/useWindowBehavior"
 import { useFirstName } from "../../hooks/useFirstName"
 import { useAppContext } from "../../context/context"
+import { useAuth } from "../../hooks/useAuth"
 
 const Header = () => {
     const overlayRef = useRef<HTMLDivElement | null>(null)
     const { authState, logout } = useAppContext().auth
     const { user } = authState
-    const { authenticated } = useAppContext().useAuth
+    const { authenticated } = useAuth()
     const { scrolling } = useWindowBehavior()
     const firstName = useFirstName()
     const { pathname } = useLocation()

@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import './App.css'
 import Footer from './components/Footer'
 import Header from './components/Header'
@@ -9,32 +9,30 @@ import Login from './pages/Auth/Login'
 import Register from './pages/Auth/Register'
 import Profile from './pages/Profile'
 import Modal from "react-modal"
-import { ContextProvider, useAppContext } from './context/context'
+import { useAuth } from './hooks/useAuth'
 
 Modal.setAppElement("#root")
 
 function App() {
-  const { authenticated } = useAppContext().useAuth
+  const { authenticated } = useAuth()
 
   return (
-    <ContextProvider>
-      <BrowserRouter>
-        <Header />
+    <BrowserRouter>
+      <Header />
 
-        <main>
-          <Routes>
-            <Route path='/' element={<Home />} />
-            <Route path='/pratos' element={<Plates />} />
-            <Route path='/carrinho' element={<Cart />} />
-            <Route path='/login' element={authenticated ? <Profile /> : <Login />} />
-            <Route path='/cadastrar' element={authenticated ? <Profile /> : <Register />} />
-            <Route path='/perfil' element={authenticated ? <Profile /> : <Login />} />
-          </Routes>
-        </main>
+      <main>
+        <Routes>
+          <Route path='/' element={<Home />} />
+          <Route path='/pratos' element={<Plates />} />
+          <Route path='/carrinho' element={<Cart />} />
+          <Route path='/login' element={authenticated ? <Navigate to="/perfil" /> : <Login />} />
+          <Route path='/cadastrar' element={authenticated ? <Navigate to="/perfil" /> : <Register />} />
+          <Route path='/perfil' element={authenticated ? <Profile /> : <Navigate to="/login" />} />
+        </Routes>
+      </main>
 
-        <Footer />
-      </BrowserRouter>
-    </ContextProvider>
+      <Footer />
+    </BrowserRouter>
   )
 }
 

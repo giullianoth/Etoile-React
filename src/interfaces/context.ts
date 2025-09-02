@@ -14,11 +14,6 @@ export interface IContext {
         clearCart: () => void
     }
 
-    useAuth: {
-        authenticated: boolean,
-        loading: boolean
-    }
-
     categories: {
         categoriesState: ICategoryState
         getCategories: () => void
