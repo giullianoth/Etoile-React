@@ -1,7 +1,7 @@
 import { useEffect, useReducer, useState } from "react";
 import type { IOrderState, IReducerAction } from "../interfaces/reducer-state";
 import ordersService from "../services/orders-service";
-import type { IOrder } from "../interfaces/order";
+import type { IOrder, IOrderItem } from "../interfaces/order";
 
 const state: IOrderState = {
     success: false,
@@ -98,13 +98,28 @@ export const ordersReducer = () => {
         })
     }
 
-    const addOrder = async (orderData: Partial<IOrder>) => {
+    const addOrder = async (orderData: Partial<IOrder>, orderItems: Partial<IOrderItem>[]) => {
         if (cancelled) {
             setCancelled(false)
             return
         }
 
         dispatch({ status: "pending" })
+
+        if (!orderItems.length || orderItems.some(item => !item.plateId || item.quantity! < 1) || !orderData.status) {
+            dispatch({ status: "rejected", payload: "Erro ao registrar pedido, verifique os dados." })
+            return
+        }
+
+        if (!orderData.time) {
+            dispatch({ status: "rejected", payload: "Selecione o horário de comparecimento." })
+            return
+        }
+
+        if (!orderData.userDetails) {
+            dispatch({ status: "rejected", payload: "Erro ao registrar pedido." })
+            return
+        }
 
         const res = await ordersService.addOrder(orderData)
 
@@ -120,8 +135,6 @@ export const ordersReducer = () => {
             payload: { message: "Pedido registrado com sucesso." }
         })
     }
-
-    const updateOrder = async (orderId: string, orderData: Partial<IOrder>) => { }
 
     const deleteOrder = async (orderId: string) => {
         if (cancelled) {
@@ -146,5 +159,5 @@ export const ordersReducer = () => {
         })
     }
 
-    return { ordersState, getOrders, getOrdersByUser, addOrder, updateOrder, deleteOrder }
+    return { ordersState, getOrders, getOrdersByUser, addOrder, deleteOrder }
 }

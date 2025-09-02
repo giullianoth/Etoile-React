@@ -3,7 +3,7 @@ import type { IUser } from "./user"
 
 export interface IOrder {
     _id: string
-    userDetails: IUser
+    userDetails: Partial<IUser>
     orderItems: IOrderItem[]
     time: string
     status: string

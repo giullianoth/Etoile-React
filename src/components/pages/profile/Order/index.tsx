@@ -5,6 +5,9 @@ import { useEffect, useState, type MouseEventHandler, type ReactNode } from "rea
 import type { IOrder } from "../../../../interfaces/order"
 import { orderItems } from "../../../../data/order-items"
 import OrderItem from "../OrderItem"
+import { usePendingOrder } from "../../../../hooks/usePendingOrder"
+import { useAppContext } from "../../../../context/context"
+import type { IUser } from "../../../../interfaces/user"
 
 type Props = {
     className?: string
@@ -16,6 +19,22 @@ type Props = {
 const Order = ({ className, onEdit, onDelete, order }: Props) => {
     const [bulletType, setBulletType] = useState<BulletType | null>(null)
     const [orderStatusIcon, setOrderStatusIcon] = useState<ReactNode | null>(null)
+    const { user } = useAppContext().auth.authState
+    const { pendingOrder, pendingOrderItems, getData } = usePendingOrder()
+    const { addOrder } = useAppContext().orders
+
+    useEffect(() => {
+        const savePendingOrder = async () => {
+            getData()
+
+            if (pendingOrder && pendingOrderItems.length) {
+                pendingOrder.userDetails = user as Partial<IUser>
+                await addOrder(pendingOrder, pendingOrderItems)
+            }
+        }
+
+        savePendingOrder()
+    }, [pendingOrder, pendingOrderItems])
 
     useEffect(() => {
         if (order) {
