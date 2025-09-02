@@ -58,7 +58,7 @@ const PlatesList = () => {
 
   const handleAddPlate = (plate: IPlate) => {
     const cartItem: ICartItem = {
-      plateId: plate._id,
+      plate: plate,
       quantity: 1
     }
 

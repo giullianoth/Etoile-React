@@ -22,12 +22,7 @@ const PlateModal = ({ plate, onAddPlate }: Props) => {
             </header>
 
             <p className={styles.plate__ingredients}>
-                {plate.ingredients.map((ingredient, index) => (
-                    <span key={`ingredient-${index + 1}`}>
-                        {ingredient}
-                        {index + 1 < plate.ingredients.length && <>, </>}
-                    </span>
-                ))}
+                {plate.ingredients.join(", ")}
             </p>
 
             <p className={styles.plate__description}>{plate.description}</p>

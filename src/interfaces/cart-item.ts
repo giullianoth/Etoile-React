@@ -1,4 +1,6 @@
+import type { IPlate } from "./plate"
+
 export interface ICartItem {
-    plateId: string
+    plate: IPlate
     quantity: number
 }

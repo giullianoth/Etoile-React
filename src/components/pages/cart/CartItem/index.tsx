@@ -2,7 +2,6 @@ import { useEffect, useState } from "react"
 import styles from "./CartItem.module.css"
 import { PiMinus, PiMinusCircle, PiPlus } from "react-icons/pi"
 import type { ICartItem } from "../../../../interfaces/cart-item"
-import { plates } from "../../../../data/plates"
 import { useAppContext } from "../../../../context/context"
 import Modal from "react-modal"
 import RemoveCartItem from "../Confirm/RemoveCartItem"
@@ -15,7 +14,6 @@ type Props = {
 const CartItem = ({ className, cartItem }: Props) => {
     const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
     const [quantity, setQuantity] = useState<number>(1)
-    const plate = plates.find(plate => plate.id === cartItem.plateId)
     const { updateQuantity, removeFromCart } = useAppContext().cart
 
     useEffect(() => {
@@ -47,25 +45,20 @@ const CartItem = ({ className, cartItem }: Props) => {
         <>
             <article className={styles.cartItem + (className ? ` ${className}` : "")}>
                 <div className={styles.cartItem__image}>
-                    <img src={plate?.image ? `/images/plates/${plate.image}` : "/images/no-image.jpg"} alt={plate?.name} />
+                    <img src={cartItem.plate?.image ? `/images/cartItem.plates/${cartItem.plate.image}` : "/images/no-image.jpg"} alt={cartItem.plate?.name} />
                 </div>
 
                 <div className={styles.cartItem__info}>
                     <div className={styles.cartItem__text}>
                         <header className={styles.cartItem__name}>
-                            <h3>{plate?.name}</h3>
+                            <h3>{cartItem.plate?.name}</h3>
                         </header>
 
                         <p className={styles.cartItem__ingredients}>
-                            {plate?.ingredients.map((ingredient, index) => (
-                                <span key={`ingredient-${index + 1}`}>
-                                    {ingredient}
-                                    {index + 1 < plate.ingredients.length && <>, </>}
-                                </span>
-                            ))}
+                            {cartItem.plate?.ingredients.join(", ")}
                         </p>
 
-                        <p>{plate?.description}</p>
+                        <p>{cartItem.plate?.description}</p>
                     </div>
 
                     <div className={styles.cartItem__actions}>
