@@ -4,12 +4,14 @@ import type { IUser, IUserRegister } from "../interfaces/user";
 import { useValidateEmail } from "../hooks/useValidateEmail";
 import authService from "../services/auth-service";
 
+const storagedUser = localStorage.getItem("etoile-auth")
+
 const state: IAuthState = {
     success: false,
     loading: false,
     errorMessage: null,
     successMessage: null,
-    user: null
+    user: storagedUser ? JSON.parse(storagedUser) : null
 }
 
 const authReducerActions = (state: IAuthState, action: IReducerAction) => {
@@ -96,7 +98,11 @@ export const authReducer = () => {
         const res = await authService.register(authData)
 
         if (!res.success) {
-            dispatch({ status: "rejected", payload: "Erro ao fazer o cadastro." })
+            dispatch({
+                status: "rejected",
+                payload: res.body.text ?? "Erro ao fazer o cadastro."
+            })
+
             return
         }
 
@@ -105,11 +111,17 @@ export const authReducer = () => {
                 user: res.body.user,
                 token: res.body.token
             }))
+        } else {
+            dispatch({ status: "rejected", payload: "Acesso negado." })
+            return
         }
 
         dispatch({
             status: "fulfilled",
-            payload: { data: res.body.user }
+            payload: {
+                data: res.body.user,
+                message: "Cadastro realizado com sucesso."
+            }
         })
     }
 
@@ -139,7 +151,11 @@ export const authReducer = () => {
         const res = await authService.login(authData)
 
         if (!res.success) {
-            dispatch({ status: "rejected", payload: "Erro ao fazer o login." })
+            dispatch({
+                status: "rejected",
+                payload: res.body.text ?? "Erro ao fazer o login."
+            })
+
             return
         }
 
@@ -148,11 +164,17 @@ export const authReducer = () => {
                 user: res.body.user,
                 token: res.body.token
             }))
+        } else {
+            dispatch({ status: "rejected", payload: "Acesso negado." })
+            return
         }
 
         dispatch({
             status: "fulfilled",
-            payload: { data: res.body.user }
+            payload: {
+                data: res.body.user,
+                message: "Login efetuado com sucesso."
+            }
         })
     }
 

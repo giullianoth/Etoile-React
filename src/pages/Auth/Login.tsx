@@ -25,7 +25,7 @@ const Login = () => {
     }
   }, [authState])
 
-  const handleSubmit = (event: FormEvent) => {
+  const handleSubmit = async (event: FormEvent) => {
     event.preventDefault()
 
     const userData: Partial<IUser> = {
@@ -33,7 +33,7 @@ const Login = () => {
       password
     }
 
-    login(userData)
+    await login(userData)
   }
 
   return (

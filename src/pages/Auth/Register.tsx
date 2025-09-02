@@ -26,7 +26,7 @@ const Register = () => {
     }
   }, [authState])
 
-  const handleSubmit = (event: FormEvent) => {
+  const handleSubmit = async (event: FormEvent) => {
     event.preventDefault()
 
     const userData: Partial<IUserRegister> = {
@@ -36,7 +36,7 @@ const Register = () => {
       confirmPassword
     }
 
-    register(userData)
+    await register(userData)
   }
 
   return (

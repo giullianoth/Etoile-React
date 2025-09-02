@@ -16,41 +16,41 @@ export interface IContext {
 
     categories: {
         categoriesState: ICategoryState
-        getCategories: () => void
-        getAvailableCategories: () => void
-        addCategory: (categoryData: Partial<ICategory>) => void
-        updateCategory: (categoryId: string, categoryData: Partial<ICategory>) => void
-        deleteCategory: (categoryId: string) => void
+        getCategories: () => Promise<void>
+        getAvailableCategories: () => Promise<void>
+        addCategory: (categoryData: Partial<ICategory>) => Promise<void>
+        updateCategory: (categoryId: string, categoryData: Partial<ICategory>) => Promise<void>
+        deleteCategory: (categoryId: string) => Promise<void>
     }
 
     plates: {
         platesState: IPlateState
-        getPlates: () => void
-        getAvailablePlates: () => void
-        addPlate: (plateData: Partial<IPlate>) => void
-        updatePlate: (plateId: string, plateData: Partial<IPlate>) => void
-        deletePlate: (plateId: string) => void
+        getPlates: () => Promise<void>
+        getAvailablePlates: () => Promise<void>
+        addPlate: (plateData: Partial<IPlate>) => Promise<void>
+        updatePlate: (plateId: string, plateData: Partial<IPlate>) => Promise<void>
+        deletePlate: (plateId: string) => Promise<void>
     }
 
     orders: {
         ordersState: IOrderState
-        getOrders: () => void
-        getOrdersByUser: (userId: string) => void
-        addOrder: (orderData: Partial<IOrder>) => void
-        updateOrder: (orderId: string, orderData: Partial<IPlate>) => void
-        deleteOrder: (orderId: string) => void
+        getOrders: () => Promise<void>
+        getOrdersByUser: (userId: string) => Promise<void>
+        addOrder: (orderData: Partial<IOrder>) => Promise<void>
+        updateOrder: (orderId: string, orderData: Partial<IPlate>) => Promise<void>
+        deleteOrder: (orderId: string) => Promise<void>
     }
 
     auth: {
         authState: IAuthState
-        register: (authData: Partial<IUserRegister>) => void
-        login: (authData: Partial<IUser>) => void
+        register: (authData: Partial<IUserRegister>) => Promise<void>
+        login: (authData: Partial<IUser>) => Promise<void>
         logout: () => void
     }
 
     users: {
         usersState: IUserState
-        getUsers: () => void
-        updateUser: (userId: string, userData: Partial<IUser>) => void
+        getUsers: () => Promise<void>
+        updateUser: (userId: string, userData: Partial<IUser>) => Promise<void>
     }
 }
