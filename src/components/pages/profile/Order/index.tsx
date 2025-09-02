@@ -3,7 +3,6 @@ import Bullet, { type BulletType } from "../../../Bullet"
 import styles from "./Order.module.css"
 import { useEffect, useState, type MouseEventHandler, type ReactNode } from "react"
 import type { IOrder } from "../../../../interfaces/order"
-import { orderItems } from "../../../../data/order-items"
 import OrderItem from "../OrderItem"
 import { usePendingOrder } from "../../../../hooks/usePendingOrder"
 import { useAppContext } from "../../../../context/context"
@@ -20,8 +19,10 @@ const Order = ({ className, onEdit, onDelete, order }: Props) => {
     const [bulletType, setBulletType] = useState<BulletType | null>(null)
     const [orderStatusIcon, setOrderStatusIcon] = useState<ReactNode | null>(null)
     const { user } = useAppContext().auth.authState
-    const { pendingOrder, pendingOrderItems, getData } = usePendingOrder()
-    const { addOrder } = useAppContext().orders
+    const { pendingOrder, pendingOrderItems, getData, clearOrder } = usePendingOrder()
+    const { addOrder, ordersState } = useAppContext().orders
+    const { success } = ordersState
+    const { clearCart } = useAppContext().cart
 
     useEffect(() => {
         const savePendingOrder = async () => {
@@ -30,6 +31,11 @@ const Order = ({ className, onEdit, onDelete, order }: Props) => {
             if (pendingOrder && pendingOrderItems.length) {
                 pendingOrder.userDetails = user as Partial<IUser>
                 await addOrder(pendingOrder, pendingOrderItems)
+
+                if (success) {
+                    clearOrder()
+                    clearCart()
+                }
             }
         }
 
@@ -74,7 +80,7 @@ const Order = ({ className, onEdit, onDelete, order }: Props) => {
                 </p>
             </div>
 
-            {orderItems.filter(item => item.orderId === order._id).map(item => (
+            {order.orderItems.filter(item => item.orderId === order._id).map(item => (
                 <OrderItem
                     key={`order-item-${item._id}`}
                     orderItem={item} />

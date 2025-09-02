@@ -19,7 +19,16 @@ export const usePendingOrder = () => {
         }
     }
 
-    const saveOrder = () => localStorage.setItem("etoile-pending-order", JSON.stringify({ pendingOrder, pendingOrderItems }))
+    const saveOrder = () => localStorage.setItem("etoile-pending-order", JSON.stringify({
+        pendingOrder,
+        pendingOrderItems
+    }))
 
-    return { pendingOrder, pendingOrderItems, setData, getData, saveOrder }
+    const clearOrder = () => {
+        localStorage.removeItem("etoile-pending-order")
+        setPendingOrder(null)
+        setPendingOrderItems([])
+    }
+
+    return { pendingOrder, pendingOrderItems, setData, getData, saveOrder, clearOrder }
 }

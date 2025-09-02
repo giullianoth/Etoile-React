@@ -25,8 +25,6 @@ const Orders = ({ orders }: Props) => {
         setOrderToEdit(order)
     }
 
-    const handleConfirmDelete = () => setDeleteOrderIsOpen(true)
-
     const handleDeleteOrder = () => {
         deleteOrder(orderToEdit?._id!)
         setDeleteOrderIsOpen(false)
@@ -68,7 +66,7 @@ const Orders = ({ orders }: Props) => {
                 <EditOrder
                     onClose={() => setEditIsOpen(false)}
                     order={orderToEdit as IOrder}
-                    onDeleteOrder={handleConfirmDelete} />
+                    onDeleteOrder={() => setDeleteOrderIsOpen(true)} />
             </Modal>
 
             <Modal
@@ -78,8 +76,8 @@ const Orders = ({ orders }: Props) => {
                 className="modal"
                 overlayClassName="modal-overlay">
                 <DeleteOrder
-                 onCancel={() => setDeleteOrderIsOpen(false)}
-                 onDelete={handleDeleteOrder} />
+                    onCancel={() => setDeleteOrderIsOpen(false)}
+                    onDelete={handleDeleteOrder} />
             </Modal>
         </>
     )

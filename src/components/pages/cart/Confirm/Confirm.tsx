@@ -15,7 +15,7 @@ const Confirm = ({ onCancel }: Props) => {
     const [time, setTime] = useState<string>("")
     const [localErrorMessage, setLocalErrorMessage] = useState<string | null>(null)
     const navigate = useNavigate()
-    const { cart } = useAppContext().cart
+    const { cart, clearCart } = useAppContext().cart
     const { user } = useAppContext().auth.authState
     const { pendingOrder, pendingOrderItems, setData, saveOrder } = usePendingOrder()
     const { ordersState, addOrder } = useAppContext().orders
@@ -30,6 +30,7 @@ const Confirm = ({ onCancel }: Props) => {
 
     useEffect(() => {
         if (success) {
+            clearCart()
             navigate("/perfil")
         }
     }, [ordersState])
