@@ -53,7 +53,7 @@ export const authReducer = () => {
 
     useEffect(() => {
         setCancelled(true)
-    }, [authState])
+    }, [authState, cancelled])
 
     const register = async (authData: Partial<IUserRegister>) => {
         if (cancelled) {
@@ -136,10 +136,10 @@ export const authReducer = () => {
             return
         }
 
-        const res = await authService.register(authData)
+        const res = await authService.login(authData)
 
         if (!res.success) {
-            dispatch({ status: "rejected", payload: "Erro ao fazer o cadastro." })
+            dispatch({ status: "rejected", payload: "Erro ao fazer o login." })
             return
         }
 

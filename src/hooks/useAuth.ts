@@ -7,10 +7,10 @@ export const useAuth = () => {
     const [authenticated, setAuthenticated] = useState<boolean>(false)
     const [loading, setLoading] = useState<boolean>(true)
 
+    console.log(user);
+    
     useEffect(() => {
-        const authenticatedUser = localStorage.getItem("etoile-auth")
-
-        if (user && authenticatedUser && JSON.parse(authenticatedUser)) {
+        if (user) {
             setAuthenticated(true)
         } else {
             setAuthenticated(false)

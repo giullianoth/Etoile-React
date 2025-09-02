@@ -69,12 +69,10 @@ const Login = () => {
               onChange={event => setPassword(event.target.value)} />
 
             <button type="submit" className="button primary" disabled={loading}>
-              {loading
-                ? <Loading inButton />
-                : <>
-                  <PiSignIn />
-                  Entrar
-                </>}
+              <PiSignIn />
+              Entrar
+
+              {loading && <Loading inButton />}
             </button>
 
             {errorMessage && <Trigger type="error">{errorMessage}</Trigger>}

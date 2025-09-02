@@ -16,6 +16,8 @@ Modal.setAppElement("#root")
 function App() {
   const { authenticated } = useAuth()
 
+  console.log(authenticated);
+  
   return (
     <BrowserRouter>
       <Header />

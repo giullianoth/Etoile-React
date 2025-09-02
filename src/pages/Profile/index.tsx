@@ -4,9 +4,10 @@ import User from "../../components/pages/profile/User"
 import { useAppContext } from "../../context/context"
 import type { IUser } from "../../interfaces/user"
 import { useEffect } from "react"
+import { useAuth } from "../../hooks/useAuth"
 
 const Profile = () => {
-  const { authenticated } = useAppContext().useAuth
+  const { authenticated } = useAuth()
   const navigate = useNavigate()
   const { user } = useAppContext().auth.authState
   const { ordersState, getOrdersByUser } = useAppContext().orders
@@ -19,7 +20,7 @@ const Profile = () => {
       getOrdersByUser(user?._id!)
     }
   }, [authenticated, user])
-
+  
   return (
     <>
       <User user={user as IUser} />
