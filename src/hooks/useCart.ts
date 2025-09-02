@@ -8,9 +8,9 @@ export const useCart = () => {
     const addToCart = (data: ICartItem) => {
         let updated: ICartItem[]
 
-        if (cart.some(item => item.plateId === data.plateId)) {
+        if (cart.some(item => item.plate === data.plate)) {
             updated = cart.map(item => {
-                if (item.plateId === data.plateId) {
+                if (item.plate === data.plate) {
                     item.quantity += data.quantity
                 }
                 return item
@@ -31,7 +31,7 @@ export const useCart = () => {
 
     const updateQuantity = (data: ICartItem, quantity: number) => {
         const updated = cart.map(item => {
-            if (item.plateId === data.plateId) {
+            if (item.plate === data.plate) {
                 item.quantity = quantity
             }
             return item
