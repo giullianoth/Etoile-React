@@ -18,7 +18,7 @@ const getUsers = async () => {
 
 const updateUser = async (userId: string, userData: Partial<IUserUpdate>) => {
     try {
-        const res = await fetch(`${apiUrl}/plates/${userId}`, {
+        const res = await fetch(`${apiUrl}/users/${userId}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(userData)
@@ -32,9 +32,25 @@ const updateUser = async (userId: string, userData: Partial<IUserUpdate>) => {
     }
 }
 
+const deleteUser = async (userId: string) => {
+    try {
+        const res = await fetch(`${apiUrl}/users/${userId}`, {
+            method: "DELETE",
+            headers: {}
+        })
+            .then(res => res.json())
+            .catch(err => err)
+
+        return res
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 const usersService = {
     getUsers,
-    updateUser
+    updateUser,
+    deleteUser
 }
 
 export default usersService

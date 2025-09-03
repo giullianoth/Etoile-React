@@ -126,5 +126,30 @@ export const usersReducer = () => {
         setCancelled(true)
     }
 
-    return { usersState, getUsers, updateUser }
+    const deleteUser = async (userId: string) => {
+        if (cancelled) {
+            setCancelled(false)
+            return
+        }
+
+        dispatch({ status: "pending" })
+
+        const res = await usersService.deleteUser(userId)
+
+        if (!res.success) {
+            dispatch({ status: "rejected", payload: "Erro ao excluir usuário." })
+            return
+        }
+
+        await getUsers()
+
+        dispatch({
+            status: "fulfilled",
+            payload: { message: "Usuário excluído com sucesso." }
+        })
+
+        setCancelled(true)
+    }
+
+    return { usersState, getUsers, updateUser, deleteUser }
 }

@@ -51,5 +51,6 @@ export interface IContext {
         usersState: IUserState
         getUsers: () => Promise<void>
         updateUser: (userId: string, userData: Partial<IUser>) => Promise<void>
+        deleteUser: (userId: string) => Promise<void>
     }
 }
