@@ -21,6 +21,10 @@
     margin-top: 60px;
 }
 
+.plates__error div {
+    width: 100%;
+}
+
 .plates__list {
     margin-top: 60px;
 }

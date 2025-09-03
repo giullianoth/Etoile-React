@@ -94,7 +94,9 @@ const PlatesList = () => {
             </div>
 
             : (categoriesErrorMessage
-              ? <p className={styles.plates__error}>{categoriesErrorMessage}</p>
+              ? <div className={styles.plates__error}>
+                <Trigger type="error">{categoriesErrorMessage}</Trigger>
+              </div>
 
               : categories && categories.length > 0 &&
               categories.map(category => (
@@ -112,7 +114,9 @@ const PlatesList = () => {
                       </div>
 
                       : (platesErrorMessage
-                        ? <p className={styles.plates__error}>{platesErrorMessage}</p>
+                        ? <div className={styles.plates__error}>
+                          <Trigger type="error">{platesErrorMessage}</Trigger>
+                        </div>
 
                         : <Carousel
                           arrows
