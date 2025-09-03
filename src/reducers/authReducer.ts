@@ -43,6 +43,15 @@ const authReducerActions = (state: IAuthState, action: IReducerAction) => {
                 user: null
             }
 
+        case "reset":
+            return {
+                success: false,
+                loading: false,
+                errorMessage: null,
+                successMessage: null,
+                user: storagedUser ? JSON.parse(storagedUser) : null
+            }
+
         default:
             return state
     }
@@ -52,6 +61,10 @@ export const authReducer = () => {
     const [authState, dispatch] = useReducer<IAuthState, [action: IReducerAction]>(authReducerActions, state)
     const [cancelled, setCancelled] = useState<boolean>(false)
     const validateEmail = useValidateEmail()
+
+    const resetState = () => {
+        dispatch({ status: "reset" })
+    }
 
     const register = async (authData: Partial<IUserRegister>) => {
         if (cancelled) {
@@ -151,7 +164,7 @@ export const authReducer = () => {
         if (!res.success) {
             dispatch({
                 status: "rejected",
-                payload: res.body.text ?? "Erro ao fazer o login."
+                payload: res.body ? res.body.text : "Erro ao fazer o login, tente novamente mais tarde."
             })
 
             return
@@ -187,5 +200,5 @@ export const authReducer = () => {
         })
     }
 
-    return { authState, register, login, logout }
+    return { authState, resetState, register, login, logout }
 }

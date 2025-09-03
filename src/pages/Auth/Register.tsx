@@ -14,10 +14,14 @@ const Register = () => {
   const [email, setEmail] = useState<string>("")
   const [password, setPassword] = useState<string>("")
   const [confirmPassword, setConfirmPassword] = useState<string>("")
-  const { authState, register } = useAppContext().auth
+  const { authState, register, resetState } = useAppContext().auth
   const { success, errorMessage, loading, successMessage } = authState
   const { showTrigger, triggerIsVisible } = useTrigger()
   const navigate = useNavigate()
+
+  useEffect(() => {
+    resetState()
+  }, [])
 
   useEffect(() => {
     if (success) {

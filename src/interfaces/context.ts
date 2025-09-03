@@ -16,6 +16,7 @@ export interface IContext {
 
     categories: {
         categoriesState: ICategoryState
+        resetState: () => void
         getCategories: () => Promise<void>
         getAvailableCategories: () => Promise<void>
         addCategory: (categoryData: Partial<ICategory>) => Promise<void>
@@ -25,6 +26,7 @@ export interface IContext {
 
     plates: {
         platesState: IPlateState
+        resetState: () => void
         getPlates: () => Promise<void>
         getAvailablePlates: () => Promise<void>
         addPlate: (plateData: Partial<IPlate>) => Promise<void>
@@ -34,6 +36,7 @@ export interface IContext {
 
     orders: {
         ordersState: IOrderState
+        resetState: () => void
         getOrders: () => Promise<void>
         getOrdersByUser: (userId: string) => Promise<void>
         addOrder: (orderData: Partial<IOrder>, orderItems: Partial<IOrderItem>[]) => Promise<void>
@@ -42,6 +45,7 @@ export interface IContext {
 
     auth: {
         authState: IAuthState
+        resetState: () => void
         register: (authData: Partial<IUserRegister>) => Promise<void>
         login: (authData: Partial<IUser>) => Promise<void>
         logout: () => void
@@ -49,6 +53,7 @@ export interface IContext {
 
     users: {
         usersState: IUserState
+        resetState: () => void
         getUsers: () => Promise<void>
         updateUser: (userId: string, userData: Partial<IUserUpdate>) => Promise<void>
         deleteUser: (userId: string) => Promise<void>

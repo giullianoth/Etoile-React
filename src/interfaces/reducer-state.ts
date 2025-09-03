@@ -11,7 +11,7 @@ interface IReducerInitialState {
 }
 
 export interface IReducerAction {
-    status: "pending" | "fulfilled" | "rejected"
+    status: "pending" | "fulfilled" | "rejected" | "reset"
     payload?: any
 }
 

@@ -13,10 +13,14 @@ import Trigger from "../../components/Trigger"
 const Login = () => {
   const [email, setEmail] = useState<string>("")
   const [password, setPassword] = useState<string>("")
-  const { authState, login } = useAppContext().auth
+  const { authState, login, resetState } = useAppContext().auth
   const { errorMessage, loading, success, successMessage } = authState
   const { showTrigger, triggerIsVisible } = useTrigger()
   const navigate = useNavigate()
+
+  useEffect(() => {
+    resetState()
+  }, [])
 
   useEffect(() => {
     if (success) {
