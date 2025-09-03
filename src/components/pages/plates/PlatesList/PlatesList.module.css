@@ -16,8 +16,9 @@
     padding-inline: var(--container-inline-clearance);
 }
 
-.plates__loading {
+.plates__loading, .plates__error {
     position: relative;
+    margin-top: 60px;
 }
 
 .plates__list {

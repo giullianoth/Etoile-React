@@ -40,6 +40,15 @@ const usersReducerActions = (state: IUserState, action: IReducerAction) => {
                 users: []
             }
 
+        case "reset":
+            return {
+                success: false,
+                loading: false,
+                errorMessage: null,
+                successMessage: null,
+                users: []
+            }
+
         default:
             return state
     }
@@ -48,6 +57,10 @@ const usersReducerActions = (state: IUserState, action: IReducerAction) => {
 export const usersReducer = () => {
     const [usersState, dispatch] = useReducer<IUserState, [action: IReducerAction]>(usersReducerActions, state)
     const [cancelled, setCancelled] = useState<boolean>(false)
+
+    const resetState = () => {
+        dispatch({ status: "reset" })
+    }
 
     const getUsers = async () => {
         if (cancelled) {
@@ -151,5 +164,5 @@ export const usersReducer = () => {
         setCancelled(true)
     }
 
-    return { usersState, getUsers, updateUser, deleteUser }
+    return { usersState, resetState, getUsers, updateUser, deleteUser }
 }

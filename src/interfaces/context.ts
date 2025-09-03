@@ -16,6 +16,7 @@ export interface IContext {
 
     categories: {
         categoriesState: ICategoryState
+        cancelled: boolean
         resetState: () => void
         getCategories: () => Promise<void>
         getAvailableCategories: () => Promise<void>
@@ -26,6 +27,7 @@ export interface IContext {
 
     plates: {
         platesState: IPlateState
+        cancelled: boolean
         resetState: () => void
         getPlates: () => Promise<void>
         getAvailablePlates: () => Promise<void>

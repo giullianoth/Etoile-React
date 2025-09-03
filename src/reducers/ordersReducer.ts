@@ -43,6 +43,16 @@ const ordersReducerActions = (state: IOrderState, action: IReducerAction) => {
                 order: null
             }
 
+        case "reset":
+            return {
+                success: false,
+                loading: false,
+                errorMessage: null,
+                successMessage: null,
+                orders: [],
+                order: null
+            }
+
         default:
             return state
     }
@@ -51,6 +61,10 @@ const ordersReducerActions = (state: IOrderState, action: IReducerAction) => {
 export const ordersReducer = () => {
     const [ordersState, dispatch] = useReducer<IOrderState, [action: IReducerAction]>(ordersReducerActions, state)
     const [cancelled, setCancelled] = useState<boolean>(false)
+
+    const resetState = () => {
+        dispatch({ status: "reset" })
+    }
 
     const getOrders = async () => {
         if (cancelled) {
@@ -163,5 +177,5 @@ export const ordersReducer = () => {
         setCancelled(true)
     }
 
-    return { ordersState, getOrders, getOrdersByUser, addOrder, deleteOrder }
+    return { ordersState, resetState, getOrders, getOrdersByUser, addOrder, deleteOrder }
 }

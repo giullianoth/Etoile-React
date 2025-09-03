@@ -45,6 +45,16 @@ const categoriesReducerActions = (state: ICategoryState, action: IReducerAction)
                 category: null
             }
 
+        case "reset":
+            return {
+                success: false,
+                loading: false,
+                errorMessage: null,
+                successMessage: null,
+                categories: [],
+                category: null
+            }
+
         default:
             return state
     }
@@ -54,18 +64,18 @@ export const categoriesReducer = () => {
     const [categoriesState, dispatch] = useReducer<ICategoryState, [action: IReducerAction]>(categoriesReducerActions, state)
     const [cancelled, setCancelled] = useState<boolean>(false)
 
-    const getCategories = async () => {
-        if (cancelled) {
-            setCancelled(false)
-            return
-        }
+    const resetState = () => {
+        dispatch({ status: "reset" })
+    }
 
+    const getCategories = async () => {
         dispatch({ status: "pending" })
 
         const res = await categoriesService.getCategories()
 
         if (!res.success) {
             dispatch({ status: "rejected", payload: "Erro ao carregar categorias." })
+            setCancelled(true)
             return
         }
 
@@ -78,11 +88,6 @@ export const categoriesReducer = () => {
     }
 
     const getAvailableCategories = async () => {
-        if (cancelled) {
-            setCancelled(false)
-            return
-        }
-
         dispatch({ status: "pending" })
 
         const categories = await categoriesService.getCategories()
@@ -90,6 +95,7 @@ export const categoriesReducer = () => {
 
         if (!categories.success || !plates.success) {
             dispatch({ status: "rejected", payload: "Erro ao carregar categorias." })
+            setCancelled(true)
             return
         }
 
@@ -104,15 +110,11 @@ export const categoriesReducer = () => {
     }
 
     const addCategory = async (categoryData: Partial<ICategory>) => {
-        if (cancelled) {
-            setCancelled(false)
-            return
-        }
-
         dispatch({ status: "pending" })
 
         if (!categoryData.name) {
             dispatch({ status: "rejected", payload: "Digite a categoria." })
+            setCancelled(true)
             return
         }
 
@@ -120,6 +122,7 @@ export const categoriesReducer = () => {
 
         if (!res.success) {
             dispatch({ status: "rejected", payload: "Erro ao adicionar categoria." })
+            setCancelled(true)
             return
         }
 
@@ -134,15 +137,11 @@ export const categoriesReducer = () => {
     }
 
     const updateCategory = async (categoryId: string, categoryData: Partial<ICategory>) => {
-        if (cancelled) {
-            setCancelled(false)
-            return
-        }
-
         dispatch({ status: "pending" })
 
         if (!categoryData.name) {
             dispatch({ status: "rejected", payload: "Digite a categoria." })
+            setCancelled(true)
             return
         }
 
@@ -150,6 +149,7 @@ export const categoriesReducer = () => {
 
         if (!res.success) {
             dispatch({ status: "rejected", payload: "Erro ao atualizar categoria." })
+            setCancelled(true)
             return
         }
 
@@ -164,11 +164,6 @@ export const categoriesReducer = () => {
     }
 
     const deleteCategory = async (categoryId: string) => {
-        if (cancelled) {
-            setCancelled(false)
-            return
-        }
-
         dispatch({ status: "pending" })
 
         const plates = await platesServices.getPlates()
@@ -176,6 +171,7 @@ export const categoriesReducer = () => {
 
         if (platesInCategory && platesInCategory.length) {
             dispatch({ status: "rejected", payload: "Não é possível excluir uma categoria que tenha pratos cadastrados." })
+            setCancelled(true)
             return
         }
 
@@ -183,6 +179,7 @@ export const categoriesReducer = () => {
 
         if (!res.success) {
             dispatch({ status: "rejected", payload: "Erro ao excluir categoria." })
+            setCancelled(true)
             return
         }
 
@@ -196,5 +193,5 @@ export const categoriesReducer = () => {
         setCancelled(true)
     }
 
-    return { categoriesState, getCategories, getAvailableCategories, addCategory, updateCategory, deleteCategory }
+    return { categoriesState, cancelled, resetState, getCategories, getAvailableCategories, addCategory, updateCategory, deleteCategory }
 }
