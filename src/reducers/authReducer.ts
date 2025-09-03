@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useState } from "react";
+import { useReducer, useState } from "react";
 import type { IAuthState, IReducerAction } from "../interfaces/reducer-state";
 import type { IUser, IUserRegister } from "../interfaces/user";
 import { useValidateEmail } from "../hooks/useValidateEmail";
@@ -52,10 +52,6 @@ export const authReducer = () => {
     const [authState, dispatch] = useReducer<IAuthState, [action: IReducerAction]>(authReducerActions, state)
     const [cancelled, setCancelled] = useState<boolean>(false)
     const validateEmail = useValidateEmail()
-
-    useEffect(() => {
-        setCancelled(true)
-    }, [authState, cancelled])
 
     const register = async (authData: Partial<IUserRegister>) => {
         if (cancelled) {
@@ -123,6 +119,8 @@ export const authReducer = () => {
                 message: "Cadastro realizado com sucesso."
             }
         })
+
+        setCancelled(true)
     }
 
     const login = async (authData: Partial<IUser>) => {
@@ -176,6 +174,8 @@ export const authReducer = () => {
                 message: "Login efetuado com sucesso."
             }
         })
+
+        setCancelled(true)
     }
 
     const logout = () => {

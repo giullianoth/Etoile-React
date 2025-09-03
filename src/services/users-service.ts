@@ -1,4 +1,4 @@
-import type { IUser } from "../interfaces/user";
+import type { IUserUpdate } from "../interfaces/user";
 import { apiUrl } from "./api-config";
 
 const getUsers = async () => {
@@ -16,7 +16,7 @@ const getUsers = async () => {
     }
 }
 
-const updateUser = async (userId: string, userData: Partial<IUser>) => {
+const updateUser = async (userId: string, userData: Partial<IUserUpdate>) => {
     try {
         const res = await fetch(`${apiUrl}/plates/${userId}`, {
             method: "PUT",

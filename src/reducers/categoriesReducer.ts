@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useState } from "react";
+import { useReducer, useState } from "react";
 import type { ICategory } from "../interfaces/category";
 import type { ICategoryState, IReducerAction } from "../interfaces/reducer-state";
 import categoriesService from "../services/categories-service";
@@ -54,10 +54,6 @@ export const categoriesReducer = () => {
     const [categoriesState, dispatch] = useReducer<ICategoryState, [action: IReducerAction]>(categoriesReducerActions, state)
     const [cancelled, setCancelled] = useState<boolean>(false)
 
-    useEffect(() => {
-        setCancelled(true)
-    }, [categoriesState])
-
     const getCategories = async () => {
         if (cancelled) {
             setCancelled(false)
@@ -77,6 +73,8 @@ export const categoriesReducer = () => {
             status: "fulfilled",
             payload: { data: res.body }
         })
+
+        setCancelled(true)
     }
 
     const getAvailableCategories = async () => {
@@ -99,8 +97,10 @@ export const categoriesReducer = () => {
 
         dispatch({
             status: "fulfilled",
-            payload: { data: res.body }
+            payload: { data: res }
         })
+
+        setCancelled(true)
     }
 
     const addCategory = async (categoryData: Partial<ICategory>) => {
@@ -110,6 +110,11 @@ export const categoriesReducer = () => {
         }
 
         dispatch({ status: "pending" })
+
+        if (!categoryData.name) {
+            dispatch({ status: "rejected", payload: "Digite a categoria." })
+            return
+        }
 
         const res = await categoriesService.addCategory(categoryData)
 
@@ -124,6 +129,8 @@ export const categoriesReducer = () => {
             status: "fulfilled",
             payload: { message: "Categoria registrada com sucesso." }
         })
+
+        setCancelled(true)
     }
 
     const updateCategory = async (categoryId: string, categoryData: Partial<ICategory>) => {
@@ -133,6 +140,11 @@ export const categoriesReducer = () => {
         }
 
         dispatch({ status: "pending" })
+
+        if (!categoryData.name) {
+            dispatch({ status: "rejected", payload: "Digite a categoria." })
+            return
+        }
 
         const res = await categoriesService.updateCategory(categoryId, categoryData)
 
@@ -147,6 +159,8 @@ export const categoriesReducer = () => {
             status: "fulfilled",
             payload: { message: "Categoria registrada com sucesso." }
         })
+
+        setCancelled(true)
     }
 
     const deleteCategory = async (categoryId: string) => {
@@ -178,6 +192,8 @@ export const categoriesReducer = () => {
             status: "fulfilled",
             payload: { message: "Categoria excluída com sucesso." }
         })
+
+        setCancelled(true)
     }
 
     return { categoriesState, getCategories, getAvailableCategories, addCategory, updateCategory, deleteCategory }

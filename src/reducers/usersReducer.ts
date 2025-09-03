@@ -68,6 +68,8 @@ export const usersReducer = () => {
             status: "fulfilled",
             payload: res.body
         })
+
+        setCancelled(true)
     }
 
     const updateUser = async (userId: string, userData: Partial<IUserUpdate>) => {
@@ -120,6 +122,8 @@ export const usersReducer = () => {
             status: "fulfilled",
             payload: { message: "Perfil atualizado com sucesso." }
         })
+
+        setCancelled(true)
     }
 
     return { usersState, getUsers, updateUser }

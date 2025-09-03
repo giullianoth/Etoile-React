@@ -1,7 +1,7 @@
-import { useEffect, useReducer, useState } from "react";
+import { useReducer, useState } from "react";
 import type { IPlateState, IReducerAction } from "../interfaces/reducer-state";
 import platesServices from "../services/plates-service";
-import type { IPlate } from "../interfaces/plate";
+import type { IPlateRegister } from "../interfaces/plate";
 
 const state: IPlateState = {
     success: false,
@@ -52,10 +52,6 @@ export const platesReducer = () => {
     const [platesState, dispatch] = useReducer<IPlateState, [action: IReducerAction]>(platesReducerActions, state)
     const [cancelled, setCancelled] = useState<boolean>(false)
 
-    useEffect(() => {
-        setCancelled(true)
-    }, [platesState])
-
     const getPlates = async () => {
         if (cancelled) {
             setCancelled(false)
@@ -75,6 +71,8 @@ export const platesReducer = () => {
             status: "fulfilled",
             payload: { data: res.body, }
         })
+
+        setCancelled(true)
     }
 
     const getAvailablePlates = async () => {
@@ -96,9 +94,11 @@ export const platesReducer = () => {
             status: "fulfilled",
             payload: { data: res.body, }
         })
+
+        setCancelled(true)
     }
 
-    const addPlate = async (plateData: Partial<IPlate>) => {
+    const addPlate = async (plateData: Partial<IPlateRegister>) => {
         if (cancelled) {
             setCancelled(false)
             return
@@ -106,7 +106,35 @@ export const platesReducer = () => {
 
         dispatch({ status: "pending" })
 
-        const res = await platesServices.addPlate(plateData)
+        if (!plateData.name) {
+            dispatch({ status: "rejected", payload: "Digite o nome do prato." })
+            return
+        }
+
+        if (!plateData.category) {
+            dispatch({ status: "rejected", payload: "Selecione a categoria do prato." })
+            return
+        }
+
+        if (!plateData.price) {
+            dispatch({ status: "rejected", payload: "Digite o preço do prato." })
+            return
+        }
+
+        if (!plateData.ingredientsString) {
+            dispatch({ status: "rejected", payload: "Digite os ingredientes." })
+            return
+        }
+
+        plateData.categoryId = plateData.category._id
+        plateData.price = parseFloat((plateData.price as string).replace(",", "."))
+
+        plateData.ingredients = plateData.ingredientsString.split(",")
+            .map(ingredient => ingredient.trim())
+
+        const { category, ingredientsString, ...plateDataRest } = plateData
+
+        const res = await platesServices.addPlate(plateDataRest)
 
         if (!res.success) {
             dispatch({ status: "rejected", payload: "Erro ao adicionar prato." })
@@ -119,9 +147,11 @@ export const platesReducer = () => {
             status: "fulfilled",
             payload: { message: "Prato adicionado com sucesso." }
         })
+
+        setCancelled(true)
     }
 
-    const updatePlate = async (plateId: string, plateData: Partial<IPlate>) => {
+    const updatePlate = async (plateId: string, plateData: Partial<IPlateRegister>) => {
         if (cancelled) {
             setCancelled(false)
             return
@@ -129,7 +159,35 @@ export const platesReducer = () => {
 
         dispatch({ status: "pending" })
 
-        const res = await platesServices.updatePlate(plateId, plateData)
+        if (!plateData.name) {
+            dispatch({ status: "rejected", payload: "Digite o nome do prato." })
+            return
+        }
+
+        if (!plateData.category) {
+            dispatch({ status: "rejected", payload: "Selecione a categoria do prato." })
+            return
+        }
+
+        if (!plateData.price) {
+            dispatch({ status: "rejected", payload: "Digite o preço do prato." })
+            return
+        }
+
+        if (!plateData.ingredientsString) {
+            dispatch({ status: "rejected", payload: "Digite os ingredientes." })
+            return
+        }
+
+        plateData.categoryId = plateData.category._id
+        plateData.price = parseFloat((plateData.price as string).replace(",", "."))
+
+        plateData.ingredients = plateData.ingredientsString.split(",")
+            .map(ingredient => ingredient.trim())
+
+        const { category, ingredientsString, ...plateDataRest } = plateData
+
+        const res = await platesServices.updatePlate(plateId, plateDataRest)
 
         if (!res.success) {
             dispatch({ status: "rejected", payload: "Erro ao atualizar prato." })
@@ -142,6 +200,8 @@ export const platesReducer = () => {
             status: "fulfilled",
             payload: { message: "Prato atualizado com sucesso." }
         })
+
+        setCancelled(true)
     }
 
     const deletePlate = async (plateId: string) => {
@@ -165,6 +225,8 @@ export const platesReducer = () => {
             status: "fulfilled",
             payload: { message: "Prato excluído com sucesso." }
         })
+
+        setCancelled(true)
     }
 
     return { platesState, getPlates, getAvailablePlates, addPlate, updatePlate, deletePlate }

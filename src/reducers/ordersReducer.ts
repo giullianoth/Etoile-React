@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useState } from "react";
+import { useReducer, useState } from "react";
 import type { IOrderState, IReducerAction } from "../interfaces/reducer-state";
 import ordersService from "../services/orders-service";
 import type { IOrder, IOrderItem } from "../interfaces/order";
@@ -52,10 +52,6 @@ export const ordersReducer = () => {
     const [ordersState, dispatch] = useReducer<IOrderState, [action: IReducerAction]>(ordersReducerActions, state)
     const [cancelled, setCancelled] = useState<boolean>(false)
 
-    useEffect(() => {
-        setCancelled(true)
-    }, [ordersState])
-
     const getOrders = async () => {
         if (cancelled) {
             setCancelled(false)
@@ -75,6 +71,8 @@ export const ordersReducer = () => {
             status: "fulfilled",
             payload: { data: res.body }
         })
+
+        setCancelled(true)
     }
 
     const getOrdersByUser = async (userId: string) => {
@@ -96,6 +94,8 @@ export const ordersReducer = () => {
             status: "fulfilled",
             payload: { single: res.body }
         })
+
+        setCancelled(true)
     }
 
     const addOrder = async (orderData: Partial<IOrder>, orderItems: Partial<IOrderItem>[]) => {
@@ -134,6 +134,8 @@ export const ordersReducer = () => {
             status: "fulfilled",
             payload: { message: "Pedido registrado com sucesso." }
         })
+
+        setCancelled(true)
     }
 
     const deleteOrder = async (orderId: string) => {
@@ -157,6 +159,8 @@ export const ordersReducer = () => {
             status: "fulfilled",
             payload: { message: "Pedido excluído com sucesso." }
         })
+
+        setCancelled(true)
     }
 
     return { ordersState, getOrders, getOrdersByUser, addOrder, deleteOrder }
