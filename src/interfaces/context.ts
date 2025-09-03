@@ -3,7 +3,7 @@ import type { ICategory } from "./category";
 import type { IOrder, IOrderItem } from "./order";
 import type { IPlate } from "./plate";
 import type { IAuthState, ICategoryState, IOrderState, IPlateState, IUserState } from "./reducer-state";
-import type { IUser, IUserRegister } from "./user";
+import type { IUser, IUserRegister, IUserUpdate } from "./user";
 
 export interface IContext {
     cart: {
@@ -50,7 +50,7 @@ export interface IContext {
     users: {
         usersState: IUserState
         getUsers: () => Promise<void>
-        updateUser: (userId: string, userData: Partial<IUser>) => Promise<void>
+        updateUser: (userId: string, userData: Partial<IUserUpdate>) => Promise<void>
         deleteUser: (userId: string) => Promise<void>
     }
 }
