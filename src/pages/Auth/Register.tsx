@@ -88,7 +88,8 @@ const Register = () => {
               onChange={event => setConfirmPassword(event.target.value)} />
 
             <button type="submit" className="button primary" disabled={loading}>
-              {loading ? <Loading inButton /> : "Cadastrar"}
+              Cadastrar
+              {loading && <Loading inButton />}
             </button>
 
             {errorMessage && <Trigger type="error">{errorMessage}</Trigger>}

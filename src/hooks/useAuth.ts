@@ -7,8 +7,6 @@ export const useAuth = () => {
     const [authenticated, setAuthenticated] = useState<boolean>(false)
     const [loading, setLoading] = useState<boolean>(true)
 
-    console.log(user);
-    
     useEffect(() => {
         if (user) {
             setAuthenticated(true)

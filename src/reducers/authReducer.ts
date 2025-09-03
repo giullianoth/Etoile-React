@@ -96,7 +96,7 @@ export const authReducer = () => {
         if (!res.success) {
             dispatch({
                 status: "rejected",
-                payload: res.body.text ?? "Erro ao fazer o cadastro."
+                payload: res.body ? res.body.text : "Erro ao fazer o cadastro, tente novamente mais tarde."
             })
 
             return
