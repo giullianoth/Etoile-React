@@ -46,7 +46,7 @@ const CartItem = ({ className, cartItem }: Props) => {
             <article className={styles.cartItem + (className ? ` ${className}` : "")}>
                 <div className={styles.cartItem__image}>
                     <img
-                        src={cartItem.plate?.image ? `/images/cartItem.plates/${cartItem.plate.image}` : "/images/no-image.jpg"}
+                        src={cartItem.plate?.image ? `/images/plates/${cartItem.plate.image}` : "/images/no-image.jpg"}
                         alt={cartItem.plate?.name} />
                 </div>
 
