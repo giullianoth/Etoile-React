@@ -1,4 +1,4 @@
-import { useReducer, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import type { IPlateState, IReducerAction } from "../interfaces/reducer-state";
 import platesServices from "../services/plates-service";
 import type { IPlateRegister } from "../interfaces/plate";
@@ -61,6 +61,10 @@ const platesReducerActions = (state: IPlateState, action: IReducerAction) => {
 export const platesReducer = () => {
     const [platesState, dispatch] = useReducer<IPlateState, [action: IReducerAction]>(platesReducerActions, state)
     const [cancelled, setCancelled] = useState<boolean>(false)
+
+    useEffect(() => {
+        setCancelled(false)
+    }, [])
 
     const resetState = () => {
         dispatch({ status: "reset" })

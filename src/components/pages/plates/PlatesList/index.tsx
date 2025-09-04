@@ -20,8 +20,8 @@ const PlatesList = () => {
   const [plateToShow, setPlateToShow] = useState<IPlate | null>(null)
   const { addToCart } = useAppContext().cart
   const { showTrigger, triggerIsVisible } = useTrigger()
-  const { categoriesState, getAvailableCategories, resetState: resetCategoriesState, cancelled: categoriesCancelled } = useAppContext().categories
-  const { platesState, getAvailablePlates, resetState: resetPlatesState, cancelled: platesCancelled } = useAppContext().plates
+  const { categoriesState, getAvailableCategories, cancelled: categoriesCancelled } = useAppContext().categories
+  const { platesState, getAvailablePlates, cancelled: platesCancelled } = useAppContext().plates
   const { categories, loading: categoriesLoading, errorMessage: categoriesErrorMessage } = categoriesState
   const { plates, loading: platesLoading, errorMessage: platesErrorMessage } = platesState
 
@@ -44,9 +44,6 @@ const PlatesList = () => {
   }
 
   useEffect(() => {
-    resetCategoriesState()
-    resetPlatesState()
-
     if (!categoriesCancelled) {
       getAvailableCategories()
     }
@@ -54,7 +51,7 @@ const PlatesList = () => {
     if (!platesCancelled) {
       getAvailablePlates()
     }
-  }, [])
+  }, [categoriesState, platesState])
 
 
 
