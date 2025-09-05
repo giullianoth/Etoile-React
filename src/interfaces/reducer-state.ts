@@ -3,7 +3,7 @@ import type { IOrder } from "./order"
 import type { IPlate } from "./plate"
 import type { IUser } from "./user"
 
-interface IReducerInitialState {
+interface IReducerState {
     success: boolean
     loading: boolean
     errorMessage: string | null
@@ -15,25 +15,25 @@ export interface IReducerAction {
     payload?: any
 }
 
-export interface ICategoryState extends IReducerInitialState {
+export interface ICategoryState extends IReducerState {
     categories: ICategory[]
     category: ICategory | null
 }
 
-export interface IPlateState extends IReducerInitialState {
+export interface IPlateState extends IReducerState {
     plates: IPlate[]
     plate: IPlate | null
 }
 
-export interface IOrderState extends IReducerInitialState {
+export interface IOrderState extends IReducerState {
     orders: IOrder[]
     order: IOrder | null
 }
 
-export interface IAuthState extends IReducerInitialState {
+export interface IAuthState extends IReducerState {
     user: Partial<IUser> | null
 }
 
-export interface IUserState extends IReducerInitialState {
+export interface IUserState extends IReducerState {
     users: IUser[]
 }

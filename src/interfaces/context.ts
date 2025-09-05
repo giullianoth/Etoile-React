@@ -1,7 +1,7 @@
 import type { ICartItem } from "./cart-item";
 import type { ICategory } from "./category";
 import type { IOrder, IOrderItem } from "./order";
-import type { IPlate } from "./plate";
+import type { IPlateRegister } from "./plate";
 import type { IAuthState, ICategoryState, IOrderState, IPlateState, IUserState } from "./reducer-state";
 import type { IUser, IUserRegister, IUserUpdate } from "./user";
 
@@ -31,8 +31,8 @@ export interface IContext {
         resetState: () => void
         getPlates: () => Promise<void>
         getAvailablePlates: () => Promise<void>
-        addPlate: (plateData: Partial<IPlate>) => Promise<void>
-        updatePlate: (plateId: string, plateData: Partial<IPlate>) => Promise<void>
+        addPlate: (plateData: Partial<IPlateRegister>) => Promise<void>
+        updatePlate: (plateId: string, plateData: Partial<IPlateRegister>) => Promise<void>
         deletePlate: (plateId: string) => Promise<void>
     }
 
