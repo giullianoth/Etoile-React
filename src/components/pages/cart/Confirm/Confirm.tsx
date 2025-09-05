@@ -90,8 +90,15 @@ const Confirm = ({ onCancel }: Props) => {
                     </div>
                 </form>
 
-                {errorMessage && <Trigger type="error">{errorMessage}</Trigger>}
-                {localErrorMessage && <Trigger type="error">{localErrorMessage}</Trigger>}
+                {errorMessage &&
+                    <Trigger
+                        className={styles.confirm__message}
+                        type="error">{errorMessage}</Trigger>}
+
+                {localErrorMessage &&
+                    <Trigger
+                        className={styles.confirm__message}
+                        type="error">{localErrorMessage}</Trigger>}
             </div>
         </section>
     )

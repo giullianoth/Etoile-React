@@ -8,14 +8,17 @@ type Props = {
     type: BulletType
     small?: boolean
     floating?: boolean
+    className?: string
 }
 
-const Trigger = ({ type, children, small, floating }: Props) => {
+const Trigger = ({ type, children, small, floating, className }: Props) => {
     return (
         <Bullet
             type={type}
             small={small}
-            className={styles.trigger + (floating ? ` ${styles.floating}` : "")}>
+            className={styles.trigger
+                + (floating ? ` ${styles.floating}` : "")
+                + (className ? ` ${className}` : "")}>
             {children}
         </Bullet>
     )
