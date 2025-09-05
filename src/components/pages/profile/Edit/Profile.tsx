@@ -124,7 +124,10 @@ const EditProfile = ({ onCancel, user }: Props) => {
                     </div>
                 </form>
 
-                {errorMessage && <Trigger type="error">{errorMessage}</Trigger>}
+                {errorMessage &&
+                    <Trigger
+                        type="error"
+                        className={styles.edit__message}>{errorMessage}</Trigger>}
             </div>
         </section>
     )
