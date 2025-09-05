@@ -1,4 +1,4 @@
-import { useReducer, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import type { IOrderState, IReducerAction } from "../interfaces/reducer-state";
 import ordersService from "../services/orders-service";
 import type { IOrder, IOrderItem } from "../interfaces/order";
@@ -61,6 +61,10 @@ const ordersReducerActions = (state: IOrderState, action: IReducerAction) => {
 export const ordersReducer = () => {
     const [ordersState, dispatch] = useReducer<IOrderState, [action: IReducerAction]>(ordersReducerActions, state)
     const [cancelled, setCancelled] = useState<boolean>(false)
+
+    useEffect(() => {
+        setCancelled(false)
+    }, [])
 
     const resetState = () => {
         dispatch({ status: "reset" })
@@ -177,5 +181,5 @@ export const ordersReducer = () => {
         setCancelled(true)
     }
 
-    return { ordersState, resetState, getOrders, getOrdersByUser, addOrder, deleteOrder }
+    return { ordersState, cancelled, resetState, getOrders, getOrdersByUser, addOrder, deleteOrder }
 }

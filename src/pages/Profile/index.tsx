@@ -10,14 +10,16 @@ const Profile = () => {
   const { authenticated } = useAuth()
   const navigate = useNavigate()
   const { user } = useAppContext().auth.authState
-  const { ordersState, getOrdersByUser } = useAppContext().orders
+  const { ordersState, getOrdersByUser, cancelled } = useAppContext().orders
   const { orders } = ordersState
 
   useEffect(() => {
     if (!authenticated && !user) {
       navigate("/login")
     } else {
-      getOrdersByUser(user?._id!)
+      if (!cancelled) {
+        getOrdersByUser(user?._id!)
+      }
     }
   }, [authenticated, user])
   

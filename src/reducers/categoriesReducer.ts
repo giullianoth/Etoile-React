@@ -1,4 +1,4 @@
-import { useReducer, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import type { ICategory } from "../interfaces/category";
 import type { ICategoryState, IReducerAction } from "../interfaces/reducer-state";
 import categoriesService from "../services/categories-service";
@@ -63,6 +63,10 @@ const categoriesReducerActions = (state: ICategoryState, action: IReducerAction)
 export const categoriesReducer = () => {
     const [categoriesState, dispatch] = useReducer<ICategoryState, [action: IReducerAction]>(categoriesReducerActions, state)
     const [cancelled, setCancelled] = useState<boolean>(false)
+
+    useEffect(() => {
+        setCancelled(false)
+    }, [])
 
     const resetState = () => {
         dispatch({ status: "reset" })

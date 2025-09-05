@@ -38,6 +38,7 @@ export interface IContext {
 
     orders: {
         ordersState: IOrderState
+        cancelled: boolean
         resetState: () => void
         getOrders: () => Promise<void>
         getOrdersByUser: (userId: string) => Promise<void>
