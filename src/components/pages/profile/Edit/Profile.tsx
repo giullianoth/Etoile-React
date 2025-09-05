@@ -37,7 +37,7 @@ const EditProfile = ({ onCancel, user }: Props) => {
 
     const handleSubmit = (event: FormEvent) => {
         event.preventDefault()
-        
+
         const userData: Partial<IUserUpdate> = { fullname, confirmPassword }
 
         if (phone) {
@@ -55,75 +55,77 @@ const EditProfile = ({ onCancel, user }: Props) => {
 
     return (
         <section className={styles.edit}>
-            <header className={`section-heading ${styles.edit__title}`}>
-                <h2>Atualizar seus dados</h2>
-            </header>
+            <div className={styles.edit__container}>
+                <header className={`section-heading ${styles.edit__title}`}>
+                    <h2>Atualizar seus dados</h2>
+                </header>
 
-            <form className={styles.edit__form} onSubmit={handleSubmit}>
-                <input
-                    type="text"
-                    name="name"
-                    placeholder="Nome"
-                    required
-                    value={fullname ?? ""}
-                    onChange={event => setFullname(event.target.value)} />
-
-                <input
-                    type="tel"
-                    name="phone"
-                    placeholder="Telefone"
-                    required
-                    value={phone ?? ""}
-                    onChange={event => setPhone(event.target.value)} />
-
-                <label className={styles.edit__formCheck}>
-                    <Checkbox
-                        name="changePassword"
-                        checked={changePassword}
-                        onChange={event => setChangePassword(event.target.checked)} />
-
-                    <span>Redefinir a senha</span>
-                </label>
-
-                <Collapse
-                    height={changePassword ? "auto" : 0}
-                    duration={300}
-                    contentClassName={styles.edit__formPassword}>
+                <form className={styles.edit__form} onSubmit={handleSubmit}>
                     <input
-                        type="password"
-                        name="currentPassword"
-                        placeholder="Senha atual"
-                        required={changePassword}
-                        value={currentPassword ?? ""}
-                        onChange={event => setCurrentPassword(event.target.value)} />
+                        type="text"
+                        name="name"
+                        placeholder="Nome"
+                        required
+                        value={fullname ?? ""}
+                        onChange={event => setFullname(event.target.value)} />
 
                     <input
-                        type="password"
-                        name="newPassword"
-                        placeholder="Nova senha"
-                        required={changePassword}
-                        value={newPassword ?? ""}
-                        onChange={event => setNewPassword(event.target.value)} />
+                        type="tel"
+                        name="phone"
+                        placeholder="Telefone"
+                        required
+                        value={phone ?? ""}
+                        onChange={event => setPhone(event.target.value)} />
 
-                    <input
-                        type="password"
-                        name="confirmPassword"
-                        placeholder="Confirmar nova senha"
-                        required={changePassword}
-                        value={confirmPassword ?? ""}
-                        onChange={event => setConfirnPassword(event.target.value)} />
-                </Collapse>
+                    <label className={styles.edit__formCheck}>
+                        <Checkbox
+                            name="changePassword"
+                            checked={changePassword}
+                            onChange={event => setChangePassword(event.target.checked)} />
 
-                <div className={styles.edit__formSubmit}>
-                    <span className="button primary outline" onClick={onCancel}>Cancelar</span>
+                        <span>Redefinir a senha</span>
+                    </label>
 
-                    <button type="submit" className="button primary" disabled={loading}>
-                        {loading ? <Loading inButton /> : "Atualizar"}
-                    </button>
-                </div>
-            </form>
+                    <Collapse
+                        height={changePassword ? "auto" : 0}
+                        duration={300}
+                        contentClassName={styles.edit__formPassword}>
+                        <input
+                            type="password"
+                            name="currentPassword"
+                            placeholder="Senha atual"
+                            required={changePassword}
+                            value={currentPassword ?? ""}
+                            onChange={event => setCurrentPassword(event.target.value)} />
 
-            {errorMessage && <Trigger type="error">{errorMessage}</Trigger>}
+                        <input
+                            type="password"
+                            name="newPassword"
+                            placeholder="Nova senha"
+                            required={changePassword}
+                            value={newPassword ?? ""}
+                            onChange={event => setNewPassword(event.target.value)} />
+
+                        <input
+                            type="password"
+                            name="confirmPassword"
+                            placeholder="Confirmar nova senha"
+                            required={changePassword}
+                            value={confirmPassword ?? ""}
+                            onChange={event => setConfirnPassword(event.target.value)} />
+                    </Collapse>
+
+                    <div className={styles.edit__formSubmit}>
+                        <span className="button primary outline" onClick={onCancel}>Cancelar</span>
+
+                        <button type="submit" className="button primary" disabled={loading}>
+                            {loading ? <Loading inButton /> : "Atualizar"}
+                        </button>
+                    </div>
+                </form>
+
+                {errorMessage && <Trigger type="error">{errorMessage}</Trigger>}
+            </div>
         </section>
     )
 }

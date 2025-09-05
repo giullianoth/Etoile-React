@@ -65,32 +65,34 @@ const Confirm = ({ onCancel }: Props) => {
 
     return (
         <section className={styles.confirm}>
-            <header className={styles.confirm__title}>
-                <h3>Quase lá</h3>
-            </header>
+            <div className={styles.confirm__container}>
+                <header className={styles.confirm__title}>
+                    <h3>Quase lá</h3>
+                </header>
 
-            <p className={styles.confirm__text}>
-                Confirme seu pedido para a seguinte data: <strong>18/02/2025</strong>. Qual horário você virá para a refeição?
-            </p>
+                <p className={styles.confirm__text}>
+                    Confirme seu pedido para a seguinte data: <strong>18/02/2025</strong>. Qual horário você virá para a refeição?
+                </p>
 
-            <form className={styles.confirm__form} onSubmit={handleSubmit}>
-                <input
-                    type="time"
-                    name="time"
-                    value={time}
-                    onChange={event => setTime(event.target.value)} />
+                <form className={styles.confirm__form} onSubmit={handleSubmit}>
+                    <input
+                        type="time"
+                        name="time"
+                        value={time}
+                        onChange={event => setTime(event.target.value)} />
 
-                <div className={styles.confirm__actions}>
-                    <span className="button primary outline" onClick={onCancel}>Cancelar</span>
-                    <button type="submit" className="button primary" disabled={loading}>
-                        Confirmar
-                        {loading && <Loading inButton />}
-                    </button>
-                </div>
-            </form>
+                    <div className={styles.confirm__actions}>
+                        <span className="button primary outline" onClick={onCancel}>Cancelar</span>
+                        <button type="submit" className="button primary" disabled={loading}>
+                            Confirmar
+                            {loading && <Loading inButton />}
+                        </button>
+                    </div>
+                </form>
 
-            {errorMessage && <Trigger type="error">{errorMessage}</Trigger>}
-            {localErrorMessage && <Trigger type="error">{localErrorMessage}</Trigger>}
+                {errorMessage && <Trigger type="error">{errorMessage}</Trigger>}
+                {localErrorMessage && <Trigger type="error">{localErrorMessage}</Trigger>}
+            </div>
         </section>
     )
 }

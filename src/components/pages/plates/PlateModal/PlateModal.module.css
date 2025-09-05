@@ -1,9 +1,15 @@
 .plate {
-    max-height: 100%;
-    overflow-y: auto;
+    height: inherit;
+    max-height: inherit;
     background-color: var(--color-white-smoke);
     padding: 20px;
     text-align: center;
+}
+
+.plate__container {
+    height: inherit;
+    max-height: calc(100vh - 80px);
+    overflow-y: auto;
 }
 
 .plate__image, .plate__name, .plate__description {

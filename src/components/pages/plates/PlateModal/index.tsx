@@ -13,27 +13,29 @@ const PlateModal = ({ plate, onAddPlate }: Props) => {
 
     return (
         <section className={styles.plate}>
-            <div className={styles.plate__image}>
-                <img src={plate.image ? `/images/plates/${plate.image}` : "/images/no-image.jpg"} alt={plate.name} />
-            </div>
+            <div className={styles.plate__container}>
+                <div className={styles.plate__image}>
+                    <img src={plate.image ? `/images/plates/${plate.image}` : "/images/no-image.jpg"} alt={plate.name} />
+                </div>
 
-            <header className={styles.plate__name}>
-                <h2>{plate.name}</h2>
-            </header>
+                <header className={styles.plate__name}>
+                    <h2>{plate.name}</h2>
+                </header>
 
-            <p className={styles.plate__ingredients}>
-                {plate.ingredients.join(", ")}
-            </p>
+                <p className={styles.plate__ingredients}>
+                    {plate.ingredients.join(", ")}
+                </p>
 
-            <p className={styles.plate__description}>{plate.description}</p>
+                <p className={styles.plate__description}>{plate.description}</p>
 
-            <div className={styles.plate__action}>
-                <p className={styles.plate__price}>{currency(plate.price)}</p>
+                <div className={styles.plate__action}>
+                    <p className={styles.plate__price}>{currency(plate.price as number)}</p>
 
-                <button className="button primary" onClick={() => onAddPlate(plate)}>
-                    <PiShoppingCartSimple />
-                    Adicionar
-                </button>
+                    <button className="button primary" onClick={() => onAddPlate(plate)}>
+                        <PiShoppingCartSimple />
+                        Adicionar
+                    </button>
+                </div>
             </div>
         </section>
     )

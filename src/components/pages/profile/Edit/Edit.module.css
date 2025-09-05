@@ -1,7 +1,13 @@
 .edit {
+    height: inherit;
+    max-height: inherit;
     background-color: var(--color-white-smoke);
     padding: 20px;
-    max-height: 100%;
+}
+
+.edit__container {
+    height: inherit;
+    max-height: calc(100vh - 80px);
     overflow-y: auto;
 }
 
