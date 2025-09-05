@@ -9,6 +9,7 @@ import { useTrigger } from "../../hooks/useTrigger"
 import type { IUser } from "../../interfaces/user"
 import Loading from "../../components/Loading"
 import Trigger from "../../components/Trigger"
+import Password from "../../components/form/Password"
 
 const Login = () => {
   const [email, setEmail] = useState<string>("")
@@ -64,8 +65,7 @@ const Login = () => {
               value={email ?? ""}
               onChange={event => setEmail(event.target.value)} />
 
-            <input
-              type="password"
+            <Password
               name="password"
               placeholder="Senha *"
               required

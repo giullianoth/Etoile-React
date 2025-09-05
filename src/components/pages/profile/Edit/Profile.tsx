@@ -1,11 +1,12 @@
 import { useEffect, useState, type FormEvent } from "react"
 import styles from "./Edit.module.css"
 import Collapse from "react-animate-height"
-import Checkbox from "../../../Checkbox"
+import Checkbox from "../../../form/Checkbox"
 import type { IUser, IUserUpdate } from "../../../../interfaces/user"
 import { useAppContext } from "../../../../context/context"
 import Loading from "../../../Loading"
 import Trigger from "../../../Trigger"
+import Password from "../../../form/Password"
 
 type Props = {
     onCancel: () => void
@@ -17,7 +18,7 @@ const EditProfile = ({ onCancel, user }: Props) => {
     const [phone, setPhone] = useState<string>("")
     const [currentPassword, setCurrentPassword] = useState<string>("")
     const [newPassword, setNewPassword] = useState<string>("")
-    const [confirmPassword, setConfirnPassword] = useState<string>("")
+    const [confirmPassword, setConfirmPassword] = useState<string>("")
     const [changePassword, setChangePassword] = useState<boolean>(false)
     const { usersState, updateUser } = useAppContext().users
     const { errorMessage, loading, success } = usersState
@@ -90,29 +91,23 @@ const EditProfile = ({ onCancel, user }: Props) => {
                         height={changePassword ? "auto" : 0}
                         duration={300}
                         contentClassName={styles.edit__formPassword}>
-                        <input
-                            type="password"
+                        <Password
                             name="currentPassword"
                             placeholder="Senha atual"
-                            required={changePassword}
                             value={currentPassword ?? ""}
                             onChange={event => setCurrentPassword(event.target.value)} />
 
-                        <input
-                            type="password"
+                        <Password
                             name="newPassword"
                             placeholder="Nova senha"
-                            required={changePassword}
                             value={newPassword ?? ""}
                             onChange={event => setNewPassword(event.target.value)} />
 
-                        <input
-                            type="password"
+                        <Password
                             name="confirmPassword"
                             placeholder="Confirmar nova senha"
-                            required={changePassword}
                             value={confirmPassword ?? ""}
-                            onChange={event => setConfirnPassword(event.target.value)} />
+                            onChange={event => setConfirmPassword(event.target.value)} />
                     </Collapse>
 
                     <div className={styles.edit__formSubmit}>

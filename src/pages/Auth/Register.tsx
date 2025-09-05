@@ -8,6 +8,7 @@ import Trigger from "../../components/Trigger"
 import type { IUserRegister } from "../../interfaces/user"
 import { useTrigger } from "../../hooks/useTrigger"
 import Loading from "../../components/Loading"
+import Password from "../../components/form/Password"
 
 const Register = () => {
   const [fullname, setFullname] = useState<string>("")
@@ -75,16 +76,14 @@ const Register = () => {
               value={email ?? ""}
               onChange={event => setEmail(event.target.value)} />
 
-            <input
-              type="password"
+            <Password
               name="password"
               placeholder="Senha *"
               required
               value={password ?? ""}
               onChange={event => setPassword(event.target.value)} />
 
-            <input
-              type="password"
+            <Password
               name="confirmPassword"
               placeholder="Confirmar senha *"
               required

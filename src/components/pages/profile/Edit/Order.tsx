@@ -1,7 +1,7 @@
 import { useEffect, useState, type FormEvent, type MouseEventHandler } from "react"
 import styles from "./Edit.module.css"
 import { PiTrash } from "react-icons/pi"
-import Checkbox from "../../../Checkbox"
+import Checkbox from "../../../form/Checkbox"
 import type { IOrder } from "../../../../interfaces/order"
 import OrderItem from "../OrderItem"
 
