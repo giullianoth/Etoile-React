@@ -4,9 +4,12 @@ import styles from "./Footer.module.css"
 import logo from "/images/logo.svg"
 import { useAppContext } from "../../context/context"
 import { useEffect, useState } from "react"
+import { useAuth } from "../../hooks/useAuth"
 
 const Footer = () => {
-    const { user, authenticated } = useAppContext().auth
+    const { authState } = useAppContext().auth
+    const { user } = authState
+    const { authenticated } = useAuth()
     const { pathname } = useLocation()
     const [auth, setAuth] = useState<boolean>(false)
 

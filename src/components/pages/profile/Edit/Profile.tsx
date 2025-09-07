@@ -36,7 +36,7 @@ const EditProfile = ({ onCancel, user }: Props) => {
         }
     }, [usersState])
 
-    const handleSubmit = (event: FormEvent) => {
+    const handleSubmit = async (event: FormEvent) => {
         event.preventDefault()
 
         const userData: Partial<IUserUpdate> = { fullname, confirmPassword }
@@ -51,7 +51,7 @@ const EditProfile = ({ onCancel, user }: Props) => {
             userData.confirmPassword = confirmPassword
         }
 
-        updateUser(user._id, userData)
+        await updateUser(user._id, userData)
     }
 
     return (
@@ -74,7 +74,6 @@ const EditProfile = ({ onCancel, user }: Props) => {
                         type="tel"
                         name="phone"
                         placeholder="Telefone"
-                        required
                         value={phone ?? ""}
                         onChange={event => setPhone(event.target.value)} />
 

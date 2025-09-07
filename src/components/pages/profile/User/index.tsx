@@ -15,6 +15,7 @@ const User = ({ user }: Props) => {
     const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
 
     return (
+        user &&
         <>
             <section className={styles.user}>
                 <Container className={styles.user__container}>

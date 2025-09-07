@@ -7,9 +7,9 @@ import { useEffect } from "react"
 import { useAuth } from "../../hooks/useAuth"
 
 const Profile = () => {
-  const { authenticated } = useAuth()
   const navigate = useNavigate()
   const { user } = useAppContext().auth.authState
+  const { authenticated } = useAuth()
   const { ordersState, getOrdersByUser, cancelled } = useAppContext().orders
   const { orders } = ordersState
 

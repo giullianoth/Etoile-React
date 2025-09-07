@@ -11,7 +11,7 @@ const state: IAuthState = {
     loading: false,
     errorMessage: null,
     successMessage: null,
-    user: storagedUser ? JSON.parse(storagedUser) : null
+    user: storagedUser ? JSON.parse(storagedUser).user : null
 }
 
 const authReducerActions = (state: IAuthState, action: IReducerAction) => {
@@ -76,31 +76,37 @@ export const authReducer = () => {
 
         if (!authData.fullname) {
             dispatch({ status: "rejected", payload: "Digite o nome." })
+            setCancelled(true)
             return
         }
 
         if (!authData.email) {
             dispatch({ status: "rejected", payload: "Digite o e-mail." })
+            setCancelled(true)
             return
         }
 
         if (!authData.password) {
             dispatch({ status: "rejected", payload: "Digite a senha." })
+            setCancelled(true)
             return
         }
 
         if (!authData.confirmPassword) {
             dispatch({ status: "rejected", payload: "Confirme a sua senha." })
+            setCancelled(true)
             return
         }
 
         if (!validateEmail(authData.email)) {
             dispatch({ status: "rejected", payload: "Digite um endereço de e-mail válido." })
+            setCancelled(true)
             return
         }
 
         if (authData.password !== authData.confirmPassword) {
             dispatch({ status: "rejected", payload: "As senhas digitadas não conferem." })
+            setCancelled(true)
             return
         }
 
@@ -112,6 +118,7 @@ export const authReducer = () => {
                 payload: res.body ? res.body.text : "Erro ao fazer o cadastro, tente novamente mais tarde."
             })
 
+            setCancelled(true)
             return
         }
 
@@ -122,6 +129,7 @@ export const authReducer = () => {
             }))
         } else {
             dispatch({ status: "rejected", payload: "Acesso negado." })
+            setCancelled(true)
             return
         }
 
@@ -146,16 +154,19 @@ export const authReducer = () => {
 
         if (!authData.email) {
             dispatch({ status: "rejected", payload: "Digite o e-mail." })
+            setCancelled(true)
             return
         }
 
         if (!authData.password) {
             dispatch({ status: "rejected", payload: "Digite a senha." })
+            setCancelled(true)
             return
         }
 
         if (!validateEmail(authData.email)) {
             dispatch({ status: "rejected", payload: "Digite um endereço de e-mail válido." })
+            setCancelled(true)
             return
         }
 
@@ -167,6 +178,7 @@ export const authReducer = () => {
                 payload: res.body ? res.body.text : "Erro ao fazer o login, tente novamente mais tarde."
             })
 
+            setCancelled(true)
             return
         }
 
@@ -177,6 +189,7 @@ export const authReducer = () => {
             }))
         } else {
             dispatch({ status: "rejected", payload: "Acesso negado." })
+            setCancelled(true)
             return
         }
 

@@ -73,7 +73,7 @@ const Header = () => {
                             </Link>
                         </div>
 
-                        {auth &&
+                        {auth && user?.fullname &&
                             <p className={styles.header__navigationWelcome}>
                                 Bem-vindo, <strong>{firstName(user?.fullname!)}</strong>!
                             </p>}
