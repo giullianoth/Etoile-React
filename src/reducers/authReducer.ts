@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useState } from "react";
+import { useReducer } from "react";
 import type { IAuthState, IReducerAction } from "../interfaces/reducer-state";
 import type { IUser, IUserRegister } from "../interfaces/user";
 import { useValidateEmail } from "../hooks/useValidateEmail";
@@ -51,20 +51,11 @@ const authReducerActions = (state: IAuthState, action: IReducerAction) => {
 
 export const authReducer = () => {
     const [authState, dispatch] = useReducer<IAuthState, [action: IReducerAction]>(authReducerActions, initialState)
-    const [cancelled, setCancelled] = useState<boolean>(false)
     const validateEmail = useValidateEmail()
-
-    function checkIfIsCancelled() {
-        if (cancelled) {
-            return
-        }
-    }
 
     const resetState = () => dispatch({ status: "reset" })
 
     const register = async (authData: Partial<IUserRegister>) => {
-        checkIfIsCancelled()
-
         dispatch({ status: "pending" })
 
         if (!authData.fullname) {
@@ -128,8 +119,6 @@ export const authReducer = () => {
     }
 
     const login = async (authData: Partial<IUser>) => {
-        checkIfIsCancelled()
-
         dispatch({ status: "pending" })
 
         if (!authData.email) {
@@ -179,16 +168,8 @@ export const authReducer = () => {
 
     const logout = () => {
         localStorage.removeItem("etoile-auth")
-
-        dispatch({
-            status: "fulfilled",
-            payload: { data: null }
-        })
+        dispatch({ status: "reset" })
     }
-
-    useEffect(() => {
-        return () => setCancelled(true)
-    }, [])
 
     return { authState, resetState, register, login, logout }
 }
