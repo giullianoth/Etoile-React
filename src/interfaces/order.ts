@@ -14,5 +14,5 @@ export interface IOrderItem {
     plateId: string
     orderId: string
     quantity: number
-    itemDetails: IPlate[]
+    itemDetails: IPlate
 }

@@ -1,4 +1,3 @@
-import { plates } from "../../../../data/plates"
 import type { IOrderItem } from "../../../../interfaces/order"
 import styles from "./OrderItem.module.css"
 
@@ -7,17 +6,17 @@ type Props = {
 }
 
 const OrderItem = ({ orderItem }: Props) => {
-    const plate = plates.find(plate => orderItem.plateId === plate.id)
-
     return (
         <article className={styles.orderItem}>
             <div className={styles.orderItem__image}>
-                <img src={plate?.image ? `/images/plates/${plate.image}` : "/images/no-image.jpg"} alt={plate?.name} />
+                <img
+                    src={orderItem.itemDetails.image ? `/images/plates/${orderItem.itemDetails.image}` : "/images/no-image.jpg"}
+                    alt={orderItem.itemDetails.name} />
             </div>
 
             <div className={styles.orderItem__info}>
                 <header className={styles.orderItem__name}>
-                    <h3>{plate?.name}</h3>
+                    <h3>{orderItem.itemDetails.name}</h3>
                 </header>
 
                 <p className={styles.orderItem__portions}>

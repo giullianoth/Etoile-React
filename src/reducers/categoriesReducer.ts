@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useState } from "react";
+import { useReducer, useState } from "react";
 import type { ICategory } from "../interfaces/category";
 import type { ICategoryState, IReducerAction } from "../interfaces/reducer-state";
 import categoriesService from "../services/categories-service";
@@ -55,16 +55,13 @@ export const categoriesReducer = () => {
     const [categoriesState, dispatch] = useReducer<ICategoryState, [action: IReducerAction]>(categoriesReducerActions, initialState)
     const [cancelled, setCancelled] = useState<boolean>(false)
 
-    function checkIfIsCancelled() {
-        if (cancelled) {
-            return
-        }
-    }
-
     const resetState = () => dispatch({ status: "reset" })
 
     const getCategories = async () => {
-        checkIfIsCancelled()
+        if (cancelled) {
+            setCancelled(false)
+            return
+        }
 
         dispatch({ status: "pending" })
 
@@ -75,6 +72,8 @@ export const categoriesReducer = () => {
                 status: "rejected",
                 payload: res.body ? res.body.text : "Erro ao carregar categorias."
             })
+
+            setCancelled(true)
             return
         }
 
@@ -82,10 +81,15 @@ export const categoriesReducer = () => {
             status: "fulfilled",
             payload: { data: res.body }
         })
+
+        setCancelled(true)
     }
 
     const getAvailableCategories = async () => {
-        checkIfIsCancelled()
+        if (cancelled) {
+            setCancelled(false)
+            return
+        }
 
         dispatch({ status: "pending" })
 
@@ -100,6 +104,7 @@ export const categoriesReducer = () => {
                     : "Erro ao carregar categorias."
             })
 
+            setCancelled(true)
             return
         }
 
@@ -109,15 +114,21 @@ export const categoriesReducer = () => {
             status: "fulfilled",
             payload: { data: res }
         })
+
+        setCancelled(true)
     }
 
     const addCategory = async (categoryData: Partial<ICategory>) => {
-        checkIfIsCancelled()
+        if (cancelled) {
+            setCancelled(false)
+            return
+        }
 
         dispatch({ status: "pending" })
 
         if (!categoryData.name) {
             dispatch({ status: "rejected", payload: "Digite a categoria." })
+            setCancelled(true)
             return
         }
 
@@ -129,6 +140,7 @@ export const categoriesReducer = () => {
                 payload: res.body ? res.body.text : "Erro ao adicionar categoria."
             })
 
+            setCancelled(true)
             return
         }
 
@@ -143,12 +155,16 @@ export const categoriesReducer = () => {
     }
 
     const updateCategory = async (categoryId: string, categoryData: Partial<ICategory>) => {
-        checkIfIsCancelled()
+        if (cancelled) {
+            setCancelled(false)
+            return
+        }
 
         dispatch({ status: "pending" })
 
         if (!categoryData.name) {
             dispatch({ status: "rejected", payload: "Digite a categoria." })
+            setCancelled(true)
             return
         }
 
@@ -160,6 +176,7 @@ export const categoriesReducer = () => {
                 payload: res.body ? res.body.text : "Erro ao atualizar categoria."
             })
 
+            setCancelled(true)
             return
         }
 
@@ -169,10 +186,15 @@ export const categoriesReducer = () => {
             status: "fulfilled",
             payload: { message: "Categoria registrada com sucesso." }
         })
+
+        setCancelled(true)
     }
 
     const deleteCategory = async (categoryId: string) => {
-        checkIfIsCancelled()
+        if (cancelled) {
+            setCancelled(false)
+            return
+        }
 
         dispatch({ status: "pending" })
 
@@ -181,6 +203,7 @@ export const categoriesReducer = () => {
 
         if (platesInCategory && platesInCategory.length) {
             dispatch({ status: "rejected", payload: "Não é possível excluir uma categoria que tenha pratos cadastrados." })
+            setCancelled(true)
             return
         }
 
@@ -191,7 +214,8 @@ export const categoriesReducer = () => {
                 status: "rejected",
                 payload: res.body ? res.body.text : "Erro ao excluir categoria."
             })
-            
+
+            setCancelled(true)
             return
         }
 
@@ -201,11 +225,9 @@ export const categoriesReducer = () => {
             status: "fulfilled",
             payload: { message: "Categoria excluída com sucesso." }
         })
+
+        setCancelled(true)
     }
 
-    useEffect(() => {
-        return () => setCancelled(true)
-    }, [])
-
-    return { categoriesState, resetState, getCategories, getAvailableCategories, addCategory, updateCategory, deleteCategory }
+    return { categoriesState, cancelled, resetState, getCategories, getAvailableCategories, addCategory, updateCategory, deleteCategory }
 }

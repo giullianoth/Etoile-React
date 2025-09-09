@@ -44,16 +44,18 @@ const PlatesList = () => {
   }
 
   useEffect(() => {
-    if (!categoriesCancelled) {
-      getAvailableCategories()
+    const getData = async () => {
+      if (!categoriesCancelled) {
+        await getAvailableCategories()
+      }
+
+      if (!platesCancelled) {
+        await getAvailablePlates()
+      }
     }
 
-    if (!platesCancelled) {
-      getAvailablePlates()
-    }
-  }, [categoriesState, platesState])
-
-
+    getData()
+  }, [categoriesCancelled, platesCancelled])
 
   const handleSelectPlate = (plate: IPlate) => {
     setPlateToShow(plate)
