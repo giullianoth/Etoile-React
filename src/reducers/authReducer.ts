@@ -1,4 +1,4 @@
-import { useReducer, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import type { IAuthState, IReducerAction } from "../interfaces/reducer-state";
 import type { IUser, IUserRegister } from "../interfaces/user";
 import { useValidateEmail } from "../hooks/useValidateEmail";
@@ -25,7 +25,6 @@ const authReducerActions = (state: IAuthState, action: IReducerAction) => {
 
         case "fulfilled":
             return {
-                ...state,
                 success: true,
                 loading: false,
                 user: action.payload.data,
@@ -35,7 +34,6 @@ const authReducerActions = (state: IAuthState, action: IReducerAction) => {
 
         case "rejected":
             return {
-                ...state,
                 success: false,
                 loading: false,
                 errorMessage: action.payload,
@@ -44,13 +42,7 @@ const authReducerActions = (state: IAuthState, action: IReducerAction) => {
             }
 
         case "reset":
-            return {
-                success: false,
-                loading: false,
-                errorMessage: null,
-                successMessage: null,
-                user: storagedUser ? JSON.parse(storagedUser) : null
-            }
+            return initialState
 
         default:
             return state
@@ -62,51 +54,46 @@ export const authReducer = () => {
     const [cancelled, setCancelled] = useState<boolean>(false)
     const validateEmail = useValidateEmail()
 
-    const resetState = () => {
-        dispatch({ status: "reset" })
-    }
-
-    const register = async (authData: Partial<IUserRegister>) => {
+    function checkIfIsCancelled() {
         if (cancelled) {
-            setCancelled(false)
             return
         }
+    }
+
+    const resetState = () => dispatch({ status: "reset" })
+
+    const register = async (authData: Partial<IUserRegister>) => {
+        checkIfIsCancelled()
 
         dispatch({ status: "pending" })
 
         if (!authData.fullname) {
             dispatch({ status: "rejected", payload: "Digite o nome." })
-            setCancelled(true)
             return
         }
 
         if (!authData.email) {
             dispatch({ status: "rejected", payload: "Digite o e-mail." })
-            setCancelled(true)
             return
         }
 
         if (!authData.password) {
             dispatch({ status: "rejected", payload: "Digite a senha." })
-            setCancelled(true)
             return
         }
 
         if (!authData.confirmPassword) {
             dispatch({ status: "rejected", payload: "Confirme a sua senha." })
-            setCancelled(true)
             return
         }
 
         if (!validateEmail(authData.email)) {
             dispatch({ status: "rejected", payload: "Digite um endereço de e-mail válido." })
-            setCancelled(true)
             return
         }
 
         if (authData.password !== authData.confirmPassword) {
             dispatch({ status: "rejected", payload: "As senhas digitadas não conferem." })
-            setCancelled(true)
             return
         }
 
@@ -118,7 +105,6 @@ export const authReducer = () => {
                 payload: res.body ? res.body.text : "Erro ao fazer o cadastro, tente novamente mais tarde."
             })
 
-            setCancelled(true)
             return
         }
 
@@ -129,7 +115,6 @@ export const authReducer = () => {
             }))
         } else {
             dispatch({ status: "rejected", payload: "Acesso negado." })
-            setCancelled(true)
             return
         }
 
@@ -140,33 +125,25 @@ export const authReducer = () => {
                 message: "Cadastro realizado com sucesso."
             }
         })
-
-        setCancelled(true)
     }
 
     const login = async (authData: Partial<IUser>) => {
-        if (cancelled) {
-            setCancelled(false)
-            return
-        }
+        checkIfIsCancelled()
 
         dispatch({ status: "pending" })
 
         if (!authData.email) {
             dispatch({ status: "rejected", payload: "Digite o e-mail." })
-            setCancelled(true)
             return
         }
 
         if (!authData.password) {
             dispatch({ status: "rejected", payload: "Digite a senha." })
-            setCancelled(true)
             return
         }
 
         if (!validateEmail(authData.email)) {
             dispatch({ status: "rejected", payload: "Digite um endereço de e-mail válido." })
-            setCancelled(true)
             return
         }
 
@@ -178,7 +155,6 @@ export const authReducer = () => {
                 payload: res.body ? res.body.text : "Erro ao fazer o login, tente novamente mais tarde."
             })
 
-            setCancelled(true)
             return
         }
 
@@ -189,7 +165,6 @@ export const authReducer = () => {
             }))
         } else {
             dispatch({ status: "rejected", payload: "Acesso negado." })
-            setCancelled(true)
             return
         }
 
@@ -200,8 +175,6 @@ export const authReducer = () => {
                 message: "Login efetuado com sucesso."
             }
         })
-
-        setCancelled(true)
     }
 
     const logout = () => {
@@ -212,6 +185,10 @@ export const authReducer = () => {
             payload: { data: null }
         })
     }
+
+    useEffect(() => {
+        return () => setCancelled(true)
+    }, [])
 
     return { authState, resetState, register, login, logout }
 }

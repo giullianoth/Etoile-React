@@ -23,7 +23,6 @@ const ordersReducerActions = (state: IOrderState, action: IReducerAction) => {
 
         case "fulfilled":
             return {
-                ...state,
                 success: true,
                 loading: false,
                 orders: action.payload.data ?? state.orders,
@@ -34,7 +33,6 @@ const ordersReducerActions = (state: IOrderState, action: IReducerAction) => {
 
         case "rejected":
             return {
-                ...state,
                 success: false,
                 loading: false,
                 errorMessage: action.payload,
@@ -44,14 +42,7 @@ const ordersReducerActions = (state: IOrderState, action: IReducerAction) => {
             }
 
         case "reset":
-            return {
-                success: false,
-                loading: false,
-                errorMessage: null,
-                successMessage: null,
-                orders: [],
-                order: null
-            }
+            return initialState
 
         default:
             return state
@@ -62,26 +53,27 @@ export const ordersReducer = () => {
     const [ordersState, dispatch] = useReducer<IOrderState, [action: IReducerAction]>(ordersReducerActions, initialState)
     const [cancelled, setCancelled] = useState<boolean>(false)
 
-    useEffect(() => {
-        setCancelled(false)
-    }, [])
-
-    const resetState = () => {
-        dispatch({ status: "reset" })
-    }
-
-    const getOrders = async () => {
+    function checkIfIsCancelled() {
         if (cancelled) {
-            setCancelled(false)
             return
         }
+    }
+
+    const resetState = () => dispatch({ status: "reset" })
+
+    const getOrders = async () => {
+        checkIfIsCancelled()
 
         dispatch({ status: "pending" })
 
         const res = await ordersService.getOrders()
 
         if (!res.success) {
-            dispatch({ status: "rejected", payload: "Erro ao carregar pedidos." })
+            dispatch({
+                status: "rejected",
+                payload: res.body ? res.body.text : "Erro ao carregar pedidos."
+            })
+
             return
         }
 
@@ -89,22 +81,21 @@ export const ordersReducer = () => {
             status: "fulfilled",
             payload: { data: res.body }
         })
-
-        setCancelled(true)
     }
 
     const getOrdersByUser = async (userId: string) => {
-        if (cancelled) {
-            setCancelled(false)
-            return
-        }
+        checkIfIsCancelled()
 
         dispatch({ status: "pending" })
 
         const res = await ordersService.getOrdersByUser(userId)
 
         if (!res.success) {
-            dispatch({ status: "rejected", payload: "Pedido não encontrado." })
+            dispatch({
+                status: "rejected",
+                payload: res.body ? res.body.text : "Pedido não encontrado."
+            })
+
             return
         }
 
@@ -112,15 +103,10 @@ export const ordersReducer = () => {
             status: "fulfilled",
             payload: { single: res.body }
         })
-
-        setCancelled(true)
     }
 
     const addOrder = async (orderData: Partial<IOrder>, orderItems: Partial<IOrderItem>[]) => {
-        if (cancelled) {
-            setCancelled(false)
-            return
-        }
+        checkIfIsCancelled()
 
         dispatch({ status: "pending" })
 
@@ -142,7 +128,11 @@ export const ordersReducer = () => {
         const res = await ordersService.addOrder(orderData)
 
         if (!res.success) {
-            dispatch({ status: "rejected", payload: "Erro ao registrar pedido." })
+            dispatch({
+                status: "rejected",
+                payload: res.body ? res.body.text : "Erro ao registrar pedido."
+            })
+
             return
         }
 
@@ -152,22 +142,20 @@ export const ordersReducer = () => {
             status: "fulfilled",
             payload: { message: "Pedido registrado com sucesso." }
         })
-
-        setCancelled(true)
     }
 
     const deleteOrder = async (orderId: string) => {
-        if (cancelled) {
-            setCancelled(false)
-            return
-        }
+        checkIfIsCancelled()
 
         dispatch({ status: "pending" })
 
         const res = await ordersService.deleteOrder(orderId)
 
         if (!res.success) {
-            dispatch({ status: "rejected", payload: "Erro ao excluir pedido." })
+            dispatch({
+                status: "rejected",
+                payload: res.body ? res.body.text : "Erro ao excluir pedido."
+            })
             return
         }
 
@@ -177,9 +165,11 @@ export const ordersReducer = () => {
             status: "fulfilled",
             payload: { message: "Pedido excluído com sucesso." }
         })
-
-        setCancelled(true)
     }
 
-    return { ordersState, cancelled, resetState, getOrders, getOrdersByUser, addOrder, deleteOrder }
+    useEffect(() => {
+        return () => setCancelled(true)
+    }, [])
+
+    return { ordersState, resetState, getOrders, getOrdersByUser, addOrder, deleteOrder }
 }

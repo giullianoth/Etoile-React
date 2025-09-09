@@ -1,4 +1,4 @@
-import { useReducer, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import type { IReducerAction, IUserState } from "../interfaces/reducer-state";
 import type { IUserUpdate } from "../interfaces/user";
 import usersService from "../services/users-service";
@@ -22,7 +22,6 @@ const usersReducerActions = (state: IUserState, action: IReducerAction) => {
 
         case "fulfilled":
             return {
-                ...state,
                 success: true,
                 loading: false,
                 users: action.payload ?? state.users,
@@ -32,7 +31,6 @@ const usersReducerActions = (state: IUserState, action: IReducerAction) => {
 
         case "rejected":
             return {
-                ...state,
                 success: false,
                 loading: false,
                 errorMessage: action.payload,
@@ -41,13 +39,7 @@ const usersReducerActions = (state: IUserState, action: IReducerAction) => {
             }
 
         case "reset":
-            return {
-                success: false,
-                loading: false,
-                errorMessage: null,
-                successMessage: null,
-                users: []
-            }
+            return initialState
 
         default:
             return state
@@ -58,22 +50,27 @@ export const usersReducer = () => {
     const [usersState, dispatch] = useReducer<IUserState, [action: IReducerAction]>(usersReducerActions, initialState)
     const [cancelled, setCancelled] = useState<boolean>(false)
 
-    const resetState = () => {
-        dispatch({ status: "reset" })
-    }
-
-    const getUsers = async () => {
+    function checkIfIsCancelled() {
         if (cancelled) {
-            setCancelled(false)
             return
         }
+    }
+
+    const resetState = () => dispatch({ status: "reset" })
+
+    const getUsers = async () => {
+        checkIfIsCancelled()
 
         dispatch({ status: "pending" })
 
         const res = await usersService.getUsers()
 
         if (!res.success) {
-            dispatch({ status: "rejected", payload: "Erro ao carregar usuários." })
+            dispatch({
+                status: "rejected",
+                payload: res.body ? res.body.text : "Erro ao carregar usuários."
+            })
+
             return
         }
 
@@ -81,15 +78,10 @@ export const usersReducer = () => {
             status: "fulfilled",
             payload: res.body
         })
-
-        setCancelled(true)
     }
 
     const updateUser = async (userId: string, userData: Partial<IUserUpdate>) => {
-        if (cancelled) {
-            setCancelled(false)
-            return
-        }
+        checkIfIsCancelled()
 
         dispatch({ status: "pending" })
 
@@ -125,7 +117,11 @@ export const usersReducer = () => {
         const res = await usersService.updateUser(userId, userDataRest)
 
         if (!res.success) {
-            dispatch({ status: "rejected", payload: "Erro ao atualizar perfil." })
+            dispatch({
+                status: "rejected",
+                payload: res.body ? res.body.text : "Erro ao atualizar perfil."
+            })
+
             return
         }
 
@@ -135,22 +131,21 @@ export const usersReducer = () => {
             status: "fulfilled",
             payload: { message: "Perfil atualizado com sucesso." }
         })
-
-        setCancelled(true)
     }
 
     const deleteUser = async (userId: string) => {
-        if (cancelled) {
-            setCancelled(false)
-            return
-        }
+        checkIfIsCancelled()
 
         dispatch({ status: "pending" })
 
         const res = await usersService.deleteUser(userId)
 
         if (!res.success) {
-            dispatch({ status: "rejected", payload: "Erro ao excluir usuário." })
+            dispatch({
+                status: "rejected",
+                payload: res.body ? res.body.text : "Erro ao excluir usuário."
+            })
+
             return
         }
 
@@ -160,9 +155,11 @@ export const usersReducer = () => {
             status: "fulfilled",
             payload: { message: "Usuário excluído com sucesso." }
         })
-
-        setCancelled(true)
     }
+
+    useEffect(() => {
+        return () => setCancelled(true)
+    }, [])
 
     return { usersState, resetState, getUsers, updateUser, deleteUser }
 }
