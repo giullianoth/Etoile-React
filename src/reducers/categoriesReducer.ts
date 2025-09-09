@@ -5,7 +5,7 @@ import categoriesService from "../services/categories-service";
 import platesServices from "../services/plates-service";
 import type { IPlate } from "../interfaces/plate";
 
-const state: ICategoryState = {
+const initialState: ICategoryState = {
     success: false,
     loading: false,
     errorMessage: null,
@@ -61,7 +61,7 @@ const categoriesReducerActions = (state: ICategoryState, action: IReducerAction)
 }
 
 export const categoriesReducer = () => {
-    const [categoriesState, dispatch] = useReducer<ICategoryState, [action: IReducerAction]>(categoriesReducerActions, state)
+    const [categoriesState, dispatch] = useReducer<ICategoryState, [action: IReducerAction]>(categoriesReducerActions, initialState)
     const [cancelled, setCancelled] = useState<boolean>(false)
 
     useEffect(() => {

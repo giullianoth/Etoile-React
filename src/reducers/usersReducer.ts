@@ -3,7 +3,7 @@ import type { IReducerAction, IUserState } from "../interfaces/reducer-state";
 import type { IUserUpdate } from "../interfaces/user";
 import usersService from "../services/users-service";
 
-const state: IUserState = {
+const initialState: IUserState = {
     success: false,
     loading: false,
     errorMessage: null,
@@ -55,7 +55,7 @@ const usersReducerActions = (state: IUserState, action: IReducerAction) => {
 }
 
 export const usersReducer = () => {
-    const [usersState, dispatch] = useReducer<IUserState, [action: IReducerAction]>(usersReducerActions, state)
+    const [usersState, dispatch] = useReducer<IUserState, [action: IReducerAction]>(usersReducerActions, initialState)
     const [cancelled, setCancelled] = useState<boolean>(false)
 
     const resetState = () => {

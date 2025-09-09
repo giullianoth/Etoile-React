@@ -6,7 +6,7 @@ import authService from "../services/auth-service";
 
 const storagedUser = localStorage.getItem("etoile-auth")
 
-const state: IAuthState = {
+const initialState: IAuthState = {
     success: false,
     loading: false,
     errorMessage: null,
@@ -58,7 +58,7 @@ const authReducerActions = (state: IAuthState, action: IReducerAction) => {
 }
 
 export const authReducer = () => {
-    const [authState, dispatch] = useReducer<IAuthState, [action: IReducerAction]>(authReducerActions, state)
+    const [authState, dispatch] = useReducer<IAuthState, [action: IReducerAction]>(authReducerActions, initialState)
     const [cancelled, setCancelled] = useState<boolean>(false)
     const validateEmail = useValidateEmail()
 

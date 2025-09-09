@@ -3,7 +3,7 @@ import type { IPlateState, IReducerAction } from "../interfaces/reducer-state";
 import platesServices from "../services/plates-service";
 import type { IPlateRegister } from "../interfaces/plate";
 
-const state: IPlateState = {
+const initialState: IPlateState = {
     success: false,
     loading: false,
     errorMessage: null,
@@ -59,7 +59,7 @@ const platesReducerActions = (state: IPlateState, action: IReducerAction) => {
 }
 
 export const platesReducer = () => {
-    const [platesState, dispatch] = useReducer<IPlateState, [action: IReducerAction]>(platesReducerActions, state)
+    const [platesState, dispatch] = useReducer<IPlateState, [action: IReducerAction]>(platesReducerActions, initialState)
     const [cancelled, setCancelled] = useState<boolean>(false)
 
     useEffect(() => {
