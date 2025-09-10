@@ -88,6 +88,7 @@ export const authReducer = () => {
             return
         }
 
+        authData.role = "user"
         const res = await authService.register(authData)
 
         if (!res.success) {
