@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useState } from "react";
+import { useReducer, useState } from "react";
 import type { IOrderState, IReducerAction } from "../interfaces/reducer-state";
 import ordersService from "../services/orders-service";
 import type { IOrder, IOrderItem } from "../interfaces/order";
@@ -53,16 +53,13 @@ export const ordersReducer = () => {
     const [ordersState, dispatch] = useReducer<IOrderState, [action: IReducerAction]>(ordersReducerActions, initialState)
     const [cancelled, setCancelled] = useState<boolean>(false)
 
-    function checkIfIsCancelled() {
-        if (cancelled) {
-            return
-        }
-    }
-
     const resetState = () => dispatch({ status: "reset" })
 
     const getOrders = async () => {
-        checkIfIsCancelled()
+        if (cancelled) {
+            setCancelled(false)
+            return
+        }
 
         dispatch({ status: "pending" })
 
@@ -74,6 +71,7 @@ export const ordersReducer = () => {
                 payload: res.body ? res.body.text : "Erro ao carregar pedidos."
             })
 
+            setCancelled(true)
             return
         }
 
@@ -81,10 +79,15 @@ export const ordersReducer = () => {
             status: "fulfilled",
             payload: { data: res.body }
         })
+
+        setCancelled(true)
     }
 
     const getOrdersByUser = async (userId: string) => {
-        checkIfIsCancelled()
+        if (cancelled) {
+            setCancelled(false)
+            return
+        }
 
         dispatch({ status: "pending" })
 
@@ -96,6 +99,7 @@ export const ordersReducer = () => {
                 payload: res.body ? res.body.text : "Pedido não encontrado."
             })
 
+            setCancelled(true)
             return
         }
 
@@ -103,25 +107,33 @@ export const ordersReducer = () => {
             status: "fulfilled",
             payload: { single: res.body }
         })
+
+        setCancelled(true)
     }
 
     const addOrder = async (orderData: Partial<IOrder>, orderItems: Partial<IOrderItem>[]) => {
-        checkIfIsCancelled()
+        if (cancelled) {
+            setCancelled(false)
+            return
+        }
 
         dispatch({ status: "pending" })
 
         if (!orderItems.length || orderItems.some(item => !item.plateId || item.quantity! < 1) || !orderData.status) {
             dispatch({ status: "rejected", payload: "Erro ao registrar pedido, verifique os dados." })
+            setCancelled(true)
             return
         }
 
         if (!orderData.time) {
             dispatch({ status: "rejected", payload: "Selecione o horário de comparecimento." })
+            setCancelled(true)
             return
         }
 
         if (!orderData.userDetails) {
             dispatch({ status: "rejected", payload: "Erro ao registrar pedido." })
+            setCancelled(true)
             return
         }
 
@@ -133,6 +145,7 @@ export const ordersReducer = () => {
                 payload: res.body ? res.body.text : "Erro ao registrar pedido."
             })
 
+            setCancelled(true)
             return
         }
 
@@ -142,10 +155,15 @@ export const ordersReducer = () => {
             status: "fulfilled",
             payload: { message: "Pedido registrado com sucesso." }
         })
+
+        setCancelled(true)
     }
 
     const deleteOrder = async (orderId: string) => {
-        checkIfIsCancelled()
+        if (cancelled) {
+            setCancelled(false)
+            return
+        }
 
         dispatch({ status: "pending" })
 
@@ -156,6 +174,8 @@ export const ordersReducer = () => {
                 status: "rejected",
                 payload: res.body ? res.body.text : "Erro ao excluir pedido."
             })
+
+            setCancelled(true)
             return
         }
 
@@ -165,11 +185,9 @@ export const ordersReducer = () => {
             status: "fulfilled",
             payload: { message: "Pedido excluído com sucesso." }
         })
+
+        setCancelled(true)
     }
 
-    useEffect(() => {
-        return () => setCancelled(true)
-    }, [])
-
-    return { ordersState, resetState, getOrders, getOrdersByUser, addOrder, deleteOrder }
+    return { ordersState, cancelled, resetState, getOrders, getOrdersByUser, addOrder, deleteOrder }
 }
