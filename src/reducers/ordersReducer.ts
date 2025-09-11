@@ -1,9 +1,9 @@
-import { useEffect, useReducer, useState } from "react";
+import { useReducer, useState } from "react";
 import type { IOrderState, IReducerAction } from "../interfaces/reducer-state";
 import ordersService from "../services/orders-service";
 import type { IOrder, IOrderItem } from "../interfaces/order";
 
-const state: IOrderState = {
+const initialState: IOrderState = {
     success: false,
     loading: false,
     errorMessage: null,
@@ -23,7 +23,6 @@ const ordersReducerActions = (state: IOrderState, action: IReducerAction) => {
 
         case "fulfilled":
             return {
-                ...state,
                 success: true,
                 loading: false,
                 orders: action.payload.data ?? state.orders,
@@ -34,7 +33,6 @@ const ordersReducerActions = (state: IOrderState, action: IReducerAction) => {
 
         case "rejected":
             return {
-                ...state,
                 success: false,
                 loading: false,
                 errorMessage: action.payload,
@@ -44,14 +42,7 @@ const ordersReducerActions = (state: IOrderState, action: IReducerAction) => {
             }
 
         case "reset":
-            return {
-                success: false,
-                loading: false,
-                errorMessage: null,
-                successMessage: null,
-                orders: [],
-                order: null
-            }
+            return initialState
 
         default:
             return state
@@ -59,16 +50,10 @@ const ordersReducerActions = (state: IOrderState, action: IReducerAction) => {
 }
 
 export const ordersReducer = () => {
-    const [ordersState, dispatch] = useReducer<IOrderState, [action: IReducerAction]>(ordersReducerActions, state)
+    const [ordersState, dispatch] = useReducer<IOrderState, [action: IReducerAction]>(ordersReducerActions, initialState)
     const [cancelled, setCancelled] = useState<boolean>(false)
 
-    useEffect(() => {
-        setCancelled(false)
-    }, [])
-
-    const resetState = () => {
-        dispatch({ status: "reset" })
-    }
+    const resetState = () => dispatch({ status: "reset" })
 
     const getOrders = async () => {
         if (cancelled) {
@@ -81,7 +66,12 @@ export const ordersReducer = () => {
         const res = await ordersService.getOrders()
 
         if (!res.success) {
-            dispatch({ status: "rejected", payload: "Erro ao carregar pedidos." })
+            dispatch({
+                status: "rejected",
+                payload: res.body ? res.body.text : "Erro ao carregar pedidos."
+            })
+
+            setCancelled(true)
             return
         }
 
@@ -104,7 +94,12 @@ export const ordersReducer = () => {
         const res = await ordersService.getOrdersByUser(userId)
 
         if (!res.success) {
-            dispatch({ status: "rejected", payload: "Pedido não encontrado." })
+            dispatch({
+                status: "rejected",
+                payload: res.body ? res.body.text : "Pedido não encontrado."
+            })
+
+            setCancelled(true)
             return
         }
 
@@ -126,23 +121,31 @@ export const ordersReducer = () => {
 
         if (!orderItems.length || orderItems.some(item => !item.plateId || item.quantity! < 1) || !orderData.status) {
             dispatch({ status: "rejected", payload: "Erro ao registrar pedido, verifique os dados." })
+            setCancelled(true)
             return
         }
 
         if (!orderData.time) {
             dispatch({ status: "rejected", payload: "Selecione o horário de comparecimento." })
+            setCancelled(true)
             return
         }
 
         if (!orderData.userDetails) {
             dispatch({ status: "rejected", payload: "Erro ao registrar pedido." })
+            setCancelled(true)
             return
         }
 
         const res = await ordersService.addOrder(orderData)
 
         if (!res.success) {
-            dispatch({ status: "rejected", payload: "Erro ao registrar pedido." })
+            dispatch({
+                status: "rejected",
+                payload: res.body ? res.body.text : "Erro ao registrar pedido."
+            })
+
+            setCancelled(true)
             return
         }
 
@@ -167,7 +170,12 @@ export const ordersReducer = () => {
         const res = await ordersService.deleteOrder(orderId)
 
         if (!res.success) {
-            dispatch({ status: "rejected", payload: "Erro ao excluir pedido." })
+            dispatch({
+                status: "rejected",
+                payload: res.body ? res.body.text : "Erro ao excluir pedido."
+            })
+
+            setCancelled(true)
             return
         }
 

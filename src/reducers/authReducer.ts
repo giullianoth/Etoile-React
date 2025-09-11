@@ -1,4 +1,4 @@
-import { useReducer, useState } from "react";
+import { useReducer } from "react";
 import type { IAuthState, IReducerAction } from "../interfaces/reducer-state";
 import type { IUser, IUserRegister } from "../interfaces/user";
 import { useValidateEmail } from "../hooks/useValidateEmail";
@@ -6,7 +6,7 @@ import authService from "../services/auth-service";
 
 const storagedUser = localStorage.getItem("etoile-auth")
 
-const state: IAuthState = {
+const initialState: IAuthState = {
     success: false,
     loading: false,
     errorMessage: null,
@@ -25,7 +25,6 @@ const authReducerActions = (state: IAuthState, action: IReducerAction) => {
 
         case "fulfilled":
             return {
-                ...state,
                 success: true,
                 loading: false,
                 user: action.payload.data,
@@ -35,7 +34,6 @@ const authReducerActions = (state: IAuthState, action: IReducerAction) => {
 
         case "rejected":
             return {
-                ...state,
                 success: false,
                 loading: false,
                 errorMessage: action.payload,
@@ -44,13 +42,7 @@ const authReducerActions = (state: IAuthState, action: IReducerAction) => {
             }
 
         case "reset":
-            return {
-                success: false,
-                loading: false,
-                errorMessage: null,
-                successMessage: null,
-                user: storagedUser ? JSON.parse(storagedUser) : null
-            }
+            return initialState
 
         default:
             return state
@@ -58,58 +50,45 @@ const authReducerActions = (state: IAuthState, action: IReducerAction) => {
 }
 
 export const authReducer = () => {
-    const [authState, dispatch] = useReducer<IAuthState, [action: IReducerAction]>(authReducerActions, state)
-    const [cancelled, setCancelled] = useState<boolean>(false)
+    const [authState, dispatch] = useReducer<IAuthState, [action: IReducerAction]>(authReducerActions, initialState)
     const validateEmail = useValidateEmail()
 
-    const resetState = () => {
-        dispatch({ status: "reset" })
-    }
+    const resetState = () => dispatch({ status: "reset" })
 
     const register = async (authData: Partial<IUserRegister>) => {
-        if (cancelled) {
-            setCancelled(false)
-            return
-        }
-
         dispatch({ status: "pending" })
 
         if (!authData.fullname) {
             dispatch({ status: "rejected", payload: "Digite o nome." })
-            setCancelled(true)
             return
         }
 
         if (!authData.email) {
             dispatch({ status: "rejected", payload: "Digite o e-mail." })
-            setCancelled(true)
             return
         }
 
         if (!authData.password) {
             dispatch({ status: "rejected", payload: "Digite a senha." })
-            setCancelled(true)
             return
         }
 
         if (!authData.confirmPassword) {
             dispatch({ status: "rejected", payload: "Confirme a sua senha." })
-            setCancelled(true)
             return
         }
 
         if (!validateEmail(authData.email)) {
             dispatch({ status: "rejected", payload: "Digite um endereço de e-mail válido." })
-            setCancelled(true)
             return
         }
 
         if (authData.password !== authData.confirmPassword) {
             dispatch({ status: "rejected", payload: "As senhas digitadas não conferem." })
-            setCancelled(true)
             return
         }
 
+        authData.role = "user"
         const res = await authService.register(authData)
 
         if (!res.success) {
@@ -118,7 +97,6 @@ export const authReducer = () => {
                 payload: res.body ? res.body.text : "Erro ao fazer o cadastro, tente novamente mais tarde."
             })
 
-            setCancelled(true)
             return
         }
 
@@ -129,7 +107,6 @@ export const authReducer = () => {
             }))
         } else {
             dispatch({ status: "rejected", payload: "Acesso negado." })
-            setCancelled(true)
             return
         }
 
@@ -140,33 +117,23 @@ export const authReducer = () => {
                 message: "Cadastro realizado com sucesso."
             }
         })
-
-        setCancelled(true)
     }
 
     const login = async (authData: Partial<IUser>) => {
-        if (cancelled) {
-            setCancelled(false)
-            return
-        }
-
         dispatch({ status: "pending" })
 
         if (!authData.email) {
             dispatch({ status: "rejected", payload: "Digite o e-mail." })
-            setCancelled(true)
             return
         }
 
         if (!authData.password) {
             dispatch({ status: "rejected", payload: "Digite a senha." })
-            setCancelled(true)
             return
         }
 
         if (!validateEmail(authData.email)) {
             dispatch({ status: "rejected", payload: "Digite um endereço de e-mail válido." })
-            setCancelled(true)
             return
         }
 
@@ -178,7 +145,6 @@ export const authReducer = () => {
                 payload: res.body ? res.body.text : "Erro ao fazer o login, tente novamente mais tarde."
             })
 
-            setCancelled(true)
             return
         }
 
@@ -189,7 +155,6 @@ export const authReducer = () => {
             }))
         } else {
             dispatch({ status: "rejected", payload: "Acesso negado." })
-            setCancelled(true)
             return
         }
 
@@ -202,13 +167,15 @@ export const authReducer = () => {
                 message: "Login efetuado com sucesso."
             }
         })
-
-        setCancelled(true)
     }
 
     const logout = () => {
         localStorage.removeItem("etoile-auth")
+<<<<<<< HEAD
         dispatch({ status: "reset", })
+=======
+        dispatch({ status: "reset" })
+>>>>>>> 0c5c0a587d2159eb6b9fba7e5b28398068011be7
     }
 
     return { authState, resetState, register, login, logout }

@@ -1,11 +1,11 @@
-import { useEffect, useReducer, useState } from "react";
+import { useReducer, useState } from "react";
 import type { ICategory } from "../interfaces/category";
 import type { ICategoryState, IReducerAction } from "../interfaces/reducer-state";
 import categoriesService from "../services/categories-service";
 import platesServices from "../services/plates-service";
 import type { IPlate } from "../interfaces/plate";
 
-const state: ICategoryState = {
+const initialState: ICategoryState = {
     success: false,
     loading: false,
     errorMessage: null,
@@ -25,7 +25,6 @@ const categoriesReducerActions = (state: ICategoryState, action: IReducerAction)
 
         case "fulfilled":
             return {
-                ...state,
                 success: true,
                 loading: false,
                 categories: action.payload.data ?? state.categories,
@@ -36,7 +35,6 @@ const categoriesReducerActions = (state: ICategoryState, action: IReducerAction)
 
         case "rejected":
             return {
-                ...state,
                 success: false,
                 loading: false,
                 errorMessage: action.payload,
@@ -46,14 +44,7 @@ const categoriesReducerActions = (state: ICategoryState, action: IReducerAction)
             }
 
         case "reset":
-            return {
-                success: false,
-                loading: false,
-                errorMessage: null,
-                successMessage: null,
-                categories: [],
-                category: null
-            }
+            return initialState
 
         default:
             return state
@@ -61,24 +52,27 @@ const categoriesReducerActions = (state: ICategoryState, action: IReducerAction)
 }
 
 export const categoriesReducer = () => {
-    const [categoriesState, dispatch] = useReducer<ICategoryState, [action: IReducerAction]>(categoriesReducerActions, state)
+    const [categoriesState, dispatch] = useReducer<ICategoryState, [action: IReducerAction]>(categoriesReducerActions, initialState)
     const [cancelled, setCancelled] = useState<boolean>(false)
 
-    useEffect(() => {
-        setCancelled(false)
-    }, [])
-
-    const resetState = () => {
-        dispatch({ status: "reset" })
-    }
+    const resetState = () => dispatch({ status: "reset" })
 
     const getCategories = async () => {
+        if (cancelled) {
+            setCancelled(false)
+            return
+        }
+
         dispatch({ status: "pending" })
 
         const res = await categoriesService.getCategories()
 
         if (!res.success) {
-            dispatch({ status: "rejected", payload: "Erro ao carregar categorias." })
+            dispatch({
+                status: "rejected",
+                payload: res.body ? res.body.text : "Erro ao carregar categorias."
+            })
+
             setCancelled(true)
             return
         }
@@ -92,13 +86,24 @@ export const categoriesReducer = () => {
     }
 
     const getAvailableCategories = async () => {
+        if (cancelled) {
+            setCancelled(false)
+            return
+        }
+
         dispatch({ status: "pending" })
 
         const categories = await categoriesService.getCategories()
         const plates = await platesServices.getAvailablePlates()
 
         if (!categories.success || !plates.success) {
-            dispatch({ status: "rejected", payload: "Erro ao carregar categorias." })
+            dispatch({
+                status: "rejected",
+                payload: (categories.body || plates.body)
+                    ? categories.body.text | plates.body
+                    : "Erro ao carregar categorias."
+            })
+
             setCancelled(true)
             return
         }
@@ -114,6 +119,11 @@ export const categoriesReducer = () => {
     }
 
     const addCategory = async (categoryData: Partial<ICategory>) => {
+        if (cancelled) {
+            setCancelled(false)
+            return
+        }
+
         dispatch({ status: "pending" })
 
         if (!categoryData.name) {
@@ -125,7 +135,11 @@ export const categoriesReducer = () => {
         const res = await categoriesService.addCategory(categoryData)
 
         if (!res.success) {
-            dispatch({ status: "rejected", payload: "Erro ao adicionar categoria." })
+            dispatch({
+                status: "rejected",
+                payload: res.body ? res.body.text : "Erro ao adicionar categoria."
+            })
+
             setCancelled(true)
             return
         }
@@ -141,6 +155,11 @@ export const categoriesReducer = () => {
     }
 
     const updateCategory = async (categoryId: string, categoryData: Partial<ICategory>) => {
+        if (cancelled) {
+            setCancelled(false)
+            return
+        }
+
         dispatch({ status: "pending" })
 
         if (!categoryData.name) {
@@ -152,7 +171,11 @@ export const categoriesReducer = () => {
         const res = await categoriesService.updateCategory(categoryId, categoryData)
 
         if (!res.success) {
-            dispatch({ status: "rejected", payload: "Erro ao atualizar categoria." })
+            dispatch({
+                status: "rejected",
+                payload: res.body ? res.body.text : "Erro ao atualizar categoria."
+            })
+
             setCancelled(true)
             return
         }
@@ -168,6 +191,11 @@ export const categoriesReducer = () => {
     }
 
     const deleteCategory = async (categoryId: string) => {
+        if (cancelled) {
+            setCancelled(false)
+            return
+        }
+
         dispatch({ status: "pending" })
 
         const plates = await platesServices.getPlates()
@@ -182,7 +210,11 @@ export const categoriesReducer = () => {
         const res = await categoriesService.deleteCategory(categoryId)
 
         if (!res.success) {
-            dispatch({ status: "rejected", payload: "Erro ao excluir categoria." })
+            dispatch({
+                status: "rejected",
+                payload: res.body ? res.body.text : "Erro ao excluir categoria."
+            })
+
             setCancelled(true)
             return
         }

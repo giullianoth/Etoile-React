@@ -14,15 +14,19 @@ const Profile = () => {
   const { orders } = ordersState
 
   useEffect(() => {
-    if (!authenticated && !user) {
-      navigate("/login")
-    } else {
-      if (!cancelled) {
-        getOrdersByUser(user?._id!)
+    const getData = async () => {
+      if (!authenticated && !user) {
+        navigate("/login")
+      } else {
+        if (!cancelled) {
+          await getOrdersByUser(user?._id!)
+        }
       }
     }
-  }, [authenticated, user])
-  
+
+    getData()
+  }, [authenticated, user, cancelled])
+
   return (
     <>
       <User user={user as IUser} />

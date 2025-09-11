@@ -29,7 +29,7 @@ const PlateModal = ({ plate, onAddPlate }: Props) => {
                 <p className={styles.plate__description}>{plate.description}</p>
 
                 <div className={styles.plate__action}>
-                    <p className={styles.plate__price}>{currency(plate.price as number)}</p>
+                    <p className={styles.plate__price}>{currency(plate.price)}</p>
 
                     <button className="button primary" onClick={() => onAddPlate(plate)}>
                         <PiShoppingCartSimple />
