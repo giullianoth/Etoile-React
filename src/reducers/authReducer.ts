@@ -193,6 +193,8 @@ export const authReducer = () => {
             return
         }
 
+        console.log(res);
+        
         dispatch({
             status: "fulfilled",
             payload: {
@@ -206,11 +208,7 @@ export const authReducer = () => {
 
     const logout = () => {
         localStorage.removeItem("etoile-auth")
-
-        dispatch({
-            status: "fulfilled",
-            payload: { data: null }
-        })
+        dispatch({ status: "reset", })
     }
 
     return { authState, resetState, register, login, logout }

@@ -5,7 +5,6 @@ import styles from "./Auth.module.css"
 import { useEffect, useState, type FormEvent } from "react"
 import { PiSignIn } from "react-icons/pi"
 import { useAppContext } from "../../context/context"
-import { useTrigger } from "../../hooks/useTrigger"
 import type { IUser } from "../../interfaces/user"
 import Loading from "../../components/Loading"
 import Trigger from "../../components/Trigger"
@@ -16,7 +15,7 @@ const Login = () => {
   const [password, setPassword] = useState<string>("")
   const { authState, login, resetState } = useAppContext().auth
   const { errorMessage, loading, success, successMessage } = authState
-  const { showTrigger, triggerIsVisible } = useTrigger()
+  const { showMessage } = useAppContext().message
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -25,7 +24,7 @@ const Login = () => {
 
   useEffect(() => {
     if (success) {
-      showTrigger()
+      showMessage(successMessage as string)
       navigate("/perfil")
     }
   }, [authState])
@@ -83,8 +82,6 @@ const Login = () => {
           </form>
         </Container>
       </section>
-
-      {triggerIsVisible && <Trigger type="success" floating>{successMessage}</Trigger>}
     </>
   )
 }

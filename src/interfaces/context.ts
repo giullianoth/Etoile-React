@@ -2,7 +2,7 @@ import type { ICartItem } from "./cart-item";
 import type { ICategory } from "./category";
 import type { IOrder, IOrderItem } from "./order";
 import type { IPlateRegister } from "./plate";
-import type { IAuthState, ICategoryState, IOrderState, IPlateState, IUserState } from "./reducer-state";
+import type { IAuthState, ICategoryState, IMessageState, IOrderState, IPlateState, IUserState } from "./reducer-state";
 import type { IUser, IUserRegister, IUserUpdate } from "./user";
 
 export interface IContext {
@@ -12,6 +12,11 @@ export interface IContext {
         removeFromCart: (data: ICartItem) => void
         updateQuantity: (data: ICartItem, quantity: number) => void
         clearCart: () => void
+    }
+
+    message: {
+        messageState: IMessageState
+        showMessage: (message: string, milliSeconds?: number) => void
     }
 
     categories: {

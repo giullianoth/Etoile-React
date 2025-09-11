@@ -15,6 +15,11 @@ export interface IReducerAction {
     payload?: any
 }
 
+export interface IMessageState {
+    message: string | null
+    isVisible: boolean
+}
+
 export interface ICategoryState extends IReducerState {
     categories: ICategory[]
     category: ICategory | null

@@ -6,6 +6,7 @@ import { platesReducer } from "../reducers/platesReducer"
 import { ordersReducer } from "../reducers/ordersReducer"
 import { authReducer } from "../reducers/authReducer"
 import { usersReducer } from "../reducers/usersReducer"
+import { messageReducer } from "../reducers/messageReducer"
 
 type Props = {
     children?: ReactNode
@@ -16,6 +17,7 @@ const Context = createContext<IContext | undefined>(undefined)
 export const ContextProvider = ({ children }: Props) => {
     const contextValues: IContext = {
         cart: useCart(),
+        message: messageReducer(),
         categories: categoriesReducer(),
         plates: platesReducer(),
         orders: ordersReducer(),
