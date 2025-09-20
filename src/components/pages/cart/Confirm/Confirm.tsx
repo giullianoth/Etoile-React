@@ -1,6 +1,5 @@
 import { useEffect, useState, type FormEvent } from "react"
 import styles from "./Confirm.module.css"
-import { useAppContext } from "../../../../context/context"
 import type { IOrder, IOrderItem } from "../../../../interfaces/order"
 import { useNavigate } from "react-router-dom"
 import { usePendingOrder } from "../../../../hooks/usePendingOrder"
@@ -15,11 +14,7 @@ const Confirm = ({ onCancel }: Props) => {
     const [time, setTime] = useState<string>("")
     const [localErrorMessage, setLocalErrorMessage] = useState<string | null>(null)
     const navigate = useNavigate()
-    const { cart, clearCart } = useAppContext().cart
-    const { user } = useAppContext().auth.authState
     const { pendingOrder, pendingOrderItems, setData, saveOrder } = usePendingOrder()
-    const { ordersState, addOrder } = useAppContext().orders
-    const { errorMessage, loading, success } = ordersState
 
     useEffect(() => {
         if (pendingOrder && pendingOrderItems.length) {
@@ -28,39 +23,10 @@ const Confirm = ({ onCancel }: Props) => {
         }
     }, [pendingOrder, pendingOrderItems])
 
-    useEffect(() => {
-        if (success) {
-            clearCart()
-            navigate("/perfil")
-        }
-    }, [ordersState])
-
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault()
 
-        if (!time) {
-            setLocalErrorMessage("Selecione o horário de comparecimento.")
-            return
-        }
-
-        const orderItemsData: Partial<IOrderItem>[] = cart.map(item => ({
-            plateId: item.plate._id,
-            quantity: item.quantity
-        }))
-
-        const orderData: Partial<IOrder> = {
-            time,
-            status: "Pendente"
-        }
-
-        if (user) {
-            orderData.userDetails = user
-            await addOrder(orderData, orderItemsData)
-        } else {
-            setData(orderData, orderItemsData)
-        }
-
-        onCancel()
+        
     }
 
     return (
@@ -83,17 +49,11 @@ const Confirm = ({ onCancel }: Props) => {
 
                     <div className={styles.confirm__actions}>
                         <span className="button primary outline" onClick={onCancel}>Cancelar</span>
-                        <button type="submit" className="button primary" disabled={loading}>
+                        <button type="submit" className="button primary">
                             Confirmar
-                            {loading && <Loading inButton />}
                         </button>
                     </div>
                 </form>
-
-                {errorMessage &&
-                    <Trigger
-                        className={styles.confirm__message}
-                        type="error">{errorMessage}</Trigger>}
 
                 {localErrorMessage &&
                     <Trigger

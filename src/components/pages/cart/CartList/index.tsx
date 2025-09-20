@@ -1,22 +1,17 @@
 import { Link } from "react-router-dom"
 import Container from "../../../Container"
 import styles from "./CartList.module.css"
-import CartItem from "../CartItem"
 import { PiCheck } from "react-icons/pi"
 import { useState } from "react"
-import Modal from "react-modal"
-import Confirm from "../Confirm/Confirm"
-import { useAppContext } from "../../../../context/context"
 
 const CartList = () => {
     const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
-    const { cart } = useAppContext().cart
 
     return (
         <>
             <section className={styles.cart}>
                 <Container>
-                    <header className="section-heading">
+                    {/* <header className="section-heading">
                         <h2>
                             Meus itens&nbsp;
                             {cart && cart.length > 0 && `(${cart.length})`}
@@ -49,18 +44,18 @@ const CartList = () => {
                                 Você ainda não adicionou itens no carrinho.&nbsp;
                                 <Link to="/pratos">Clique aqui e veja nossas espeialidades!</Link>
                             </p>}
-                    </div>
+                    </div> */}
                 </Container>
             </section>
 
-            <Modal
+            {/* <Modal
                 isOpen={modalIsOpen}
                 onRequestClose={() => setModalIsOpen(false)}
                 closeTimeoutMS={300}
                 className="modal"
                 overlayClassName="modal-overlay">
                 <Confirm onCancel={() => setModalIsOpen(false)} />
-            </Modal>
+            </Modal> */}
         </>
     )
 }

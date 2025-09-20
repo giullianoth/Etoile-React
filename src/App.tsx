@@ -9,12 +9,11 @@ import Login from "./pages/Auth/Login"
 import Register from "./pages/Auth/Register"
 import Profile from "./pages/Profile"
 import Modal from "react-modal"
-import { useAuth } from './hooks/useAuth'
 
 Modal.setAppElement("#root")
 
 function App() {
-  const { authenticated } = useAuth()
+  const authenticated = false
 
   return (
     <BrowserRouter>
@@ -32,11 +31,6 @@ function App() {
       </main>
 
       <Footer />
-
-      {messageState.isVisible &&
-        <Trigger type='success' floating>
-          {messageState.message}
-        </Trigger>}
     </BrowserRouter>
   )
 }

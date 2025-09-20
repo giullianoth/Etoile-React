@@ -8,7 +8,6 @@ import Modal from "react-modal"
 import EditOrder from "../Edit/Order"
 import DeleteOrder from "../Edit/DeleteOrder"
 import type { IOrder } from "../../../../interfaces/order"
-import { useAppContext } from "../../../../context/context"
 
 type Props = {
     orders: IOrder[]
@@ -18,7 +17,6 @@ const Orders = ({ orders }: Props) => {
     const [editIsOpen, setEditIsOpen] = useState<boolean>(false)
     const [deleteOrderIsOpen, setDeleteOrderIsOpen] = useState<boolean>(false)
     const [orderToEdit, setOrderToEdit] = useState<IOrder | null>(null)
-    const { deleteOrder } = useAppContext().orders
 
     const handleOpenEditOrder = (order: IOrder) => {
         setEditIsOpen(true)
@@ -26,7 +24,6 @@ const Orders = ({ orders }: Props) => {
     }
 
     const handleDeleteOrder = () => {
-        deleteOrder(orderToEdit?._id!)
         setDeleteOrderIsOpen(false)
         setEditIsOpen(false)
     }

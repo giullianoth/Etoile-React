@@ -2,9 +2,7 @@ import { useRef, type ComponentProps } from "react"
 import styles from "./Checkbox.module.css"
 import { PiCheck } from "react-icons/pi"
 
-type Props = ComponentProps<"input">
-
-const Checkbox = ({ ...props }: Props) => {
+const Checkbox = (props: ComponentProps<"input">) => {
     const checkboxRef = useRef<HTMLInputElement | null>(null)
 
     return (

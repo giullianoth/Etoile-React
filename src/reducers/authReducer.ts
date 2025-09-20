@@ -1,20 +1,17 @@
-import { useReducer } from "react";
-import type { IAuthState, IReducerAction } from "../interfaces/reducer-state";
-import type { IUser, IUserRegister } from "../interfaces/user";
-import { useValidateEmail } from "../hooks/useValidateEmail";
-import authService from "../services/auth-service";
+import { useEffect, useReducer } from "react"
+import type { IReducerAction, IReducerState } from "../interfaces/reducer-states"
+import authServices from "../services/auth"
+import type { IUser, IUserRegister } from "../interfaces/user"
+import { useValidateEmail } from "../hooks/useValidateEmail"
 
-const storagedUser = localStorage.getItem("etoile-auth")
-
-const initialState: IAuthState = {
+const initialState: IReducerState = {
     success: false,
     loading: false,
-    errorMessage: null,
     successMessage: null,
-    user: storagedUser ? JSON.parse(storagedUser).user : null
+    errorMessage: null
 }
 
-const authReducerActions = (state: IAuthState, action: IReducerAction) => {
+const authReducerActions = (state: IReducerState, action: IReducerAction) => {
     switch (action.status) {
         case "pending":
             return {
@@ -23,22 +20,22 @@ const authReducerActions = (state: IAuthState, action: IReducerAction) => {
                 loading: true
             }
 
-        case "fulfilled":
-            return {
-                success: true,
-                loading: false,
-                user: action.payload.data,
-                successMessage: action.payload.message ?? state.successMessage,
-                errorMessage: null
-            }
-
         case "rejected":
             return {
+                ...state,
                 success: false,
                 loading: false,
-                errorMessage: action.payload,
-                successMessage: null,
-                user: null
+                errorMessage: action.message,
+                successMessage: null
+            }
+
+        case "fulfilled":
+            return {
+                ...state,
+                success: true,
+                loading: false,
+                successMessage: action.message,
+                errorMessage: null
             }
 
         case "reset":
@@ -49,134 +46,153 @@ const authReducerActions = (state: IAuthState, action: IReducerAction) => {
     }
 }
 
-export const authReducer = () => {
-    const [authState, dispatch] = useReducer<IAuthState, [action: IReducerAction]>(authReducerActions, initialState)
+export const useAuthReducer = () => {
+    const [authState, dispatch] = useReducer<IReducerState, [action: IReducerAction]>(authReducerActions, initialState)
     const validateEmail = useValidateEmail()
 
-    const resetState = () => dispatch({ status: "reset" })
+    useEffect(() => {
+        dispatch({ status: "reset" })
+    }, [])
 
-    const register = async (authData: Partial<IUserRegister>) => {
+    const login = async (userData: Partial<IUser>) => {
         dispatch({ status: "pending" })
 
-        if (!authData.fullname) {
-            dispatch({ status: "rejected", payload: "Digite o nome." })
+        if (!userData.email) {
+            dispatch({
+                status: "rejected",
+                message: "Digite o e-mail."
+            })
             return
         }
 
-        if (!authData.email) {
-            dispatch({ status: "rejected", payload: "Digite o e-mail." })
+        if (!userData.password) {
+            dispatch({
+                status: "rejected",
+                message: "Digite a senha."
+            })
             return
         }
 
-        if (!authData.password) {
-            dispatch({ status: "rejected", payload: "Digite a senha." })
+        if (!validateEmail(userData.email)) {
+            dispatch({
+                status: "rejected",
+                message: "E-mail inválido."
+            })
             return
         }
 
-        if (!authData.confirmPassword) {
-            dispatch({ status: "rejected", payload: "Confirme a sua senha." })
-            return
-        }
-
-        if (!validateEmail(authData.email)) {
-            dispatch({ status: "rejected", payload: "Digite um endereço de e-mail válido." })
-            return
-        }
-
-        if (authData.password !== authData.confirmPassword) {
-            dispatch({ status: "rejected", payload: "As senhas digitadas não conferem." })
-            return
-        }
-
-        authData.role = "user"
-        const res = await authService.register(authData)
+        const res = await authServices.login(userData)
 
         if (!res.success) {
             dispatch({
                 status: "rejected",
-                payload: res.body ? res.body.text : "Erro ao fazer o cadastro, tente novamente mais tarde."
+                message: res.body.text ?? "Erro ao realizar o login."
             })
-
             return
         }
 
-        if (res.body.token) {
-            localStorage.setItem("etoile-auth", JSON.stringify({
-                user: res.body.user,
-                token: res.body.token
-            }))
-        } else {
-            dispatch({ status: "rejected", payload: "Acesso negado." })
-            return
-        }
-
-        dispatch({
-            status: "fulfilled",
-            payload: {
-                data: res.body.user,
-                message: "Cadastro realizado com sucesso."
-            }
-        })
-    }
-
-    const login = async (authData: Partial<IUser>) => {
-        dispatch({ status: "pending" })
-
-        if (!authData.email) {
-            dispatch({ status: "rejected", payload: "Digite o e-mail." })
-            return
-        }
-
-        if (!authData.password) {
-            dispatch({ status: "rejected", payload: "Digite a senha." })
-            return
-        }
-
-        if (!validateEmail(authData.email)) {
-            dispatch({ status: "rejected", payload: "Digite um endereço de e-mail válido." })
-            return
-        }
-
-        const res = await authService.login(authData)
-
-        if (!res.success) {
+        if (!res.body.token) {
             dispatch({
                 status: "rejected",
-                payload: res.body ? res.body.text : "Erro ao fazer o login, tente novamente mais tarde."
+                message: "Acesso negado."
             })
-
             return
         }
 
-        if (res.body.token) {
-            localStorage.setItem("etoile-auth", JSON.stringify({
-                user: res.body.user,
-                token: res.body.token
-            }))
-        } else {
-            dispatch({ status: "rejected", payload: "Acesso negado." })
-            return
-        }
+        localStorage.setItem("etoile-auth", JSON.stringify({
+            token: res.body.token,
+            user: res.body.user
+        }))
 
-        console.log(res);
-        
         dispatch({
             status: "fulfilled",
-            payload: {
-                data: res.body.user,
-                message: "Login efetuado com sucesso."
-            }
+            message: res.body.text ?? "Login efetuado com sucesso."
         })
     }
 
     const logout = () => {
-        localStorage.removeItem("etoile-auth")
-<<<<<<< HEAD
-        dispatch({ status: "reset", })
-=======
-        dispatch({ status: "reset" })
->>>>>>> 0c5c0a587d2159eb6b9fba7e5b28398068011be7
+
     }
 
-    return { authState, resetState, register, login, logout }
+    const register = async (userData: Partial<IUserRegister>) => {
+        dispatch({ status: "pending" })
+
+        if (!userData.fullname) {
+            dispatch({
+                status: "rejected",
+                message: "Digite o nome."
+            })
+            return
+        }
+
+        if (!userData.email) {
+            dispatch({
+                status: "rejected",
+                message: "Digite o e-mail."
+            })
+            return
+        }
+
+        if (!userData.password) {
+            dispatch({
+                status: "rejected",
+                message: "Digite a senha."
+            })
+            return
+        }
+
+        if (!userData.confirmPassword) {
+            dispatch({
+                status: "rejected",
+                message: "Confirme a senha."
+            })
+            return
+        }
+
+        if (!validateEmail(userData.email)) {
+            dispatch({
+                status: "rejected",
+                message: "E-mail inválido."
+            })
+            return
+        }
+
+        if (userData.password !== userData.confirmPassword) {
+            dispatch({
+                status: "rejected",
+                message: "As senhas digitadas não correspondem."
+            })
+            return
+        }
+
+        const res = await authServices.register(userData)
+
+        if (!res.success) {
+            dispatch({
+                status: "rejected",
+                message: res.body.text ?? "Erro ao realizar o cadastro."
+            })
+            return
+        }
+
+        if (!res.body.token) {
+            dispatch({
+                status: "rejected",
+                message: "Acesso negado."
+            })
+            return
+        }
+
+        localStorage.setItem("etoile-auth", JSON.stringify({
+            token: res.body.token,
+            user: res.body.user
+        }))
+
+        dispatch({
+            status: "fulfilled",
+            message: res.body.text ?? "Cadastro realizado com sucesso."
+        })
+    }
+
+    return { authState, login, logout, register }
 }

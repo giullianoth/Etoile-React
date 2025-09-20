@@ -1,33 +1,19 @@
-import { Link, useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 import Container from "../../components/Container"
 import PageTitle from "../../components/PageTitle"
 import styles from "./Auth.module.css"
-import { useEffect, useState, type FormEvent } from "react"
+import { useState, type FormEvent } from "react"
 import { PiSignIn } from "react-icons/pi"
-import { useAppContext } from "../../context/context"
 import type { IUser } from "../../interfaces/user"
+import Password from "../../components/form/Password"
+import { useAuthReducer } from "../../reducers/authReducer"
 import Loading from "../../components/Loading"
 import Trigger from "../../components/Trigger"
-import Password from "../../components/form/Password"
 
 const Login = () => {
   const [email, setEmail] = useState<string>("")
   const [password, setPassword] = useState<string>("")
-  const { authState, login, resetState } = useAppContext().auth
-  const { errorMessage, loading, success, successMessage } = authState
-  const { showMessage } = useAppContext().message
-  const navigate = useNavigate()
-
-  useEffect(() => {
-    resetState()
-  }, [])
-
-  useEffect(() => {
-    if (success) {
-      showMessage(successMessage as string)
-      navigate("/perfil")
-    }
-  }, [authState])
+  const { authState, login } = useAuthReducer()
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault()
@@ -39,6 +25,8 @@ const Login = () => {
 
     await login(userData)
   }
+
+  console.log(authState);
 
   return (
     <>
@@ -71,14 +59,15 @@ const Login = () => {
               value={password ?? ""}
               onChange={event => setPassword(event.target.value)} />
 
-            <button type="submit" className="button primary" disabled={loading}>
+            <button type="submit" className="button primary" disabled={authState.loading}>
               <PiSignIn />
               Entrar
 
-              {loading && <Loading inButton />}
+              {authState.loading && <Loading inButton />}
             </button>
 
-            {errorMessage && <Trigger type="error">{errorMessage}</Trigger>}
+            {authState.errorMessage &&
+              <Trigger type="error">{authState.errorMessage}</Trigger>}
           </form>
         </Container>
       </section>

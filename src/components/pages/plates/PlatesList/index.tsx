@@ -9,7 +9,6 @@ import { useEffect, useState } from "react"
 import Modal from "react-modal"
 import PlateModal from "../PlateModal"
 import type { IPlate } from "../../../../interfaces/plate"
-import { useAppContext } from "../../../../context/context"
 import type { ICartItem } from "../../../../interfaces/cart-item"
 import Trigger from "../../../Trigger"
 import { useTrigger } from "../../../../hooks/useTrigger"
@@ -18,49 +17,30 @@ import Loading from "../../../Loading"
 const PlatesList = () => {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
   const [plateToShow, setPlateToShow] = useState<IPlate | null>(null)
-  const { addToCart } = useAppContext().cart
   const { showTrigger, triggerIsVisible } = useTrigger()
-  const { categoriesState, getAvailableCategories, cancelled: categoriesCancelled } = useAppContext().categories
-  const { platesState, getAvailablePlates, cancelled: platesCancelled } = useAppContext().plates
-  const { categories, loading: categoriesLoading, errorMessage: categoriesErrorMessage } = categoriesState
-  const { plates, loading: platesLoading, errorMessage: platesErrorMessage } = platesState
 
-  const responsiveCarousel: ResponsiveType = {
-    desktop: {
-      breakpoint: { max: 8000, min: 992 },
-      items: 3,
-      partialVisibilityGutter: 40
-    },
-    tablet: {
-      breakpoint: { max: 992, min: 576 },
-      items: 2,
-      partialVisibilityGutter: 40
-    },
-    mobile: {
-      breakpoint: { max: 576, min: 0 },
-      items: 1,
-      partialVisibilityGutter: 40
-    },
-  }
+  // const responsiveCarousel: ResponsiveType = {
+  //   desktop: {
+  //     breakpoint: { max: 8000, min: 992 },
+  //     items: 3,
+  //     partialVisibilityGutter: 40
+  //   },
+  //   tablet: {
+  //     breakpoint: { max: 992, min: 576 },
+  //     items: 2,
+  //     partialVisibilityGutter: 40
+  //   },
+  //   mobile: {
+  //     breakpoint: { max: 576, min: 0 },
+  //     items: 1,
+  //     partialVisibilityGutter: 40
+  //   },
+  // }
 
-  useEffect(() => {
-    const getData = async () => {
-      if (!categoriesCancelled) {
-        await getAvailableCategories()
-      }
-
-      if (!platesCancelled) {
-        await getAvailablePlates()
-      }
-    }
-
-    getData()
-  }, [categoriesCancelled, platesCancelled])
-
-  const handleSelectPlate = (plate: IPlate) => {
-    setPlateToShow(plate)
-    setModalIsOpen(true)
-  }
+  // const handleSelectPlate = (plate: IPlate) => {
+  //   setPlateToShow(plate)
+  //   setModalIsOpen(true)
+  // }
 
   const handleAddPlate = (plate: IPlate) => {
     const cartItem: ICartItem = {
@@ -68,9 +48,7 @@ const PlatesList = () => {
       quantity: 1
     }
 
-    addToCart(cartItem)
-    setModalIsOpen(false)
-    showTrigger()
+    console.log(cartItem)
   }
 
   return (
@@ -87,7 +65,7 @@ const PlatesList = () => {
 
           <Divider />
 
-          {categoriesLoading
+          {/* {categoriesLoading
             ? <div className={styles.plates__loading}>
               <Loading />
             </div>
@@ -138,7 +116,7 @@ const PlatesList = () => {
                   </div>
                 </article>
               ))
-            )}
+            )} */}
         </Container>
       </section>
 

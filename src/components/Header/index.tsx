@@ -7,28 +7,17 @@ import { PiList, PiShoppingCartSimple, PiSignOut, PiUserCircle, PiX } from "reac
 import { useEffect, useRef, useState } from "react"
 import { useWindowBehavior } from "../../hooks/useWindowBehavior"
 import { useFirstName } from "../../hooks/useFirstName"
-import { useAppContext } from "../../context/context"
-import { useAuth } from "../../hooks/useAuth"
 
 const Header = () => {
     const overlayRef = useRef<HTMLDivElement | null>(null)
-    const { authState, logout } = useAppContext().auth
-    const { user } = authState
-    const { authenticated } = useAuth()
     const { scrolling } = useWindowBehavior()
     const firstName = useFirstName()
     const { pathname } = useLocation()
-    const { cart } = useAppContext().cart
     const navigate = useNavigate()
     const [menuIsOpen, setMenuIsOpen] = useState<boolean>(false)
     const [auth, setAuth] = useState<boolean>(false)
 
-    useEffect(() => {
-        setAuth(authenticated && pathname === "/perfil")
-    }, [user, authenticated, pathname])
-
     const handleLogout = () => {
-        logout()
         navigate("/")
     }
 
@@ -66,17 +55,17 @@ const Header = () => {
                             <Link to="/carrinho" title="Carrinho">
                                 <PiShoppingCartSimple />
 
-                                {cart && cart.length > 0 &&
+                                {/* {cart && cart.length > 0 &&
                                     <span className={styles.header__navigationCartQt}>
                                         {cart.length}
-                                    </span>}
+                                    </span>} */}
                             </Link>
                         </div>
 
-                        {auth && user?.fullname &&
+                        {/* {auth && user?.fullname &&
                             <p className={styles.header__navigationWelcome}>
                                 Bem-vindo, <strong>{firstName(user?.fullname!)}</strong>!
-                            </p>}
+                            </p>} */}
 
                         {!auth &&
                             <>
