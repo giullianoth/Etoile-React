@@ -9,11 +9,21 @@ import Login from "./pages/Auth/Login"
 import Register from "./pages/Auth/Register"
 import Profile from "./pages/Profile"
 import Modal from "react-modal"
+import { useAuth } from "./hooks/useAuth"
+import Loading from "./components/Loading"
 
 Modal.setAppElement("#root")
 
 function App() {
-  const authenticated = false
+  const { authenticated, loading } = useAuth()
+
+  if (loading) {
+    return (
+      <div className="loading-page">
+        <Loading />
+      </div>
+    )
+  }
 
   return (
     <BrowserRouter>

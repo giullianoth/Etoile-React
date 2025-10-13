@@ -7,6 +7,8 @@ import { PiList, PiShoppingCartSimple, PiSignOut, PiUserCircle, PiX } from "reac
 import { useEffect, useRef, useState } from "react"
 import { useWindowBehavior } from "../../hooks/useWindowBehavior"
 import { useFirstName } from "../../hooks/useFirstName"
+import { useAuth } from "../../hooks/useAuth"
+import { useAppContext } from "../../context/context"
 
 const Header = () => {
     const overlayRef = useRef<HTMLDivElement | null>(null)
@@ -15,9 +17,16 @@ const Header = () => {
     const { pathname } = useLocation()
     const navigate = useNavigate()
     const [menuIsOpen, setMenuIsOpen] = useState<boolean>(false)
+    const { authenticated } = useAuth()
     const [auth, setAuth] = useState<boolean>(false)
+    const { authState, logout } = useAppContext().auth
+
+    useEffect(() => {
+        setAuth(authenticated && pathname === "/perfil")
+    }, [authenticated, pathname])
 
     const handleLogout = () => {
+        logout()
         navigate("/")
     }
 
@@ -62,10 +71,10 @@ const Header = () => {
                             </Link>
                         </div>
 
-                        {/* {auth && user?.fullname &&
+                        {auth && authState.user?.fullname &&
                             <p className={styles.header__navigationWelcome}>
-                                Bem-vindo, <strong>{firstName(user?.fullname!)}</strong>!
-                            </p>} */}
+                                Bem-vindo, <strong>{firstName(authState.user?.fullname!)}</strong>!
+                            </p>}
 
                         {!auth &&
                             <>

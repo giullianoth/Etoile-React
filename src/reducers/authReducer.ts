@@ -1,17 +1,20 @@
 import { useEffect, useReducer } from "react"
-import type { IReducerAction, IReducerState } from "../interfaces/reducer-states"
+import type { IAuthReducerState, IReducerAction } from "../interfaces/reducer-states"
 import authServices from "../services/auth"
 import type { IUser, IUserRegister } from "../interfaces/user"
 import { useValidateEmail } from "../hooks/useValidateEmail"
 
-const initialState: IReducerState = {
+const storagedAuth = () => localStorage.getItem("etoile-auth")
+
+const initialState: IAuthReducerState = {
     success: false,
     loading: false,
     successMessage: null,
-    errorMessage: null
+    errorMessage: null,
+    user: storagedAuth() ? JSON.parse(storagedAuth()!).user : null
 }
 
-const authReducerActions = (state: IReducerState, action: IReducerAction) => {
+const authReducerActions = (state: IAuthReducerState, action: IReducerAction) => {
     switch (action.status) {
         case "pending":
             return {
@@ -22,20 +25,20 @@ const authReducerActions = (state: IReducerState, action: IReducerAction) => {
 
         case "rejected":
             return {
-                ...state,
                 success: false,
                 loading: false,
+                successMessage: null,
                 errorMessage: action.message,
-                successMessage: null
+                user: null
             }
 
         case "fulfilled":
             return {
-                ...state,
                 success: true,
                 loading: false,
                 successMessage: action.message,
-                errorMessage: null
+                errorMessage: null,
+                user: action.data
             }
 
         case "reset":
@@ -47,7 +50,7 @@ const authReducerActions = (state: IReducerState, action: IReducerAction) => {
 }
 
 export const useAuthReducer = () => {
-    const [authState, dispatch] = useReducer<IReducerState, [action: IReducerAction]>(authReducerActions, initialState)
+    const [authState, dispatch] = useReducer<IAuthReducerState, [action: IReducerAction]>(authReducerActions, initialState)
     const validateEmail = useValidateEmail()
 
     useEffect(() => {
@@ -106,12 +109,14 @@ export const useAuthReducer = () => {
 
         dispatch({
             status: "fulfilled",
-            message: res.body.text ?? "Login efetuado com sucesso."
+            message: res.body.text ?? "Login efetuado com sucesso.",
+            data: res.body.user
         })
     }
 
     const logout = () => {
-
+        localStorage.removeItem("etoile-auth")
+        dispatch({ status: "reset" })
     }
 
     const register = async (userData: Partial<IUserRegister>) => {
@@ -190,7 +195,8 @@ export const useAuthReducer = () => {
 
         dispatch({
             status: "fulfilled",
-            message: res.body.text ?? "Cadastro realizado com sucesso."
+            message: res.body.text ?? "Cadastro realizado com sucesso.",
+            data: res.body.user
         })
     }
 

@@ -1,19 +1,26 @@
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import Container from "../../components/Container"
 import PageTitle from "../../components/PageTitle"
 import styles from "./Auth.module.css"
-import { useState, type FormEvent } from "react"
+import { useEffect, useState, type FormEvent } from "react"
 import { PiSignIn } from "react-icons/pi"
 import type { IUser } from "../../interfaces/user"
 import Password from "../../components/form/Password"
-import { useAuthReducer } from "../../reducers/authReducer"
 import Loading from "../../components/Loading"
 import Trigger from "../../components/Trigger"
+import { useAppContext } from "../../context/context"
 
 const Login = () => {
   const [email, setEmail] = useState<string>("")
   const [password, setPassword] = useState<string>("")
-  const { authState, login } = useAuthReducer()
+  const { authState, login } = useAppContext().auth
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (authState.success) {
+      navigate("/perfil")
+    }
+  }, [authState])
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault()
@@ -25,8 +32,6 @@ const Login = () => {
 
     await login(userData)
   }
-
-  console.log(authState);
 
   return (
     <>
