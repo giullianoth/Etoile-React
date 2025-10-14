@@ -38,7 +38,7 @@ const authReducerActions = (state: IAuthReducerState, action: IReducerAction) =>
                 loading: false,
                 successMessage: action.message,
                 errorMessage: null,
-                user: action.data
+                user: action.payload
             }
 
         case "reset":
@@ -110,7 +110,7 @@ export const useAuthReducer = () => {
         dispatch({
             status: "fulfilled",
             message: res.body.text ?? "Login efetuado com sucesso.",
-            data: res.body.user
+            payload: res.body.user
         })
     }
 
@@ -196,7 +196,7 @@ export const useAuthReducer = () => {
         dispatch({
             status: "fulfilled",
             message: res.body.text ?? "Cadastro realizado com sucesso.",
-            data: res.body.user
+            payload: res.body.user
         })
     }
 

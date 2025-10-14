@@ -11,7 +11,7 @@ interface IReducerState {
 export interface IReducerAction {
     status: "pending" | "rejected" | "fulfilled" | "reset"
     message?: string | null
-    data?: any
+    payload?: any
 }
 
 export interface IAuthReducerState extends IReducerState {
