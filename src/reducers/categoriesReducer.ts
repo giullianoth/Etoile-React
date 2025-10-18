@@ -1,17 +1,17 @@
-import { useReducer, useState } from "react"
-import type { IOrderReducerState, IReducerAction } from "../interfaces/reducer-states"
-import ordersServices from "../services/orders"
+import { useReducer, useState } from "react";
+import type { ICategoriesReducerState, IReducerAction } from "../interfaces/reducer-states";
+import categoriesServices from "../services/categories";
 
-const initialState: IOrderReducerState = {
+const initialState: ICategoriesReducerState = {
     success: false,
     loading: false,
     successMessage: null,
     errorMessage: null,
-    orders: [],
-    order: null
+    categories: [],
+    category: null
 }
 
-const ordersReducerActions = (state: IOrderReducerState, action: IReducerAction) => {
+const categoresReducerActions = (state: ICategoriesReducerState, action: IReducerAction) => {
     switch (action.status) {
         case "pending":
             return {
@@ -26,7 +26,7 @@ const ordersReducerActions = (state: IOrderReducerState, action: IReducerAction)
                 success: false,
                 loading: false,
                 successMessage: null,
-                errorMessage: action.message
+                errorMessage: action.message ?? null
             }
 
         case "fulfilled":
@@ -35,8 +35,8 @@ const ordersReducerActions = (state: IOrderReducerState, action: IReducerAction)
                 loading: false,
                 successMessage: action.message ?? null,
                 errorMessage: null,
-                orders: action.payload.list ?? state.orders,
-                order: action.payload.data ?? state.order
+                categories: action.payload.list ?? state.categories,
+                category: action.payload.data ?? state.category
             }
 
         case "reset":
@@ -47,19 +47,19 @@ const ordersReducerActions = (state: IOrderReducerState, action: IReducerAction)
     }
 }
 
-export const useOrdersReducer = () => {
-    const [ordersState, dispatch] = useReducer<IOrderReducerState, [action: IReducerAction]>(ordersReducerActions, initialState)
+export const useCategoriesReducer = () => {
+    const [categoriesState, dispatch] = useReducer<ICategoriesReducerState, [action: IReducerAction]>(categoresReducerActions, initialState)
     const [refetch, setRefetch] = useState<boolean>(true)
 
-    const getOrdersByUser = async (userId: string) => {
+    const getAvailableCategories = async () => {
         dispatch({ status: "pending" })
 
-        const res = await ordersServices.getOrdersByUser(userId)
+        const res = await categoriesServices.getAvailableCategories()
 
         if (!res.success) {
             dispatch({
                 status: "rejected",
-                message: res.body.text ?? "Erro ao listar pedidos."
+                message: "Erro ao listar categorias."
             })
 
             setRefetch(false)
@@ -70,9 +70,7 @@ export const useOrdersReducer = () => {
             status: "fulfilled",
             payload: { list: res.body }
         })
-
-        setRefetch(false)
     }
 
-    return { ordersState, refetch, getOrdersByUser }
+    return { categoriesState, refetch, getAvailableCategories }
 }

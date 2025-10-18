@@ -1,17 +1,17 @@
-import { useReducer, useState } from "react"
-import type { IOrderReducerState, IReducerAction } from "../interfaces/reducer-states"
-import ordersServices from "../services/orders"
+import { useReducer, useState } from "react";
+import type { IPlatesReducerState, IReducerAction } from "../interfaces/reducer-states";
+import platesServices from "../services/plates";
 
-const initialState: IOrderReducerState = {
+const initialState: IPlatesReducerState = {
     success: false,
     loading: false,
     successMessage: null,
     errorMessage: null,
-    orders: [],
-    order: null
+    plates: [],
+    plate: null
 }
 
-const ordersReducerActions = (state: IOrderReducerState, action: IReducerAction) => {
+const platesReducerActions = (state: IPlatesReducerState, action: IReducerAction) => {
     switch (action.status) {
         case "pending":
             return {
@@ -26,7 +26,7 @@ const ordersReducerActions = (state: IOrderReducerState, action: IReducerAction)
                 success: false,
                 loading: false,
                 successMessage: null,
-                errorMessage: action.message
+                errorMessage: action.message ?? null
             }
 
         case "fulfilled":
@@ -35,8 +35,8 @@ const ordersReducerActions = (state: IOrderReducerState, action: IReducerAction)
                 loading: false,
                 successMessage: action.message ?? null,
                 errorMessage: null,
-                orders: action.payload.list ?? state.orders,
-                order: action.payload.data ?? state.order
+                plates: action.payload.list ?? state.plates,
+                plate: action.payload.data ?? state.plate
             }
 
         case "reset":
@@ -47,19 +47,19 @@ const ordersReducerActions = (state: IOrderReducerState, action: IReducerAction)
     }
 }
 
-export const useOrdersReducer = () => {
-    const [ordersState, dispatch] = useReducer<IOrderReducerState, [action: IReducerAction]>(ordersReducerActions, initialState)
+export const usePlatesReducer = () => {
+    const [platesState, dispatch] = useReducer<IPlatesReducerState, [action: IReducerAction]>(platesReducerActions, initialState)
     const [refetch, setRefetch] = useState<boolean>(true)
 
-    const getOrdersByUser = async (userId: string) => {
+    const getAvailablePlates = async () => {
         dispatch({ status: "pending" })
 
-        const res = await ordersServices.getOrdersByUser(userId)
+        const res = await platesServices.getAvailablePlates()
 
         if (!res.success) {
             dispatch({
                 status: "rejected",
-                message: res.body.text ?? "Erro ao listar pedidos."
+                message: "Erro ao listar pratos."
             })
 
             setRefetch(false)
@@ -70,9 +70,7 @@ export const useOrdersReducer = () => {
             status: "fulfilled",
             payload: { list: res.body }
         })
-
-        setRefetch(false)
     }
 
-    return { ordersState, refetch, getOrdersByUser }
+    return { platesState, refetch, getAvailablePlates }
 }

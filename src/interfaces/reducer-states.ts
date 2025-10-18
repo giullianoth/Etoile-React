@@ -1,4 +1,6 @@
+import type { ICategory } from "./category"
 import type { IOrder } from "./order"
+import type { IPlate } from "./plate"
 import type { IUser } from "./user"
 
 interface IReducerState {
@@ -21,4 +23,14 @@ export interface IAuthReducerState extends IReducerState {
 export interface IOrderReducerState extends IReducerState {
     orders: IOrder[]
     order: IOrder | null
+}
+
+export interface IPlatesReducerState extends IReducerState {
+    plates: IPlate[]
+    plate: IPlate | null
+}
+
+export interface ICategoriesReducerState extends IReducerState {
+    categories: ICategory[]
+    category: ICategory | null
 }

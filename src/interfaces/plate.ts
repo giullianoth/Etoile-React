@@ -10,9 +10,10 @@ export interface IPlate {
     available: boolean
     pairing?: string
     ingredients: string[]
+    category: string
 }
 
 export interface IPlateRegister extends IPlate {
-    category: ICategory
+    categoryToAdd: ICategory
     ingredientsString: string
 }

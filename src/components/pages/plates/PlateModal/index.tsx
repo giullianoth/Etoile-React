@@ -1,4 +1,4 @@
-import { PiShoppingCartSimple } from "react-icons/pi"
+import { PiBeerBottle, PiShoppingCartSimple } from "react-icons/pi"
 import styles from "./PlateModal.module.css"
 import type { IPlate } from "../../../../interfaces/plate"
 import { useCurrency } from "../../../../hooks/useCurrency"
@@ -27,6 +27,11 @@ const PlateModal = ({ plate, onAddPlate }: Props) => {
                 </p>
 
                 <p className={styles.plate__description}>{plate.description}</p>
+
+                <p className={styles.plate__pairing}>
+                    <PiBeerBottle />&nbsp;
+                    Perfeito acompanhado por um <strong>{plate.pairing}</strong>
+                </p>
 
                 <div className={styles.plate__action}>
                     <p className={styles.plate__price}>{currency(plate.price)}</p>

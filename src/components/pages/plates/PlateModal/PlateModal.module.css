@@ -35,6 +35,14 @@
     color: var(--color-murrey);
 }
 
+.plate__pairing {
+    margin-bottom: 20px;
+}
+
+.plate__pairing svg, .plate__pairing strong {
+    color: var(--color-murrey);
+}
+
 .plate__action {
     display: flex;
     justify-content: space-between;

@@ -1,4 +1,4 @@
-import type { IAuthReducerState, IOrderReducerState } from "./reducer-states"
+import type { IAuthReducerState, ICategoriesReducerState, IOrderReducerState, IPlatesReducerState } from "./reducer-states"
 import type { IUser, IUserRegister } from "./user"
 
 export interface IContext {
@@ -13,5 +13,17 @@ export interface IContext {
         ordersState: IOrderReducerState
         refetch: boolean
         getOrdersByUser: (userId: string) => Promise<void>
+    }
+
+    plates: {
+        platesState: IPlatesReducerState
+        refetch: boolean
+        getAvailablePlates: () => Promise<void>
+    }
+
+    categories: {
+        categoriesState: ICategoriesReducerState
+        refetch: boolean
+        getAvailableCategories: () => Promise<void>
     }
 }
