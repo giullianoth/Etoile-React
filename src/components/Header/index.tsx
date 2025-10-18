@@ -20,6 +20,7 @@ const Header = () => {
     const { authenticated } = useAuth()
     const [auth, setAuth] = useState<boolean>(false)
     const { authState, logout } = useAppContext().auth
+    const { cart } = useAppContext().cart
 
     useEffect(() => {
         setAuth(authenticated && pathname === "/perfil")
@@ -64,10 +65,10 @@ const Header = () => {
                             <Link to="/carrinho" title="Carrinho">
                                 <PiShoppingCartSimple />
 
-                                {/* {cart && cart.length > 0 &&
+                                {cart && cart.length > 0 &&
                                     <span className={styles.header__navigationCartQt}>
                                         {cart.length}
-                                    </span>} */}
+                                    </span>}
                             </Link>
                         </div>
 

@@ -4,6 +4,7 @@ import { useAuthReducer } from "../reducers/authReducer";
 import { useOrdersReducer } from "../reducers/ordersReducer";
 import { usePlatesReducer } from "../reducers/platesReducer";
 import { useCategoriesReducer } from "../reducers/categoriesReducer";
+import { useCart } from "../hooks/useCart";
 
 type Props = {
     children: ReactNode
@@ -16,7 +17,8 @@ export const AppProvider = ({ children }: Props) => {
         auth: useAuthReducer(),
         orders: useOrdersReducer(),
         plates: usePlatesReducer(),
-        categories: useCategoriesReducer()
+        categories: useCategoriesReducer(),
+        cart: useCart()
     }
 
     return (

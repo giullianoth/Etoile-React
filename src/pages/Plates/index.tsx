@@ -12,6 +12,7 @@ const Plates = () => {
     const [plateToShow, setPlateToShow] = useState<IPlate | null>(null)
     const { categoriesState, refetch: refetchCategories, getAvailableCategories } = useAppContext().categories
     const { platesState, refetch: refetchPlates, getAvailablePlates } = useAppContext().plates
+    const { addToCart } = useAppContext().cart
 
     useEffect(() => {
         const fetchPlates = async () => {
@@ -38,7 +39,8 @@ const Plates = () => {
             quantity: 1
         }
 
-        console.log(cartItem)
+        addToCart(cartItem)
+        setModalIsOpen(false)
     }
 
     return (

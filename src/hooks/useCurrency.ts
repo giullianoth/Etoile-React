@@ -1,4 +1,4 @@
-export const useCurrency = (currencyValue: string = "BRL", locales: string = "pt-BR") => {
+export const useCurrency = (currencyType: string = "BRL", locales: string = "pt-BR") => {
     
     const currency = (value: number | string) => {
         if (typeof value === "string") {
@@ -7,7 +7,7 @@ export const useCurrency = (currencyValue: string = "BRL", locales: string = "pt
 
         return new Intl.NumberFormat(locales, {
             style: "currency",
-            currency: currencyValue
+            currency: currencyType
         }).format(value)
     }
 

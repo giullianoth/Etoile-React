@@ -90,9 +90,8 @@
 .header__navigationCartQt {
     width: 18px;
     height: 18px;
-    background-color: var(--color-claret);
+    background-color: var(--color-murrey);
     font-family: var(--font-cinzel);
-    font-weight: var(--font-weight-title);
     font-size: 0.6em;
     display: flex;
     justify-content: center;

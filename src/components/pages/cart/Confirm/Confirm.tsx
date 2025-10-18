@@ -1,10 +1,6 @@
-import { useEffect, useState, type FormEvent } from "react"
+import { useState, type FormEvent } from "react"
 import styles from "./Confirm.module.css"
-import type { IOrder, IOrderItem } from "../../../../interfaces/order"
-import { useNavigate } from "react-router-dom"
-import { usePendingOrder } from "../../../../hooks/usePendingOrder"
 import Trigger from "../../../Trigger"
-import Loading from "../../../Loading"
 
 type Props = {
     onCancel: () => void
@@ -13,20 +9,16 @@ type Props = {
 const Confirm = ({ onCancel }: Props) => {
     const [time, setTime] = useState<string>("")
     const [localErrorMessage, setLocalErrorMessage] = useState<string | null>(null)
-    const navigate = useNavigate()
-    const { pendingOrder, pendingOrderItems, setData, saveOrder } = usePendingOrder()
-
-    useEffect(() => {
-        if (pendingOrder && pendingOrderItems.length) {
-            saveOrder()
-            navigate("/login")
-        }
-    }, [pendingOrder, pendingOrderItems])
 
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault()
 
-        
+        if (!time) {
+            setLocalErrorMessage("Selecione o horário de comparecimento.")
+            return
+        }
+
+        console.log(time)
     }
 
     return (
@@ -42,6 +34,7 @@ const Confirm = ({ onCancel }: Props) => {
 
                 <form className={styles.confirm__form} onSubmit={handleSubmit}>
                     <input
+                        required
                         type="time"
                         name="time"
                         value={time}

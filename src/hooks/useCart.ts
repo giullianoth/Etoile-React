@@ -5,33 +5,33 @@ export const useCart = () => {
     const storaged = localStorage.getItem("etoile-cart")
     const [cart, setCart] = useState<ICartItem[]>(storaged ? JSON.parse(storaged) : [])
 
-    const addToCart = (data: ICartItem) => {
+    const addToCart = (cartData: ICartItem) => {
         let updated: ICartItem[]
 
-        if (cart.some(item => item.plate === data.plate)) {
+        if (cart.some(item => item.plate === cartData.plate)) {
             updated = cart.map(item => {
-                if (item.plate === data.plate) {
-                    item.quantity += data.quantity
+                if (item.plate === cartData.plate) {
+                    item.quantity += cartData.quantity
                 }
                 return item
             })
         } else {
-            updated = [...cart, data]
+            updated = [...cart, cartData]
         }
 
         setCart(updated)
         localStorage.setItem("etoile-cart", JSON.stringify(updated))
     }
 
-    const removeFromCart = (data: ICartItem) => {
-        const stripped = cart.filter(item => item !== data)
+    const removeFromCart = (cartData: ICartItem) => {
+        const stripped = cart.filter(item => item !== cartData)
         setCart(stripped)
         localStorage.setItem("etoile-cart", JSON.stringify(stripped))
     }
 
-    const updateQuantity = (data: ICartItem, quantity: number) => {
+    const updateQuantity = (cartData: ICartItem, quantity: number) => {
         const updated = cart.map(item => {
-            if (item.plate === data.plate) {
+            if (item.plate === cartData.plate) {
                 item.quantity = quantity
             }
             return item

@@ -14,6 +14,7 @@ type Props = {
 const CartItem = ({ className, cartItem }: Props) => {
     const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
     const [quantity, setQuantity] = useState<number>(1)
+    const [disabledButton, setDisabledButton] = useState<boolean>(false)
     const { updateQuantity, removeFromCart } = useAppContext().cart
 
     useEffect(() => {
@@ -36,7 +37,13 @@ const CartItem = ({ className, cartItem }: Props) => {
         }
     }
 
+    const handleOpenModal = () => {
+        setDisabledButton(false)
+        setModalIsOpen(true)
+    }
+
     const handleRemoveItem = () => {
+        setDisabledButton(true)
         removeFromCart(cartItem)
         setModalIsOpen(false)
     }
@@ -82,7 +89,7 @@ const CartItem = ({ className, cartItem }: Props) => {
 
                         <button
                             className={`button primary outline ${styles.cartItem__remove}`}
-                            onClick={() => setModalIsOpen(true)}>
+                            onClick={handleOpenModal}>
                             <PiMinusCircle />
                             Remover item
                         </button>
@@ -98,7 +105,8 @@ const CartItem = ({ className, cartItem }: Props) => {
                 overlayClassName="modal-overlay">
                 <RemoveCartItem
                     onCancel={() => setModalIsOpen(false)}
-                    onConfirm={handleRemoveItem} />
+                    onConfirm={handleRemoveItem}
+                    disabledButton={disabledButton} />
             </Modal>
         </>
     )

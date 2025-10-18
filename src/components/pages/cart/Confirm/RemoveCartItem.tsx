@@ -4,9 +4,10 @@ import styles from "./Confirm.module.css"
 type Props = {
     onConfirm?: MouseEventHandler
     onCancel?: MouseEventHandler
+    disabledButton: boolean
 }
 
-const RemoveCartItem = ({ onCancel, onConfirm }: Props) => {
+const RemoveCartItem = ({ onCancel, onConfirm, disabledButton }: Props) => {
     return (
         <section className={styles.confirm}>
             <header className={`section-heading ${styles.confirm__titleRemove}`}>
@@ -19,6 +20,7 @@ const RemoveCartItem = ({ onCancel, onConfirm }: Props) => {
                     onClick={onCancel}>Não</button>
 
                 <button
+                disabled={disabledButton}
                     className="button primary"
                     onClick={onConfirm}>Sim</button>
             </div>

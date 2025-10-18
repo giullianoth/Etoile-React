@@ -2,16 +2,22 @@ import { Link } from "react-router-dom"
 import Container from "../../../Container"
 import styles from "./CartList.module.css"
 import { PiCheck } from "react-icons/pi"
-import { useState } from "react"
+import { type Dispatch, type SetStateAction } from "react"
+import type { ICartItem } from "../../../../interfaces/cart-item"
+import CartItem from "../CartItem"
 
-const CartList = () => {
-    const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
+type Props = {
+    cart: ICartItem[]
+    onOpenConfirmModal: Dispatch<SetStateAction<boolean>>
+}
+
+const CartList = ({ cart, onOpenConfirmModal }: Props) => {
 
     return (
         <>
             <section className={styles.cart}>
                 <Container>
-                    {/* <header className="section-heading">
+                    <header className="section-heading">
                         <h2>
                             Meus itens&nbsp;
                             {cart && cart.length > 0 && `(${cart.length})`}
@@ -33,7 +39,7 @@ const CartList = () => {
                                 <div className={styles.cart__action}>
                                     <button
                                         className="button primary"
-                                        onClick={() => setModalIsOpen(true)}>
+                                        onClick={() => onOpenConfirmModal(true)}>
                                         <PiCheck />
                                         Confirmar pedido
                                     </button>
@@ -44,18 +50,9 @@ const CartList = () => {
                                 Você ainda não adicionou itens no carrinho.&nbsp;
                                 <Link to="/pratos">Clique aqui e veja nossas espeialidades!</Link>
                             </p>}
-                    </div> */}
+                    </div>
                 </Container>
             </section>
-
-            {/* <Modal
-                isOpen={modalIsOpen}
-                onRequestClose={() => setModalIsOpen(false)}
-                closeTimeoutMS={300}
-                className="modal"
-                overlayClassName="modal-overlay">
-                <Confirm onCancel={() => setModalIsOpen(false)} />
-            </Modal> */}
         </>
     )
 }
