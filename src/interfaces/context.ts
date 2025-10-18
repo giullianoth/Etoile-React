@@ -1,4 +1,4 @@
-import type { IAuthReducerState } from "./reducer-states"
+import type { IAuthReducerState, IOrderReducerState } from "./reducer-states"
 import type { IUser, IUserRegister } from "./user"
 
 export interface IContext {
@@ -7,5 +7,11 @@ export interface IContext {
         login: (userData: Partial<IUser>) => Promise<void>
         logout: () => void
         register: (userData: Partial<IUserRegister>) => Promise<void>
+    }
+
+    orders: {
+        ordersState: IOrderReducerState
+        refetch: boolean
+        getOrdersByUser: (userId: string) => Promise<void>
     }
 }

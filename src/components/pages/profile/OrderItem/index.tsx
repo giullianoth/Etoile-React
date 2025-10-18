@@ -10,13 +10,13 @@ const OrderItem = ({ orderItem }: Props) => {
         <article className={styles.orderItem}>
             <div className={styles.orderItem__image}>
                 <img
-                    src={orderItem.itemDetails.image ? `/images/plates/${orderItem.itemDetails.image}` : "/images/no-image.jpg"}
-                    alt={orderItem.itemDetails.name} />
+                    src={orderItem.itemDetails[0].image ? `/images/plates/${orderItem.itemDetails[0].image}` : "/images/no-image.jpg"}
+                    alt={orderItem.itemDetails[0].name} />
             </div>
 
             <div className={styles.orderItem__info}>
                 <header className={styles.orderItem__name}>
-                    <h3>{orderItem.itemDetails.name}</h3>
+                    <h3>{orderItem.itemDetails[0].name}</h3>
                 </header>
 
                 <p className={styles.orderItem__portions}>
