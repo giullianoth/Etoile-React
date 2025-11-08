@@ -1,4 +1,4 @@
-import type { IOrderItem } from "../../../../interfaces/order"
+import type { IOrderItem } from "../../../../types/order"
 import styles from "./OrderItem.module.css"
 
 type Props = {

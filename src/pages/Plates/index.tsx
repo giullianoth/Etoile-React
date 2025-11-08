@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react"
 import PlatesList from "../../components/pages/plates/PlatesList"
 import PageTitle from "../../components/PageTitle"
-import type { IPlate } from "../../interfaces/plate"
+import type { IPlate } from "../../types/plate"
 import Modal from "react-modal"
 import PlateModal from "../../components/pages/plates/PlateModal"
-import type { ICartItem } from "../../interfaces/cart-item"
+import type { ICartItem } from "../../types/cart-item"
 import { useAppContext } from "../../context/context"
 
 const Plates = () => {

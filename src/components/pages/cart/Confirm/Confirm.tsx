@@ -1,12 +1,15 @@
 import { useState, type FormEvent } from "react"
 import styles from "./Confirm.module.css"
 import Trigger from "../../../Trigger"
+import Loading from "../../../Loading"
 
 type Props = {
     onCancel: () => void
+    onConfirmOrder: (time: string) => Promise<void>
+    loading: boolean
 }
 
-const Confirm = ({ onCancel }: Props) => {
+const Confirm = ({ onCancel, onConfirmOrder, loading }: Props) => {
     const [time, setTime] = useState<string>("")
     const [localErrorMessage, setLocalErrorMessage] = useState<string | null>(null)
 
@@ -18,7 +21,7 @@ const Confirm = ({ onCancel }: Props) => {
             return
         }
 
-        console.log(time)
+        await onConfirmOrder(time)
     }
 
     return (
@@ -42,8 +45,10 @@ const Confirm = ({ onCancel }: Props) => {
 
                     <div className={styles.confirm__actions}>
                         <span className="button primary outline" onClick={onCancel}>Cancelar</span>
-                        <button type="submit" className="button primary">
+
+                        <button type="submit" className="button primary" disabled={loading}>
                             Confirmar
+                            {loading && <Loading inButton />}
                         </button>
                     </div>
                 </form>

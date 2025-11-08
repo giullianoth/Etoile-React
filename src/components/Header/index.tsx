@@ -7,7 +7,6 @@ import { PiList, PiShoppingCartSimple, PiSignOut, PiUserCircle, PiX } from "reac
 import { useEffect, useRef, useState } from "react"
 import { useWindowBehavior } from "../../hooks/useWindowBehavior"
 import { useFirstName } from "../../hooks/useFirstName"
-import { useAuth } from "../../hooks/useAuth"
 import { useAppContext } from "../../context/context"
 
 const Header = () => {
@@ -17,19 +16,7 @@ const Header = () => {
     const { pathname } = useLocation()
     const navigate = useNavigate()
     const [menuIsOpen, setMenuIsOpen] = useState<boolean>(false)
-    const { authenticated } = useAuth()
     const [auth, setAuth] = useState<boolean>(false)
-    const { authState, logout } = useAppContext().auth
-    const { cart } = useAppContext().cart
-
-    useEffect(() => {
-        setAuth(authenticated && pathname === "/perfil")
-    }, [authenticated, pathname])
-
-    const handleLogout = () => {
-        logout()
-        navigate("/")
-    }
 
     return (
         <header
@@ -50,7 +37,7 @@ const Header = () => {
                     <nav>
                         {auth &&
                             <div className={styles.header__navigationLogout}>
-                                <button className="button clear" title="Sair" onClick={handleLogout}>
+                                <button className="button clear" title="Sair">
                                     <PiSignOut />
                                 </button>
                             </div>}
@@ -65,17 +52,15 @@ const Header = () => {
                             <Link to="/carrinho" title="Carrinho">
                                 <PiShoppingCartSimple />
 
-                                {cart && cart.length > 0 &&
                                     <span className={styles.header__navigationCartQt}>
-                                        {cart.length}
-                                    </span>}
+                                        {/* {cart.length} */}
+                                    </span>
                             </Link>
                         </div>
 
-                        {auth && authState.user?.fullname &&
                             <p className={styles.header__navigationWelcome}>
-                                Bem-vindo, <strong>{firstName(authState.user?.fullname!)}</strong>!
-                            </p>}
+                                {/* Bem-vindo, <strong>{firstName(authState.user?.fullname!)}</strong>! */}
+                            </p>
 
                         {!auth &&
                             <>

@@ -7,7 +7,7 @@ import { useState } from "react"
 import Modal from "react-modal"
 import EditOrder from "../Edit/Order"
 import DeleteOrder from "../Edit/DeleteOrder"
-import type { IOrder } from "../../../../interfaces/order"
+import type { IOrder } from "../../../../types/order"
 
 type Props = {
     orders: IOrder[]

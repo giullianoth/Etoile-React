@@ -5,7 +5,7 @@ export interface IUser {
     password?: string
     photo?: string
     phone?: string
-    role: string
+    role?: "admin" | "user"
 }
 
 export interface IUserRegister extends IUser {

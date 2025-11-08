@@ -2,7 +2,7 @@ import { PiCheck, PiClock, PiNotePencil, PiTrash, PiWarningCircle } from "react-
 import Bullet, { type BulletType } from "../../../Bullet"
 import styles from "./Order.module.css"
 import { useEffect, useState, type MouseEventHandler, type ReactNode } from "react"
-import type { IOrder } from "../../../../interfaces/order"
+import type { IOrder } from "../../../../types/order"
 import OrderItem from "../OrderItem"
 
 type Props = {

@@ -1,6 +1,6 @@
 import { PiBeerBottle, PiShoppingCartSimple } from "react-icons/pi"
 import styles from "./PlateModal.module.css"
-import type { IPlate } from "../../../../interfaces/plate"
+import type { IPlate } from "../../../../types/plate"
 import { useCurrency } from "../../../../hooks/useCurrency"
 
 type Props = {

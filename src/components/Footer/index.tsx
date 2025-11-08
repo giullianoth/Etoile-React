@@ -3,16 +3,10 @@ import Container from "../Container"
 import styles from "./Footer.module.css"
 import logo from "/images/logo.svg"
 import { useEffect, useState } from "react"
-import { useAuth } from "../../hooks/useAuth"
 
 const Footer = () => {
     const { pathname } = useLocation()
     const [auth, setAuth] = useState<boolean>(false)
-    const { authenticated } = useAuth()
-
-    useEffect(() => {
-        setAuth(authenticated && pathname === "/perfil")
-    }, [authenticated, pathname])
 
     return (
         <footer className={styles.footer}>

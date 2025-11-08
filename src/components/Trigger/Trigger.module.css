@@ -3,4 +3,10 @@
     right: 20px;
     top: 80px;
     z-index: 110;
+    transition: var(--transition);
+}
+
+.trigger.fading {
+    opacity: 0;
+    visibility: hidden;
 }

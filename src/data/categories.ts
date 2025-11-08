@@ -1,4 +1,4 @@
-import type { ICategory } from "../interfaces/category"
+import type { ICategory } from "../types/category"
 import data from "./data.json"
 import { plates } from "./plates"
 

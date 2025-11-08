@@ -1,6 +1,6 @@
 import type { MouseEventHandler } from "react"
 import styles from "./Plate.module.css"
-import type { IPlate } from "../../../../interfaces/plate"
+import type { IPlate } from "../../../../types/plate"
 import { useCurrency } from "../../../../hooks/useCurrency"
 
 type Props = {

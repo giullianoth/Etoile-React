@@ -2,38 +2,38 @@ import { Link, useNavigate } from "react-router-dom"
 import Container from "../../components/Container"
 import PageTitle from "../../components/PageTitle"
 import styles from "./Auth.module.css"
-import { useEffect, useState, type FormEvent } from "react"
-import type { IUserRegister } from "../../interfaces/user"
 import Password from "../../components/form/Password"
-import Loading from "../../components/Loading"
 import Trigger from "../../components/Trigger"
+import { useEffect, type ChangeEvent, type FormEvent } from "react"
 import { useAppContext } from "../../context/context"
+import type { IUserRegister } from "../../types/user"
+import Loading from "../../components/Loading"
 
 const Register = () => {
-  const [fullname, setFullname] = useState<string>("")
-  const [email, setEmail] = useState<string>("")
-  const [password, setPassword] = useState<string>("")
-  const [confirmPassword, setConfirmPassword] = useState<string>("")
-  const { authState, register } = useAppContext().auth
+  const { registerFormFields, changeRegisterFormFields, clearForm, loading, errorMessage, register, authenticated, successMessage } = useAppContext().auth
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (authState.success) {
-      navigate("/perfil")
+    clearForm()
+  }, [])
+
+  useEffect(() => {
+    if (authenticated) {
+      console.log(successMessage)
+      // navigate("/perfil")
     }
-  }, [authState])
+  }, [register, authenticated, successMessage])
+
+  const handleChangeData = (event: ChangeEvent<HTMLInputElement>) => {
+    changeRegisterFormFields(
+      event.target.name as keyof IUserRegister,
+      event.target.value
+    )
+  }
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault()
-
-    const userData: Partial<IUserRegister> = {
-      fullname,
-      email,
-      password,
-      confirmPassword
-    }
-
-    await register(userData)
+    await register()
   }
 
   return (
@@ -53,42 +53,42 @@ const Register = () => {
 
           <form className={styles.auth__form} onSubmit={handleSubmit}>
             <input
-              type="text"
-              name="name"
-              placeholder="Nome completo *"
               required
-              value={fullname ?? ""}
-              onChange={event => setFullname(event.target.value)} />
+              type="text"
+              name="fullname"
+              placeholder="Nome completo *"
+              value={registerFormFields.fullname}
+              onChange={handleChangeData} />
 
             <input
+              required
               type="email"
               name="email"
               placeholder="E-mail *"
-              required
-              value={email ?? ""}
-              onChange={event => setEmail(event.target.value)} />
+              value={registerFormFields.email}
+              onChange={handleChangeData} />
 
             <Password
+              required
               name="password"
               placeholder="Senha *"
-              required
-              value={password ?? ""}
-              onChange={event => setPassword(event.target.value)} />
+              value={registerFormFields.password}
+              onChange={handleChangeData} />
 
             <Password
+              required
               name="confirmPassword"
               placeholder="Confirmar senha *"
-              required
-              value={confirmPassword ?? ""}
-              onChange={event => setConfirmPassword(event.target.value)} />
+              value={registerFormFields.confirmPassword}
+              onChange={handleChangeData} />
 
-            <button type="submit" className="button primary" disabled={authState.loading}>
+            <button type="submit" className="button primary" disabled={loading}>
               Cadastrar
-              {authState.loading && <Loading inButton />}
+              {loading && <Loading inButton />}
             </button>
 
-            {authState.errorMessage &&
-              <Trigger type="error">{authState.errorMessage}</Trigger>}
+            {errorMessage &&
+              <Trigger type="error">{errorMessage}</Trigger>}
           </form>
         </Container>
       </section>

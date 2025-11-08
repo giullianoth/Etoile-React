@@ -1,5 +1,5 @@
 import { useState } from "react"
-import type { ICartItem } from "../interfaces/cart-item"
+import type { ICartItem } from "../types/cart-item"
 
 export const useCart = () => {
     const storaged = localStorage.getItem("etoile-cart")

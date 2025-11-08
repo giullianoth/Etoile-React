@@ -5,7 +5,7 @@ import Modal from "react-modal"
 import { useState } from "react"
 import EditProfile from "../Edit/Profile"
 import Photo from "../Photo"
-import type { IUser } from "../../../../interfaces/user"
+import type { IUser } from "../../../../types/user"
 
 type Props = {
     user: IUser

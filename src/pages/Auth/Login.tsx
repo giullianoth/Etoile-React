@@ -2,35 +2,39 @@ import { Link, useNavigate } from "react-router-dom"
 import Container from "../../components/Container"
 import PageTitle from "../../components/PageTitle"
 import styles from "./Auth.module.css"
-import { useEffect, useState, type FormEvent } from "react"
+import { useEffect, type ChangeEvent, type FormEvent } from "react"
 import { PiSignIn } from "react-icons/pi"
-import type { IUser } from "../../interfaces/user"
+import type { IUser } from "../../types/user"
 import Password from "../../components/form/Password"
 import Loading from "../../components/Loading"
 import Trigger from "../../components/Trigger"
 import { useAppContext } from "../../context/context"
 
 const Login = () => {
-  const [email, setEmail] = useState<string>("")
-  const [password, setPassword] = useState<string>("")
-  const { authState, login } = useAppContext().auth
+  const { loginFormFields, changeLoginFormFields, clearForm, loading, errorMessage, register, authenticated, successMessage, login } = useAppContext().auth
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (authState.success) {
-      navigate("/perfil")
+    clearForm()
+  }, [])
+
+  useEffect(() => {
+    if (authenticated) {
+      console.log(successMessage)
+      // navigate("/perfil")
     }
-  }, [authState])
+  }, [register, authenticated, successMessage])
+
+  const handleChangeData = (event: ChangeEvent<HTMLInputElement>) => {
+    changeLoginFormFields(
+      event.target.name as keyof IUser,
+      event.target.value
+    )
+  }
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault()
-
-    const userData: Partial<IUser> = {
-      email,
-      password
-    }
-
-    await login(userData)
+    await login()
   }
 
   return (
@@ -50,29 +54,29 @@ const Login = () => {
 
           <form className={styles.auth__form} onSubmit={handleSubmit}>
             <input
-              type="email"
+              type="text"
               name="email"
               placeholder="E-mail *"
-              required
-              value={email ?? ""}
-              onChange={event => setEmail(event.target.value)} />
+              // required
+              value={loginFormFields.email}
+              onChange={handleChangeData} />
 
             <Password
               name="password"
               placeholder="Senha *"
-              required
-              value={password ?? ""}
-              onChange={event => setPassword(event.target.value)} />
+              // required
+              value={loginFormFields.password}
+              onChange={handleChangeData} />
 
-            <button type="submit" className="button primary" disabled={authState.loading}>
+            <button type="submit" className="button primary" disabled={loading}>
               <PiSignIn />
               Entrar
 
-              {authState.loading && <Loading inButton />}
+              {loading && <Loading inButton />}
             </button>
 
-            {authState.errorMessage &&
-              <Trigger type="error">{authState.errorMessage}</Trigger>}
+            {errorMessage &&
+              <Trigger type="error">{errorMessage}</Trigger>}
           </form>
         </Container>
       </section>

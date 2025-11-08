@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import styles from "./CartItem.module.css"
 import { PiMinus, PiMinusCircle, PiPlus } from "react-icons/pi"
-import type { ICartItem } from "../../../../interfaces/cart-item"
+import type { ICartItem } from "../../../../types/cart-item"
 import { useAppContext } from "../../../../context/context"
 import Modal from "react-modal"
 import RemoveCartItem from "../Confirm/RemoveCartItem"

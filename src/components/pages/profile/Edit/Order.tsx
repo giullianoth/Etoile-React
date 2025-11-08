@@ -2,7 +2,7 @@ import { useEffect, useState, type FormEvent, type MouseEventHandler } from "rea
 import styles from "./Edit.module.css"
 import { PiTrash } from "react-icons/pi"
 import Checkbox from "../../../form/Checkbox"
-import type { IOrder } from "../../../../interfaces/order"
+import type { IOrder } from "../../../../types/order"
 import OrderItem from "../OrderItem"
 
 type Props = {

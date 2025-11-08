@@ -5,10 +5,10 @@ import styles from "./PlatesList.module.css"
 import 'react-multi-carousel/lib/styles.css'
 import ListButton from "../ListButton"
 import Plate from "../Plate"
-import type { IPlate } from "../../../../interfaces/plate"
+import type { IPlate } from "../../../../types/plate"
 import Trigger from "../../../Trigger"
 import Loading from "../../../Loading"
-import type { ICategory } from "../../../../interfaces/category"
+import type { ICategory } from "../../../../types/category"
 
 type Props = {
   categories: ICategory[]
