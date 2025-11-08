@@ -3,9 +3,9 @@ import { useState } from "react"
 export const useShowTrigger = (timeout: number = 3000) => {
     const [triggerIsVisible, setTriggerIsVisible] = useState<boolean>(false)
     const [triggerIsFading, setTriggerIsFading] = useState<boolean>(false)
-    const [triggerMessage, setTriggerMessage] = useState<string | null>("Mensagem do ruque!")
+    const [triggerMessage, setTriggerMessage] = useState<string | null>(null)
 
-    const addTriggerMessage = (message: string) => setTriggerMessage(message)
+    const addTriggerMessage = (message: string | null) => setTriggerMessage(message)
 
     const showTrigger = () => {
         setTriggerIsVisible(true)

@@ -5,7 +5,7 @@ interface ITriggerMessage {
     triggerIsVisible: boolean
     triggerIsFading: boolean
     triggerMessage: string | null
-    addTriggerMessage: (message: string) => void
+    addTriggerMessage: (message: string | null) => void
     showTrigger: () => void
 }
 

@@ -4,7 +4,7 @@ import { useValidateEmail } from "../hooks/useValidateEmail"
 import type { IUser, IUserRegister } from "../types/user"
 import authServices from "../services/auth-service"
 
-const storagedData = () => localStorage.getItem("etpile_auth")
+const storagedData = () => localStorage.getItem("etoile_auth")
 
 const initialState: IAuthState = {
     loading: false,

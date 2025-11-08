@@ -13,6 +13,7 @@ import { useAppContext } from "../../context/context"
 const Login = () => {
   const { loginFormFields, changeLoginFormFields, clearForm, loading, errorMessage, register, authenticated, successMessage, login } = useAppContext().auth
   const navigate = useNavigate()
+  const { addTriggerMessage } = useAppContext().message
 
   useEffect(() => {
     clearForm()
@@ -20,8 +21,8 @@ const Login = () => {
 
   useEffect(() => {
     if (authenticated) {
-      console.log(successMessage)
-      // navigate("/perfil")
+      addTriggerMessage(successMessage)
+      navigate("/perfil")
     }
   }, [register, authenticated, successMessage])
 

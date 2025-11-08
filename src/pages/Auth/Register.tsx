@@ -12,6 +12,7 @@ import Loading from "../../components/Loading"
 const Register = () => {
   const { registerFormFields, changeRegisterFormFields, clearForm, loading, errorMessage, register, authenticated, successMessage } = useAppContext().auth
   const navigate = useNavigate()
+  const { addTriggerMessage } = useAppContext().message
 
   useEffect(() => {
     clearForm()
@@ -19,8 +20,8 @@ const Register = () => {
 
   useEffect(() => {
     if (authenticated) {
-      console.log(successMessage)
-      // navigate("/perfil")
+      addTriggerMessage(successMessage)
+      navigate("/perfil")
     }
   }, [register, authenticated, successMessage])
 
