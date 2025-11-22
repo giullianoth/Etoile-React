@@ -1,0 +1,28 @@
+.presentation {
+    width: 100%;
+}
+
+.presentation__item {
+    background-color: var(--color-murrey);
+    text-align: center;
+    color: var(--color-white-smoke);
+    padding: 20px;
+}
+
+.presentation__item:nth-child(even) {
+    background-color: var(--color-claret);
+}
+
+.presentation__image {
+    width: 100%;
+    border-radius: 50%;
+    margin-bottom: 20px;
+}
+
+.presentation__title {
+    margin-bottom: 20px;
+}
+
+.presentation__title h2 {
+    color: var(--color-white-smoke);
+}
