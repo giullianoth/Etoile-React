@@ -3,6 +3,7 @@ import "./App.css"
 import Modal from "react-modal"
 import Home from "./pages/home"
 import Header from "./components/Header"
+import Footer from "./components/Footer"
 
 Modal.setAppElement("#root")
 
@@ -16,6 +17,8 @@ function App() {
           <Route path="/" element={<Home />} />
         </Routes>
       </main>
+
+      <Footer />
     </BrowserRouter>
   )
 }
