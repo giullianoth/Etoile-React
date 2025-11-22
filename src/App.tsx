@@ -4,6 +4,7 @@ import Modal from "react-modal"
 import Home from "./pages/Home"
 import Header from "./components/Header"
 import Footer from "./components/Footer"
+import Auth from "./pages/Auth"
 
 Modal.setAppElement("#root")
 
@@ -15,6 +16,7 @@ function App() {
       <main>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/autenticacao" element={<Auth />} />
         </Routes>
       </main>
 

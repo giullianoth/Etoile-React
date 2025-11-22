@@ -60,6 +60,7 @@
   padding: 0;
   background: none !important;
   border: none !important;
+  color: var(--color-murrey);
 }
 
 .app-loading {
