@@ -1,59 +1,39 @@
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 import Container from "../Container"
 import styles from "./Header.module.css"
 import logo from "/images/logo.svg"
 import logoAlt from "/images/logo-alt.svg"
 import { PiList, PiShoppingCartSimple, PiSignOut, PiUserCircle, PiX } from "react-icons/pi"
-import { useEffect, useRef, useState } from "react"
-import { useWindowBehavior } from "../../hooks/useWindowBehavior"
-import { useFirstName } from "../../hooks/useFirstName"
-import { useAppContext } from "../../context/context"
+import { useRef, useState } from "react"
 
 const Header = () => {
-    const overlayRef = useRef<HTMLDivElement | null>(null)
-    const { scrolling } = useWindowBehavior()
-    const firstName = useFirstName()
-    const { pathname } = useLocation()
-    const navigate = useNavigate()
-    const { authenticated, logout, user } = useAppContext().auth
     const [menuIsOpen, setMenuIsOpen] = useState<boolean>(false)
-    const [auth, setAuth] = useState<boolean>(false)
-
-    useEffect(() => {
-        setAuth(authenticated && pathname === "/perfil")
-    }, [authenticated, pathname])
-
-    const handleLogout = () => {
-        logout()
-        navigate("/")
-    }
+    const [isAuthenticated] = useState<boolean>(false)
+    const overlayRef = useRef<HTMLDivElement | null>(null)
 
     return (
-        <header
-            className={styles.header
-                + (scrolling ? ` ${styles.scrolling}` : "")
-                + (auth ? ` ${styles.authenticated}` : "")}>
+        <header className={styles.header + (isAuthenticated ? ` ${styles.authenticated}` : "")}>
             <Container className={styles.header__container}>
                 <div className={styles.header__logo}>
                     <h1>Étoile Bistrò</h1>
 
                     <Link to="/">
-                        <img src={auth ? logoAlt : logo} alt="Étoile Bistrò" />
+                        <img src={isAuthenticated ? logoAlt : logo} alt="Étoile Bistrò" />
                     </Link>
                 </div>
 
                 <div
-                    className={styles.header__navigation + (menuIsOpen ? ` ${styles.menuOpen}` : "")}>
+                    className={styles.header__navigation + (menuIsOpen ? ` ${styles.openMenu}` : "")}>
                     <nav>
-                        {auth &&
-                            <div className={styles.header__navigationLogout}>
-                                <button className="button clear" title="Sair" onClick={handleLogout}>
+                        {isAuthenticated &&
+                            <div className={styles.header__logout}>
+                                <button className="button clear">
                                     <PiSignOut />
                                 </button>
                             </div>}
 
                         <div className={styles.header__navigationProfile}>
-                            <Link to="/perfil" title="Meu perfil">
+                            <Link to="/perfil" title="Meu Perfil">
                                 <PiUserCircle />
                             </Link>
                         </div>
@@ -61,23 +41,13 @@ const Header = () => {
                         <div className={styles.header__navigationCart}>
                             <Link to="/carrinho" title="Carrinho">
                                 <PiShoppingCartSimple />
-
-                                {/* {cart && cart.length > 0 &&
-                                    <span className={styles.header__navigationCartQt}>
-                                        {cart.length}
-                                    </span>} */}
                             </Link>
                         </div>
 
-                        {auth && user?.fullname &&
-                            <p className={styles.header__navigationWelcome}>
-                                Bem-vindo, <strong>{firstName(user?.fullname!)}</strong>!
-                            </p>}
-
-                        {!auth &&
+                        {!isAuthenticated &&
                             <>
                                 <div
-                                    className={styles.header__navigationMenuIcon}
+                                    className={styles.header__menuIcon}
                                     onClick={() => setMenuIsOpen(!menuIsOpen)}>
                                     {menuIsOpen ? <PiX /> : <PiList />}
                                 </div>
@@ -85,19 +55,25 @@ const Header = () => {
                                 <div
                                     ref={overlayRef}
                                     className={styles.header__overlay}
-                                    onClick={event => event.target === overlayRef.current && setMenuIsOpen(false)}>
+                                    onClick={event => event.target === overlayRef?.current && setMenuIsOpen(false)}>
                                     <div className={styles.header__menuWrapper}>
                                         <ul className={styles.header__menu}>
                                             <li className={styles.header__menuItem}>
-                                                <NavLink to="/" onClick={() => setMenuIsOpen(false)}>Home</NavLink>
+                                                <Link
+                                                    to="/"
+                                                    onClick={() => setMenuIsOpen(false)}>Home</Link>
                                             </li>
 
                                             <li className={styles.header__menuItem}>
-                                                <NavLink to="/pratos" onClick={() => setMenuIsOpen(false)}>Pratos</NavLink>
+                                                <Link
+                                                    to="/pratos"
+                                                    onClick={() => setMenuIsOpen(false)}>Pratos</Link>
                                             </li>
 
                                             <li className={styles.header__menuItem}>
-                                                <NavLink to="/perfil" onClick={() => setMenuIsOpen(false)}>Meu perfil</NavLink>
+                                                <Link
+                                                    to="/perfil"
+                                                    onClick={() => setMenuIsOpen(false)}>Meu Perfil</Link>
                                             </li>
                                         </ul>
                                     </div>
