@@ -5,14 +5,19 @@ import logo from "/images/logo.svg"
 import logoAlt from "/images/logo-alt.svg"
 import { PiList, PiShoppingCartSimple, PiSignOut, PiUserCircle, PiX } from "react-icons/pi"
 import { useRef, useState } from "react"
+import { useWindowBehavior } from "../../hooks/window-behavior"
 
 const Header = () => {
     const [menuIsOpen, setMenuIsOpen] = useState<boolean>(false)
     const [isAuthenticated] = useState<boolean>(false)
     const overlayRef = useRef<HTMLDivElement | null>(null)
+    const { scrolling } = useWindowBehavior()
 
     return (
-        <header className={styles.header + (isAuthenticated ? ` ${styles.authenticated}` : "")}>
+        <header
+            className={styles.header +
+                (isAuthenticated ? ` ${styles.authenticated}` : "") +
+                (scrolling ? ` ${styles.scrolling}` : "")}>
             <Container className={styles.header__container}>
                 <div className={styles.header__logo}>
                     <h1>Étoile Bistrò</h1>

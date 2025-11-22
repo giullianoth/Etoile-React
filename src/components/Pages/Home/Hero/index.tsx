@@ -1,0 +1,27 @@
+import { Link } from "react-router-dom"
+import Container from "../../../Container"
+import styles from "./Hero.module.css"
+
+const Hero = () => {
+    return (
+        <section className={styles.hero}>
+            <Container className={styles.hero__container}>
+                <p className={styles.hero__headline}>Paixão da nossa cozinha à sua mesa.</p>
+
+                <header className={styles.hero__title}>
+                    <h2>Bem-vindo ao Étoile</h2>
+                </header>
+
+                <p className={styles.hero__tagline}>
+                    Aqui, tradição dança com a criatividade moderna para lhe dar uma experiência culinária única. Cada prato é um abraço de sabor, concebido com amor e dedicação para tornar seu dia inesquecível.
+                </p>
+
+                <div className={styles.hero__cta}>
+                    <Link to="/pratos" className="button primary">Confira nosso cardápio</Link>
+                </div>
+            </Container>
+        </section>
+    )
+}
+
+export default Hero
