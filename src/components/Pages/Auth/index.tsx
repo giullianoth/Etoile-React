@@ -1,9 +1,13 @@
-import { useEffect, useState, type Dispatch, type SetStateAction } from "react"
+import { useEffect, useState, type ChangeEvent, type Dispatch, type FormEvent, type SetStateAction } from "react"
 import styles from "./Auth.module.css"
 import Container from "../../Container"
 import SectionHeading from "../../SectionHeading"
 import Password from "../../Form/Password"
 import { PiSignIn } from "react-icons/pi"
+import { useAppContext } from "../../../context/context"
+import type { IUserRegister } from "../../../types/user"
+import Loading from "../../Loading"
+import Trigger from "../../Trigger"
 
 type Props = {
     setTitle: Dispatch<SetStateAction<string>>
@@ -11,6 +15,16 @@ type Props = {
 
 const Auth = ({ setTitle }: Props) => {
     const [formType, setFormType] = useState<"login" | "register">("login")
+
+    const {
+        handleClearAuthForm,
+        handleChangeAuthForm,
+        authFormFields,
+        handleLogin,
+        handleRegister,
+        errorMessage,
+        loading
+    } = useAppContext().auth
 
     useEffect(() => {
         if (formType === "login") {
@@ -21,6 +35,30 @@ const Auth = ({ setTitle }: Props) => {
             setTitle("Cadastro")
         }
     }, [formType])
+
+    const handleChangeFormType = () => {
+        setFormType(formType === "login" ? "register" : "login")
+        handleClearAuthForm()
+    }
+
+    const handleChangeFormData = (event: ChangeEvent<HTMLInputElement>) => {
+        handleChangeAuthForm(
+            event.target.name as keyof IUserRegister,
+            event.target.value
+        )
+    }
+
+    const handleSubmit = async (event: FormEvent) => {
+        event.preventDefault()
+
+        if (formType === "login") {
+            await handleLogin()
+        }
+
+        if (formType === "register") {
+            await handleRegister()
+        }
+    }
 
     return (
         <section className={styles.auth}>
@@ -34,25 +72,29 @@ const Auth = ({ setTitle }: Props) => {
 
                     <button
                         className="button clear"
-                        onClick={() => setFormType(formType === "login" ? "register" : "login")}>
+                        onClick={handleChangeFormType}>
                         {formType === "login" && "Cadastre-se"}
                         {formType === "register" && "Faça login"}
                     </button>.
                 </p>
 
-                <form className={styles.auth__form}>
+                <form className={styles.auth__form} onSubmit={handleSubmit}>
                     {formType === "login" &&
                         <>
                             <input
                                 required
-                                type="email"
+                                type="text"
                                 name="email"
-                                placeholder="E-mail *" />
+                                placeholder="E-mail *"
+                                value={authFormFields.email}
+                                onChange={handleChangeFormData} />
 
                             <Password
                                 required
                                 name="password"
-                                placeholder="Senha *" />
+                                placeholder="Senha *"
+                                value={authFormFields.password}
+                                onChange={handleChangeFormData} />
                         </>}
 
                     {formType === "register" &&
@@ -61,34 +103,46 @@ const Auth = ({ setTitle }: Props) => {
                                 required
                                 type="text"
                                 name="fullname"
-                                placeholder="Nome completo *" />
+                                placeholder="Nome completo *"
+                                value={authFormFields.fullname}
+                                onChange={handleChangeFormData} />
 
                             <input
                                 required
                                 type="email"
                                 name="email"
-                                placeholder="E-mail *" />
+                                placeholder="E-mail *"
+                                value={authFormFields.email}
+                                onChange={handleChangeFormData} />
 
                             <Password
                                 required
                                 name="password"
-                                placeholder="Senha *" />
+                                placeholder="Senha *"
+                                value={authFormFields.password}
+                                onChange={handleChangeFormData} />
 
                             <Password
                                 required
                                 name="confirmPassword"
-                                placeholder="Confirmar senha *" />
+                                placeholder="Confirmar senha *"
+                                value={authFormFields.confirmPassword}
+                                onChange={handleChangeFormData} />
                         </>}
 
-                    <button type="submit" className="button primary">
+                    <button type="submit" className="button primary" disabled={loading}>
                         {formType === "login" &&
                             <>
                                 <PiSignIn />
                                 Entrar
                             </>}
 
-                            {formType === "register" && "Cadastrar"}
+                        {formType === "register" && "Cadastrar"}
+                        {loading && <Loading inButton />}
                     </button>
+
+                    {errorMessage &&
+                        <Trigger message={errorMessage} type="error" />}
                 </form>
             </Container>
         </section>

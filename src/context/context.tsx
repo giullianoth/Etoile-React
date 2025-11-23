@@ -1,4 +1,4 @@
-import { createContext, type ReactNode } from "react";
+import { createContext, useContext, type ReactNode } from "react";
 import type { IContext } from "../types/context";
 import { useAuthReducer } from "../reducers/auth-reducer";
 
@@ -18,4 +18,14 @@ export const AppProvider = ({ children }: Props) => {
             {children}
         </AppContext.Provider>
     )
+}
+
+export const useAppContext = () => {
+    const context = useContext(AppContext)
+
+    if (!context) {
+        throw new Error("Out of context. Please, use <AppProvider> component.")
+    }
+
+    return context
 }

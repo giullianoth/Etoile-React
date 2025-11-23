@@ -1,0 +1,1 @@
+export type IMessageType = "success" | "info" | "warning" | "error"
