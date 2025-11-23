@@ -20,6 +20,7 @@
     background-image: none;
     background-color: var(--color-murrey);
     color: var(--color-white-smoke);
+    position: static;
 }
 
 .header.authenticated .header__container {
