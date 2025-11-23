@@ -4,13 +4,13 @@ import styles from "./Trigger.module.css"
 import { PiCheckCircleThin, PiInfo, PiWarning, PiXCircle } from "react-icons/pi"
 
 type Props = {
-    message: string
+    children: ReactNode
     type: IMessageType
-    small?: boolean
+    bullet?: boolean
     icon?: ReactNode
 }
 
-const Trigger = ({ message, type, small, icon }: Props) => {
+const Trigger = ({ children, type, bullet, icon }: Props) => {
     const [currentIcon, setCurrentIcon] = useState<ReactNode | null>(null)
 
     useEffect(() => {
@@ -37,10 +37,10 @@ const Trigger = ({ message, type, small, icon }: Props) => {
         <div
             className={styles.trigger +
                 ` ${styles[type]}` +
-                (small ? ` ${styles.small}` : "")
+                (bullet ? ` ${styles.bullet}` : "")
             }>
             {currentIcon}
-            {message}
+            {children}
         </div>
     )
 }

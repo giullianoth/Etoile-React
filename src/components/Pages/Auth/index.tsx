@@ -160,7 +160,7 @@ const Auth = ({ setTitle }: Props) => {
                     </button>
 
                     {errorMessage &&
-                        <Trigger message={errorMessage} type="error" />}
+                        <Trigger type="error">{errorMessage}</Trigger>}
                 </form>
             </Container>
         </section>

@@ -23,6 +23,10 @@
     position: static;
 }
 
+.header.header.authenticated.scrolling .header__container {
+    padding-block: 20px !important;
+}
+
 .header.authenticated .header__container {
     padding-block: 20px;
 }

@@ -1,4 +1,4 @@
-import type { IAuthState } from "./reducer-states";
+import type { IAuthState, IOrdersState } from "./reducer-states";
 import type { IUserRegister } from "./user";
 
 interface IAuthContext extends IAuthState {
@@ -9,6 +9,13 @@ interface IAuthContext extends IAuthState {
     handleLogout: () => void
 }
 
+interface IOrdersContext extends IOrdersState {
+    handleClearOrdersData: () => void
+    handleFetchOrders: () => Promise<void>
+    handleFetchOrdersByUser: (userId: string) => Promise<void>
+}
+
 export interface IContext {
     auth: IAuthContext
+    orders: IOrdersContext
 }

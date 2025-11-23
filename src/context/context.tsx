@@ -1,6 +1,7 @@
 import { createContext, useContext, type ReactNode } from "react";
 import type { IContext } from "../types/context";
 import { useAuthReducer } from "../reducers/auth-reducer";
+import { useOrdersReducer } from "../reducers/orders-reducer";
 
 type Props = {
     children: ReactNode
@@ -10,7 +11,8 @@ const AppContext = createContext<IContext | null>(null)
 
 export const AppProvider = ({ children }: Props) => {
     const contextValue: IContext = {
-        auth: useAuthReducer()
+        auth: useAuthReducer(),
+        orders: useOrdersReducer()
     }
 
     return (

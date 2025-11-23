@@ -9,7 +9,7 @@
     font-weight: var(--font-weight-text-bold);
 }
 
-.trigger.small {
+.trigger.bullet {
     padding: 1px 6px;
     display: inline-flex;
     column-gap: 4px;

@@ -10,9 +10,7 @@ const login = async (userData: Partial<IUserRegister>) => {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(userData)
-        })
-            .then(res => res.json())
-            .catch(err => err)
+        }).then(res => res.json())
 
         return response as IAuthResponse
     } catch (error) {
@@ -34,9 +32,7 @@ const register = async (userData: Partial<IUserRegister>) => {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(userData)
-        })
-            .then(res => res.json())
-            .catch(err => err)
+        }).then(res => res.json())
 
         return response as IAuthResponse
     } catch (error) {

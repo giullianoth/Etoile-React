@@ -1,3 +1,4 @@
+import type { IOrder } from "./order"
 import type { IUser } from "./user"
 
 interface ISuccessResponse {
@@ -23,3 +24,10 @@ export interface IAuthSuccessResponse extends ISuccessResponse {
 }
 
 export type IAuthResponse = IAuthSuccessResponse | IErrorResponse
+
+// Orders
+export interface IOrderFetchSuccessResponse extends ISuccessResponse {
+    body: IOrder[]
+}
+
+export type IOrderFetchResponse = IOrderFetchSuccessResponse | IErrorResponse

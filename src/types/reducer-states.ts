@@ -1,3 +1,4 @@
+import type { IOrder } from "./order"
 import type { IUser, IUserRegister } from "./user"
 
 interface IReducerStates {
@@ -21,3 +22,14 @@ export type IAuthActions =
     | { type: "AUTH_SUBMIT_SUCCESS", payload: { user: IUser, token: string, message: string } }
     | { type: "AUTH_SUBMIT_FAILURE", payload: string }
     | { type: "AUTH_LOGOUT" }
+
+// Orders
+export interface IOrdersState extends IReducerStates {
+    orders: IOrder[]
+}
+
+export type IOrdersActions =
+    | { type: "ORDERS_FETCH_START" }
+    | { type: "ORDERS_FETCH_SUCCESS", payload: IOrder[] }
+    | { type: "ORDERS_FETCH_FAILURE", payload: string }
+    | { type: "ORDERS_CLEAR_DATA" }
