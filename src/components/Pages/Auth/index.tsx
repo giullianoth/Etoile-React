@@ -8,6 +8,7 @@ import { useAppContext } from "../../../context/context"
 import type { IUserRegister } from "../../../types/user"
 import Loading from "../../Loading"
 import Trigger from "../../Trigger"
+import { useNavigate } from "react-router-dom"
 
 type Props = {
     setTitle: Dispatch<SetStateAction<string>>
@@ -15,6 +16,7 @@ type Props = {
 
 const Auth = ({ setTitle }: Props) => {
     const [formType, setFormType] = useState<"login" | "register">("login")
+    const navigate = useNavigate()
 
     const {
         handleClearAuthForm,
@@ -23,8 +25,14 @@ const Auth = ({ setTitle }: Props) => {
         handleLogin,
         handleRegister,
         errorMessage,
-        loading
+        loading,
+        success,
+        successMessage
     } = useAppContext().auth
+
+    useEffect(() => {
+        handleClearAuthForm()
+    }, [])
 
     useEffect(() => {
         if (formType === "login") {
@@ -35,6 +43,16 @@ const Auth = ({ setTitle }: Props) => {
             setTitle("Cadastro")
         }
     }, [formType])
+
+    useEffect(() => {
+        if (success) {
+            if (successMessage) {
+
+            }
+
+            navigate("/perfil")
+        }
+    }, [success, handleLogin, handleRegister])
 
     const handleChangeFormType = () => {
         setFormType(formType === "login" ? "register" : "login")

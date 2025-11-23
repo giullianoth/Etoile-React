@@ -5,6 +5,7 @@ import Home from "./pages/Home"
 import Header from "./components/Header"
 import Footer from "./components/Footer"
 import Auth from "./pages/Auth"
+import Profile from "./pages/Profile"
 
 Modal.setAppElement("#root")
 
@@ -17,6 +18,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/autenticacao" element={<Auth />} />
+          <Route path="/perfil" element={<Profile />} />
         </Routes>
       </main>
 

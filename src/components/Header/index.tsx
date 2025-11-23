@@ -1,17 +1,34 @@
-import { Link } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import Container from "../Container"
 import styles from "./Header.module.css"
 import logo from "/images/logo.svg"
 import logoAlt from "/images/logo-alt.svg"
 import { PiList, PiShoppingCartSimple, PiSignOut, PiUserCircle, PiX } from "react-icons/pi"
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useWindowBehavior } from "../../hooks/window-behavior"
+import { useAppContext } from "../../context/context"
+import { useFirstName } from "../../hooks/first-name"
 
 const Header = () => {
     const [menuIsOpen, setMenuIsOpen] = useState<boolean>(false)
-    const [isAuthenticated] = useState<boolean>(false)
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
     const overlayRef = useRef<HTMLDivElement | null>(null)
     const { scrolling } = useWindowBehavior()
+    const { success: authenticated, user, handleLogout } = useAppContext().auth
+    const { pathname } = useLocation()
+    const firstName = useFirstName()
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        setIsAuthenticated(
+            authenticated && pathname.includes("perfil")
+        )
+    }, [authenticated, user, pathname])
+
+    const handleLogoutAccount = () => {
+        handleLogout()
+        navigate("/autenticacao")
+    }
 
     return (
         <header
@@ -32,7 +49,10 @@ const Header = () => {
                     <nav>
                         {isAuthenticated &&
                             <div className={styles.header__logout}>
-                                <button className="button clear">
+                                <button
+                                    className="button clear"
+                                    title="Sair da minha conta"
+                                    onClick={handleLogoutAccount}>
                                     <PiSignOut />
                                 </button>
                             </div>}
@@ -48,6 +68,11 @@ const Header = () => {
                                 <PiShoppingCartSimple />
                             </Link>
                         </div>
+
+                        {isAuthenticated && user &&
+                            <p className={styles.header__welcome}>
+                                Bem-vindo, <strong>{firstName(user?.fullname!)}</strong>!
+                            </p>}
 
                         {!isAuthenticated &&
                             <>

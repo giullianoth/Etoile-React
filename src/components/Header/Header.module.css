@@ -81,11 +81,11 @@
 .header__navigationProfile > a,
 .header__navigationCart > a,
 .header__menuIcon > a,
-.header__logout > a {
+.header__logout > button {
     display: flex;
     justify-content: center;
     align-items: center;
-    color: var(--color-white-smoke);
+    color: var(--color-white-smoke) !important;
 }
 
 .header__navigationProfile svg,
@@ -172,10 +172,10 @@
         flex-direction: row-reverse;
     }
 
-    .header__navigationProfile > svg,
-    .header__navigationCart > svg,
-    .header__menuIcon > svg,
-    .header__logout > svg {
+    .header__navigationProfile svg,
+    .header__navigationCart svg,
+    .header__menuIcon svg,
+    .header__logout svg {
         font-size: 1em;
     }
 

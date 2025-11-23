@@ -1,11 +1,20 @@
-import { Link } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
 import Container from "../Container"
 import styles from "./Footer.module.css"
 import logo from "/images/logo.svg"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { useAppContext } from "../../context/context"
 
 const Footer = () => {
-    const [isAuthenticated] = useState<boolean>(false)
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
+    const { success: authenticated, user } = useAppContext().auth
+    const { pathname } = useLocation()
+
+    useEffect(() => {
+        setIsAuthenticated(
+            authenticated && pathname.includes("perfil")
+        )
+    }, [authenticated, user, pathname])
 
     return (
         <footer className={styles.footer}>
