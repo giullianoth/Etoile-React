@@ -1,16 +1,18 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useAppContext } from "../../context/context"
 import { useNavigate } from "react-router-dom"
 import User from "../../components/Pages/Profile/User"
 import Orders from "../../components/Pages/Profile/Orders"
+import Loading from "../../components/Loading"
 
 const Profile = () => {
     const { success: authenticated, user } = useAppContext().auth
+    const [loading, setLoading] = useState<boolean>(true)
     const navigate = useNavigate()
 
     const {
         handleFetchOrdersByUser,
-        loading,
+        loading: loadingOrders,
         errorMessage,
         orders,
         handleClearOrdersData
@@ -19,8 +21,11 @@ const Profile = () => {
     useEffect(() => {
         if (!authenticated) {
             navigate("/autenticacao")
+            return
         }
-    }, [authenticated])
+
+        setLoading(false)
+    }, [])
 
     useEffect(() => {
         handleClearOrdersData()
@@ -35,14 +40,17 @@ const Profile = () => {
     }, [user, handleFetchOrdersByUser])
 
     return (
-        <>
-            <User user={user!} />
+        loading
+            ? <Loading />
+            : <>
+                {user && <User user={user} />}
 
-            <Orders
-                orders={orders}
-                loading={loading}
-                errorMessage={errorMessage} />
-        </>
+                {orders &&
+                    <Orders
+                        orders={orders}
+                        loading={loadingOrders}
+                        errorMessage={errorMessage} />}
+            </>
     )
 }
 

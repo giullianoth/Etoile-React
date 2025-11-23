@@ -6,10 +6,21 @@ import Header from "./components/Header"
 import Footer from "./components/Footer"
 import Auth from "./pages/Auth"
 import Profile from "./pages/Profile"
+import Trigger from "./components/Trigger"
+import { useAppContext } from "./context/context"
+import { useEffect } from "react"
 
 Modal.setAppElement("#root")
 
 function App() {
+  const { message, showMessage, messageIsVisible, fading } = useAppContext().message
+
+  useEffect(() => {
+    if (message) {
+      showMessage()
+    }
+  }, [message])
+
   return (
     <BrowserRouter>
       <Header />
@@ -23,6 +34,12 @@ function App() {
       </main>
 
       <Footer />
+
+      {messageIsVisible && message &&
+        <Trigger
+          type="success"
+          fading={fading}
+          floating>{message}</Trigger>}
     </BrowserRouter>
   )
 }

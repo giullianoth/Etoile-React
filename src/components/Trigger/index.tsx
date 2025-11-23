@@ -7,10 +7,12 @@ type Props = {
     children: ReactNode
     type: IMessageType
     bullet?: boolean
+    floating?: boolean
+    fading?: boolean
     icon?: ReactNode
 }
 
-const Trigger = ({ children, type, bullet, icon }: Props) => {
+const Trigger = ({ children, type, bullet, icon, floating, fading }: Props) => {
     const [currentIcon, setCurrentIcon] = useState<ReactNode | null>(null)
 
     useEffect(() => {
@@ -37,7 +39,9 @@ const Trigger = ({ children, type, bullet, icon }: Props) => {
         <div
             className={styles.trigger +
                 ` ${styles[type]}` +
-                (bullet ? ` ${styles.bullet}` : "")
+                (bullet ? ` ${styles.bullet}` : "") +
+                (floating ? ` ${styles.floating}` : "") +
+                (fading ? ` ${styles.fading}` : "")
             }>
             {currentIcon}
             {children}

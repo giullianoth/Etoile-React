@@ -1,6 +1,14 @@
 import type { IAuthState, IOrdersState } from "./reducer-states";
 import type { IUserRegister } from "./user";
 
+interface IMessageContext {
+    message: string | null
+    messageIsVisible: boolean
+    fading: boolean
+    addMessage: (text: string) => void
+    showMessage: (timeout?: number) => void
+}
+
 interface IAuthContext extends IAuthState {
     handleChangeAuthForm: (name: keyof IUserRegister, value: string) => void
     handleClearAuthForm: () => void
@@ -16,6 +24,7 @@ interface IOrdersContext extends IOrdersState {
 }
 
 export interface IContext {
+    message: IMessageContext
     auth: IAuthContext
     orders: IOrdersContext
 }

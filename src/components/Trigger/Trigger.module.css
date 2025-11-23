@@ -16,6 +16,19 @@
     font-size: 0.8em;
 }
 
+.trigger.floating {
+    position: fixed;
+    top: 90px;
+    right: 20px;
+    z-index: 110;
+    transition: var(--transition);
+}
+
+.trigger.fading {
+    visibility: hidden;
+    opacity: 0;
+}
+
 .trigger.success {
     background-color: var(--color-success);
     color: var(--color-success-text);

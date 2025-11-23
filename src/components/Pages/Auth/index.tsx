@@ -17,6 +17,7 @@ type Props = {
 const Auth = ({ setTitle }: Props) => {
     const [formType, setFormType] = useState<"login" | "register">("login")
     const navigate = useNavigate()
+    const { addMessage } = useAppContext().message
 
     const {
         handleClearAuthForm,
@@ -47,7 +48,7 @@ const Auth = ({ setTitle }: Props) => {
     useEffect(() => {
         if (success) {
             if (successMessage) {
-
+                addMessage(successMessage)
             }
 
             navigate("/perfil")
