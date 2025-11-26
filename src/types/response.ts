@@ -1,4 +1,5 @@
 import type { IOrder } from "./order"
+import type { ICategory } from "./plate"
 import type { IUser } from "./user"
 
 interface ISuccessResponse {
@@ -31,3 +32,10 @@ export interface IOrderFetchSuccessResponse extends ISuccessResponse {
 }
 
 export type IOrderFetchResponse = IOrderFetchSuccessResponse | IErrorResponse
+
+// Plates & Categories
+export interface ICategoriesFetchSuccessResponse extends ISuccessResponse {
+    body: ICategory[]
+}
+
+export type ICategoriesFetchResponse = ICategoriesFetchSuccessResponse | IErrorResponse

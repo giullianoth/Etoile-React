@@ -9,6 +9,7 @@ import Profile from "./pages/Profile"
 import Trigger from "./components/Trigger"
 import { useAppContext } from "./context/context"
 import { useEffect } from "react"
+import Plates from "./pages/Plates"
 
 Modal.setAppElement("#root")
 
@@ -28,6 +29,7 @@ function App() {
       <main>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/pratos" element={<Plates />} />
           <Route path="/autenticacao" element={<Auth />} />
           <Route path="/perfil" element={<Profile />} />
         </Routes>

@@ -1,4 +1,4 @@
-import type { IAuthState, IOrdersState } from "./reducer-states";
+import type { IAuthState, IOrdersState, IPlatesState } from "./reducer-states";
 import type { IUserRegister } from "./user";
 
 interface IMessageContext {
@@ -23,8 +23,14 @@ interface IOrdersContext extends IOrdersState {
     handleFetchOrdersByUser: (userId: string) => Promise<void>
 }
 
+interface IPlatesContext extends IPlatesState {
+    handleClearPlatesData: () => void
+    handleFetchCategories: () => Promise<void>
+}
+
 export interface IContext {
     message: IMessageContext
     auth: IAuthContext
     orders: IOrdersContext
+    plates: IPlatesContext
 }

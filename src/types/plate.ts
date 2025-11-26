@@ -10,3 +10,9 @@ export interface IPlate {
     pairing: string
     ingredients: string[]
 }
+
+export interface ICategory {
+    _id: string
+    name: string
+    description: string
+}

@@ -3,6 +3,7 @@ import type { IContext } from "../types/context";
 import { useAuthReducer } from "../reducers/auth-reducer";
 import { useOrdersReducer } from "../reducers/orders-reducer";
 import { useMessage } from "../hooks/message";
+import { usePlatesReducer } from "../reducers/plates-reducer";
 
 type Props = {
     children: ReactNode
@@ -14,7 +15,8 @@ export const AppProvider = ({ children }: Props) => {
     const contextValue: IContext = {
         message: useMessage(),
         auth: useAuthReducer(),
-        orders: useOrdersReducer()
+        orders: useOrdersReducer(),
+        plates: usePlatesReducer()
     }
 
     return (
