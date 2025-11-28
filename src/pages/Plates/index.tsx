@@ -1,4 +1,4 @@
-import PageHeading from "../../PageHeading"
+import PageHeading from "../../components/PageHeading"
 import PlatesComponent from "../../components/Pages/Plates/Plates"
 
 const Plates = () => {

@@ -26,6 +26,9 @@ interface IOrdersContext extends IOrdersState {
 interface IPlatesContext extends IPlatesState {
     handleClearPlatesData: () => void
     handleFetchCategories: () => Promise<void>
+    handleFetchAvailableCategories: () => Promise<void>
+    handleFetchPlates: () => Promise<void>
+    handleFetchAvailablePlates: () => Promise<void>
 }
 
 export interface IContext {

@@ -7,7 +7,8 @@ const initialState: IPlatesState = {
     success: false,
     errorMessage: null,
     successMessage: null,
-    categories: []
+    categories: [],
+    plates: []
 }
 
 const platesReducerActions = (state: IPlatesState, action: IPlatesActions): IPlatesState => {
@@ -30,6 +31,32 @@ const platesReducerActions = (state: IPlatesState, action: IPlatesActions): IPla
             }
 
         case "CATEGORIES_FETCH_FAILURE":
+            return {
+                ...state,
+                loading: false,
+                success: false,
+                successMessage: null,
+                errorMessage: action.payload
+            }
+
+            case "PLATES_FETCH_START":
+            return {
+                ...state,
+                loading: true,
+                success: false,
+                successMessage: null,
+                errorMessage: null
+            }
+
+        case "PLATES_FETCH_SUCCESS":
+            return {
+                ...state,
+                loading: false,
+                errorMessage: null,
+                plates: action.payload
+            }
+
+        case "PLATES_FETCH_FAILURE":
             return {
                 ...state,
                 loading: false,
@@ -75,9 +102,69 @@ export const usePlatesReducer = () => {
         })
     }, [])
 
+    const handleFetchAvailableCategories = useCallback(async () => {
+        dispatch({ type: "CATEGORIES_FETCH_START" })
+
+        const response = await platesServices.fetchAvailableCategories()
+
+        if (!response.success) {
+            dispatch({
+                type: "CATEGORIES_FETCH_FAILURE",
+                payload: response.body.text ?? "Erro ao buscar categorias."
+            })
+            return
+        }
+
+        dispatch({
+            type: "CATEGORIES_FETCH_SUCCESS",
+            payload: response.body
+        })
+    }, [])
+
+    const handleFetchPlates = useCallback(async () => {
+        dispatch({ type: "PLATES_FETCH_START" })
+
+        const response = await platesServices.fetchPlates()
+
+        if (!response.success) {
+            dispatch({
+                type: "PLATES_FETCH_FAILURE",
+                payload: response.body.text ?? "Erro ao buscar pratos."
+            })
+            return
+        }
+
+        dispatch({
+            type: "PLATES_FETCH_SUCCESS",
+            payload: response.body
+        })
+    }, [])
+
+    const handleFetchAvailablePlates = useCallback(async () => {
+        dispatch({ type: "PLATES_FETCH_START" })
+
+        const response = await platesServices.fetchAvailablePlates()
+
+        if (!response.success) {
+            dispatch({
+                type: "PLATES_FETCH_FAILURE",
+                payload: response.body.text ?? "Erro ao buscar pratos."
+            })
+            return
+        }
+
+        dispatch({
+            type: "PLATES_FETCH_SUCCESS",
+            payload: response.body
+        })
+    }, [])
+
     return {
         ...platesState,
         handleClearPlatesData,
-        handleFetchCategories
+        handleFetchCategories,
+        handleFetchAvailableCategories,
+        handleFetchPlates,
+        handleFetchAvailablePlates
     }
 }

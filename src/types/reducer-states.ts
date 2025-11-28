@@ -1,5 +1,5 @@
 import type { IOrder } from "./order"
-import type { ICategory } from "./plate"
+import type { ICategory, IPlate } from "./plate"
 import type { IUser, IUserRegister } from "./user"
 
 interface IReducerStates {
@@ -38,10 +38,14 @@ export type IOrdersActions =
 // Plates & Categories
 export interface IPlatesState extends IReducerStates {
     categories: ICategory[]
+    plates: IPlate[]
 }
 
 export type IPlatesActions =
     | { type: "CATEGORIES_FETCH_START" }
     | { type: "CATEGORIES_FETCH_SUCCESS", payload: ICategory[] }
     | { type: "CATEGORIES_FETCH_FAILURE", payload: string }
+    | { type: "PLATES_FETCH_START" }
+    | { type: "PLATES_FETCH_SUCCESS", payload: IPlate[] }
+    | { type: "PLATES_FETCH_FAILURE", payload: string }
     | { type: "PLATES_CLEAR_DATA" }

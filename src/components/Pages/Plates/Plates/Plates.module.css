@@ -26,7 +26,7 @@
 }
 
 .plates__listCategory {
-    margin-bottom: 40px;
+    margin-bottom: 10px;
     padding-inline: var(--container-inline-clearance);
 }
 
@@ -35,8 +35,12 @@
 }
 
 .plates__listDescription {
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     padding-inline: var(--container-inline-clearance);
+}
+
+.plates__plate:not(:last-child) {
+    padding-right: 20px;
 }
 
 @media screen and (min-width: 576px) {

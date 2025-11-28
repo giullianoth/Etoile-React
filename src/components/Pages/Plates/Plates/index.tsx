@@ -6,25 +6,61 @@ import styles from "./Plates.module.css"
 import Loading from "../../../Loading"
 import Trigger from "../../../Trigger"
 import { PiEmpty } from "react-icons/pi"
+import Plate from "../Plate"
+import Carousel, { type ResponsiveType } from "react-multi-carousel"
+import { useWindowBehavior } from "../../../../hooks/window-behavior"
+import "react-multi-carousel/lib/styles.css"
 
 const Plates = () => {
     const {
         categories,
-        handleFetchCategories,
+        handleFetchAvailableCategories,
         loading,
         errorMessage,
-        handleClearPlatesData
+        handleClearPlatesData,
+        plates,
+        handleFetchAvailablePlates
     } = useAppContext().plates
+
+    const { breakpointLarge, breakpointSmall } = useWindowBehavior()
 
     useEffect(() => {
         handleClearPlatesData()
 
         const fetchData = async () => {
-            await handleFetchCategories()
+            await handleFetchAvailableCategories()
+            await handleFetchAvailablePlates()
         }
 
         fetchData()
     }, [])
+
+    const carouselBreakpoints: ResponsiveType = {
+        desktop: {
+            breakpoint: {
+                max: 10000,
+                min: breakpointLarge
+            },
+            items: 3,
+            partialVisibilityGutter: 40
+        },
+        tablet: {
+            breakpoint: {
+                max: breakpointLarge,
+                min: breakpointSmall
+            },
+            items: 2,
+            partialVisibilityGutter: 30
+        },
+        mobile: {
+            breakpoint: {
+                max: breakpointSmall,
+                min: 0
+            },
+            items: 1,
+            partialVisibilityGutter: 20
+        }
+    }
 
     return (
         <section className={styles.plates}>
@@ -47,6 +83,7 @@ const Plates = () => {
                             ? <Trigger type="error">{errorMessage}</Trigger>
 
                             : (categories && categories.length
+                                && plates && plates.length
                                 ? categories.map(category => (
                                     <article key={category._id} className={styles.plates__list}>
                                         <header className={styles.plates__listCategory}>
@@ -56,6 +93,19 @@ const Plates = () => {
                                         <p className={styles.plates__listDescription}>
                                             {category.description}
                                         </p>
+
+                                        <Carousel
+                                            draggable
+                                            responsive={carouselBreakpoints}
+                                            partialVisible
+                                            itemClass={styles.plates__plate}>
+                                            {plates.filter(plate => plate.categoryId === category._id)
+                                                .map(plate => (
+                                                    <Plate
+                                                        key={plate._id}
+                                                        plate={plate} />
+                                                ))}
+                                        </Carousel>
                                     </article>
                                 ))
 

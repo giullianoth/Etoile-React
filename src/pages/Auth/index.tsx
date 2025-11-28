@@ -1,6 +1,6 @@
 import { useState } from "react"
 import AuthComponent from "../../components/Pages/Auth"
-import PageHeading from "../../PageHeading"
+import PageHeading from "../../components/PageHeading"
 
 const Auth = () => {
     const [title, setTitle] = useState<string>("")

@@ -1,5 +1,5 @@
 import type { IOrder } from "./order"
-import type { ICategory } from "./plate"
+import type { ICategory, IPlate } from "./plate"
 import type { IUser } from "./user"
 
 interface ISuccessResponse {
@@ -39,3 +39,9 @@ export interface ICategoriesFetchSuccessResponse extends ISuccessResponse {
 }
 
 export type ICategoriesFetchResponse = ICategoriesFetchSuccessResponse | IErrorResponse
+
+export interface IPlatesFetchSuccessResponse extends ISuccessResponse {
+    body: IPlate[]
+}
+
+export type IPlatesFetchResponse = IPlatesFetchSuccessResponse | IErrorResponse
