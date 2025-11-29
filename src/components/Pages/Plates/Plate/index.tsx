@@ -1,16 +1,18 @@
 import styles from "./Plate.module.css"
 import type { IPlate } from '../../../../types/plate'
 import { useCurrency } from "../../../../hooks/currency"
+import type { MouseEventHandler } from "react"
 
 type Props = {
     plate: IPlate
+    onClick: MouseEventHandler
 }
 
-const Plate = ({ plate }: Props) => {
+const Plate = ({ plate, onClick }: Props) => {
     const currency = useCurrency()
 
     return (
-        <article className={styles.plate}>
+        <article className={styles.plate} onClick={onClick}>
             <img src={`/images/plates/${plate.image}`} alt={plate.name} />
 
             <div className={styles.plate__info}>

@@ -39,6 +39,10 @@
     padding-inline: var(--container-inline-clearance);
 }
 
+.plates__carousel * {
+    z-index: 50 !important;
+}
+
 .plates__plate:not(:last-child) {
     padding-right: 20px;
 }
