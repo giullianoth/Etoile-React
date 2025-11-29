@@ -28,8 +28,29 @@ export const useCart = () => {
         setCart(newCartList)
     }
 
+    const updateQuantity = (cartItem: IPlate, quantity: number) => {
+        const updatedCartList = cart.map(item => {
+            if (item.plate === cartItem) {
+                item.quantity = quantity
+            }
+            return item
+        })
+
+        localStorage.setItem("etoile-cart", JSON.stringify(updatedCartList))
+        setCart(updatedCartList)
+    }
+
+    const removeFromCart = (cartItem: IPlate) => {
+        const strippedCartList = cart.filter(item => item.plate !== cartItem)
+
+        localStorage.setItem("etoile-cart", JSON.stringify(strippedCartList))
+        setCart(strippedCartList)
+    }
+
     return {
         cart,
-        addToCart
+        addToCart,
+        updateQuantity,
+        removeFromCart
     }
 }

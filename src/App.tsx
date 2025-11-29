@@ -10,6 +10,7 @@ import Trigger from "./components/Trigger"
 import { useAppContext } from "./context/context"
 import { useEffect } from "react"
 import Plates from "./pages/Plates"
+import Cart from "./pages/Cart"
 
 Modal.setAppElement("#root")
 
@@ -30,6 +31,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/pratos" element={<Plates />} />
+          <Route path="/carrinho" element={<Cart />} />
           <Route path="/autenticacao" element={<Auth />} />
           <Route path="/perfil" element={<Profile />} />
         </Routes>

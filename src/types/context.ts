@@ -14,6 +14,8 @@ interface IMessageContext {
 interface ICartContext {
     cart: ICartItem[]
     addToCart: (cartItem: IPlate) => void
+    updateQuantity: (cartItem: IPlate, quantity: number) => void
+    removeFromCart: (cartItem: IPlate) => void
 }
 
 interface IAuthContext extends IAuthState {
