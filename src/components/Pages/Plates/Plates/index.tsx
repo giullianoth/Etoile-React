@@ -137,7 +137,9 @@ const Plates = () => {
                 overlayClassName="modal-overlay"
                 onRequestClose={() => setModalIsOpen(false)}
                 onAfterClose={() => setSelectedPlate(null)}>
-                <SelectedPlate plate={selectedPlate!} />
+                <SelectedPlate
+                    plate={selectedPlate!}
+                    setModalIsOpen={setModalIsOpen} />
             </Modal>
         </>
     )

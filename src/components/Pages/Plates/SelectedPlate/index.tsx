@@ -3,13 +3,24 @@ import { useCurrency } from "../../../../hooks/currency"
 import type { IPlate } from "../../../../types/plate"
 import Popup from "../../../Popup"
 import styles from "../../../Popup/Popup.module.css"
+import type { Dispatch, SetStateAction } from "react"
+import { useAppContext } from "../../../../context/context"
 
 type Props = {
     plate: IPlate
+    setModalIsOpen: Dispatch<SetStateAction<boolean>>
 }
 
-const SelectedPlate = ({ plate }: Props) => {
+const SelectedPlate = ({ plate, setModalIsOpen }: Props) => {
     const currency = useCurrency()
+    const { addToCart } = useAppContext().cart
+    const { addMessage } = useAppContext().message
+
+    const handleAddPlateToCart = () => {
+        addToCart(plate)
+        addMessage("Prato adicionado ao carrinho.")
+        setModalIsOpen(false)
+    }
 
     return (
         <Popup>
@@ -39,7 +50,9 @@ const SelectedPlate = ({ plate }: Props) => {
                     {currency(plate.price)}
                 </p>
 
-                <button className="button primary">
+                <button
+                    className="button primary"
+                    onClick={handleAddPlateToCart}>
                     <PiShoppingCartSimple />
                     Adicionar
                 </button>

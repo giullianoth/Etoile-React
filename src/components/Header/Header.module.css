@@ -104,6 +104,25 @@
     display: none;
 }
 
+.header__navigationCart {
+    position: relative;
+}
+
+.header__navigationCartQt {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: var(--color-claret);
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.6em;
+    font-family: var(--font-cinzel);
+}
+
 .header__menuIcon {
     cursor: pointer;
     color: var(--color-white-smoke);

@@ -15,6 +15,7 @@ const Header = () => {
     const overlayRef = useRef<HTMLDivElement | null>(null)
     const { scrolling } = useWindowBehavior()
     const { success: authenticated, user, handleLogout } = useAppContext().auth
+    const { cart } = useAppContext().cart
     const { pathname } = useLocation()
     const firstName = useFirstName()
     const navigate = useNavigate()
@@ -66,6 +67,11 @@ const Header = () => {
                         <div className={styles.header__navigationCart}>
                             <Link to="/carrinho" title="Carrinho">
                                 <PiShoppingCartSimple />
+
+                                {cart && cart.length &&
+                                    <span className={styles.header__navigationCartQt}>
+                                        {cart.length}
+                                    </span>}
                             </Link>
                         </div>
 

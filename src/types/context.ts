@@ -1,3 +1,5 @@
+import type { ICartItem } from "./cart";
+import type { IPlate } from "./plate";
 import type { IAuthState, IOrdersState, IPlatesState } from "./reducer-states";
 import type { IUserRegister } from "./user";
 
@@ -7,6 +9,11 @@ interface IMessageContext {
     fading: boolean
     addMessage: (text: string) => void
     showMessage: (timeout?: number) => void
+}
+
+interface ICartContext {
+    cart: ICartItem[]
+    addToCart: (cartItem: IPlate) => void
 }
 
 interface IAuthContext extends IAuthState {
@@ -33,6 +40,7 @@ interface IPlatesContext extends IPlatesState {
 
 export interface IContext {
     message: IMessageContext
+    cart: ICartContext
     auth: IAuthContext
     orders: IOrdersContext
     plates: IPlatesContext
