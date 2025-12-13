@@ -147,7 +147,7 @@ export const useOrdersReducer = () => {
         })
     }, [])
 
-    const handleCreateOrder = useCallback(async (orderItems: IOrderCreate["items"], orderDate: Date | null) => {
+    const handleCreateOrder = useCallback(async (orderItems: IOrderCreate["items"], orderDate: Date | null, userId?: string) => {
         dispatch({ type: "ORDERS_CREATE_START" })
 
         if (!orderDate) {
@@ -168,6 +168,7 @@ export const useOrdersReducer = () => {
 
         const response = await ordersServices.createOrder({
             ...ordersState.orderFormFields,
+            userId: userId ? userId : ordersState.orderFormFields.userId,
             items: orderItems,
             time: orderDate
         })

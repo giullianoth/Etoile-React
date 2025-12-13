@@ -15,7 +15,7 @@ import Cart from "./pages/Cart"
 Modal.setAppElement("#root")
 
 function App() {
-  const { message, showMessage, messageIsVisible, fading } = useAppContext().message
+  const { message, messageType, showMessage, messageIsVisible, fading } = useAppContext().message
 
   useEffect(() => {
     if (message) {
@@ -41,7 +41,7 @@ function App() {
 
       {messageIsVisible && message &&
         <Trigger
-          type="success"
+          type={messageType}
           fading={fading}
           floating>{message}</Trigger>}
     </BrowserRouter>

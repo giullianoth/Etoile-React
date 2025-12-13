@@ -9,6 +9,7 @@ import type { IUserRegister } from "../../../types/user"
 import Loading from "../../Loading"
 import Trigger from "../../Trigger"
 import { useNavigate } from "react-router-dom"
+import { usePendingOrder } from "../../../hooks/pending-order"
 
 type Props = {
     setTitle: Dispatch<SetStateAction<string>>
@@ -18,6 +19,9 @@ const Auth = ({ setTitle }: Props) => {
     const [formType, setFormType] = useState<"login" | "register">("login")
     const navigate = useNavigate()
     const { addMessage } = useAppContext().message
+    const { pendingOrder, removePendingOrder } = usePendingOrder()
+    const { handleCreateOrder, loading: loadingOrders } = useAppContext().orders
+    const { clearCart } = useAppContext().cart
 
     const {
         handleClearAuthForm,
@@ -28,7 +32,8 @@ const Auth = ({ setTitle }: Props) => {
         errorMessage,
         loading,
         success,
-        successMessage
+        successMessage,
+        user
     } = useAppContext().auth
 
     useEffect(() => {
@@ -46,13 +51,30 @@ const Auth = ({ setTitle }: Props) => {
     }, [formType])
 
     useEffect(() => {
-        if (success) {
-            if (successMessage) {
-                addMessage(successMessage)
-            }
+        const authenticate = async () => {
+            if (success) {
+                console.log(pendingOrder)
 
-            navigate("/perfil")
+                if (pendingOrder) {
+                    await handleCreateOrder(
+                        pendingOrder.items!,
+                        new Date(pendingOrder.time!),
+                        user?._id
+                    )
+
+                    removePendingOrder()
+                    clearCart()
+                }
+
+                if (successMessage) {
+                    addMessage(successMessage)
+                }
+
+                navigate("/perfil")
+            }
         }
+
+        authenticate()
     }, [success, handleLogin, handleRegister])
 
     const handleChangeFormType = () => {
@@ -149,7 +171,7 @@ const Auth = ({ setTitle }: Props) => {
                                 onChange={handleChangeFormData} />
                         </>}
 
-                    <button type="submit" className="button primary" disabled={loading}>
+                    <button type="submit" className="button primary" disabled={loading || loadingOrders}>
                         {formType === "login" &&
                             <>
                                 <PiSignIn />
@@ -157,7 +179,7 @@ const Auth = ({ setTitle }: Props) => {
                             </>}
 
                         {formType === "register" && "Cadastrar"}
-                        {loading && <Loading inButton />}
+                        {loading || loadingOrders && <Loading inButton />}
                     </button>
 
                     {errorMessage &&

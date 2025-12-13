@@ -6,9 +6,7 @@ const storagedCart = localStorage.getItem("etoile-cart")
 
 export const useCart = () => {
     const [cart, setCart] = useState<ICartItem[]>(
-        storagedCart
-            ? JSON.parse(storagedCart)
-            : []
+        storagedCart ? JSON.parse(storagedCart) : []
     )
 
     const addToCart = (cartItem: IPlate) => {
@@ -47,10 +45,16 @@ export const useCart = () => {
         setCart(strippedCartList)
     }
 
+    const clearCart = () => {
+        localStorage.removeItem("etoile-cart")
+        setCart([])
+    }
+
     return {
         cart,
         addToCart,
         updateQuantity,
-        removeFromCart
+        removeFromCart,
+        clearCart
     }
 }

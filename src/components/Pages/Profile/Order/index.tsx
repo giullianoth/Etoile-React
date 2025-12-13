@@ -4,6 +4,7 @@ import styles from "./Order.module.css"
 import type { IMessageType } from "../../../../types/message"
 import { PiArrowsClockwise, PiCheckCircle, PiClock, PiNotePencil, PiTrash, PiWarningCircle, PiX } from "react-icons/pi"
 import Trigger from "../../../Trigger"
+import { useDateFormats } from "../../../../hooks/date-formats"
 
 type Props = {
     order: IOrder
@@ -12,6 +13,7 @@ type Props = {
 const Order = ({ order }: Props) => {
     const [statusIcon, setStatusIcon] = useState<ReactNode | null>(null)
     const [statusType, setStatusType] = useState<IMessageType | null>(null)
+    const { dateFormat, dateTimeFormat } = useDateFormats()
 
     useEffect(() => {
         switch (order.status) {
@@ -41,8 +43,14 @@ const Order = ({ order }: Props) => {
             </div>
 
             <div className={styles.order__date}>
-                Presença confirmada às{" "}
-                <strong>{order.time as string/*new Date(order.time as string).toLocaleDateString()*/}</strong>
+                <p>
+                    <strong>{dateFormat(order.time)}</strong>
+                </p>
+
+                <p>
+                    Presença confirmada às{" "}
+                    <strong>{dateTimeFormat(order.time)}</strong>
+                </p>
             </div>
 
             {order.orderItems.map(item => (

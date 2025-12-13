@@ -1,4 +1,5 @@
 import type { ICartItem } from "./cart";
+import type { IMessageType } from "./message";
 import type { IOrderCreate } from "./order";
 import type { IPlate } from "./plate";
 import type { IAuthState, IOrdersState, IPlatesState } from "./reducer-states";
@@ -6,9 +7,10 @@ import type { IUserRegister } from "./user";
 
 interface IMessageContext {
     message: string | null
+    messageType: IMessageType
     messageIsVisible: boolean
     fading: boolean
-    addMessage: (text: string) => void
+    addMessage: (text: string, type?: IMessageType) => void
     showMessage: (timeout?: number) => void
 }
 
@@ -17,6 +19,7 @@ interface ICartContext {
     addToCart: (cartItem: IPlate) => void
     updateQuantity: (cartItem: IPlate, quantity: number) => void
     removeFromCart: (cartItem: IPlate) => void
+    clearCart: () => void
 }
 
 interface IAuthContext extends IAuthState {
@@ -33,7 +36,7 @@ interface IOrdersContext extends IOrdersState {
     handleClearOrderFormFields: () => void
     handleFetchOrders: () => Promise<void>
     handleFetchOrdersByUser: (userId: string) => Promise<void>
-    handleCreateOrder: (orderItems: IOrderCreate["items"], orderDate: Date) => Promise<void>
+    handleCreateOrder: (orderItems: IOrderCreate["items"], orderDate: Date | null, userId?: string) => Promise<void>
 }
 
 interface IPlatesContext extends IPlatesState {

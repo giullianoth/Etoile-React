@@ -7,6 +7,7 @@ import { useDateFormats } from "../../../../hooks/date-formats"
 import { useNavigate } from "react-router-dom"
 import Loading from "../../../Loading"
 import Trigger from "../../../Trigger"
+import { usePendingOrder } from "../../../../hooks/pending-order"
 
 type Props = {
     setModalIsOpen: Dispatch<SetStateAction<boolean>>
@@ -14,6 +15,7 @@ type Props = {
 
 const ConfirmOrder = ({ setModalIsOpen }: Props) => {
     const [date, setDate] = useState<Date | null>(null)
+    const [localErrorMessage, setLocalErrorMessage] = useState<string | null>(null)
 
     const {
         orderFormFields,
@@ -22,17 +24,20 @@ const ConfirmOrder = ({ setModalIsOpen }: Props) => {
         loading,
         errorMessage,
         success,
-        successMessage
+        successMessage,
+        handleClearOrderFormFields
     } = useAppContext().orders
 
     const { user } = useAppContext().auth
-    const { cart } = useAppContext().cart
-    const { combineDateAndTime } = useDateFormats()
+    const { cart, clearCart } = useAppContext().cart
+    const { combineDateAndTime, isPastDate } = useDateFormats()
     const { addMessage } = useAppContext().message
+    const { addPendingOrder } = usePendingOrder()
     const navigate = useNavigate()
 
     useEffect(() => {
         setDate(new Date())
+        handleClearOrderFormFields()
 
         if (user?._id) {
             handleChangeOrderFormFields("userId", user._id)
@@ -56,11 +61,6 @@ const ConfirmOrder = ({ setModalIsOpen }: Props) => {
     const handleConfirmOrder = async (event: FormEvent) => {
         event.preventDefault()
 
-        if (!user?._id) {
-            navigate("/autenticacao")
-            return
-        }
-
         const combinedDateValue = orderFormFields.time
             ? combineDateAndTime(date, orderFormFields.time)
             : null
@@ -70,7 +70,28 @@ const ConfirmOrder = ({ setModalIsOpen }: Props) => {
             quantity: item.quantity
         }))
 
+        if (!orderFormFields.userId) {
+            if (!orderFormFields.time || !combinedDateValue) {
+                setLocalErrorMessage("Preencha o horário de comparecimento.")
+                return
+            }
+
+            if (combinedDateValue && isPastDate(combinedDateValue)) {
+                setLocalErrorMessage("Hora inválida.")
+                return
+            }
+
+            addPendingOrder({
+                items: orderItems,
+                time: combinedDateValue
+            })
+
+            navigate("/autenticacao")
+            return
+        }
+
         await handleCreateOrder(orderItems, combinedDateValue!)
+        clearCart()
     }
 
     return (
@@ -107,8 +128,8 @@ const ConfirmOrder = ({ setModalIsOpen }: Props) => {
                 </div>
             </form>
 
-            {errorMessage &&
-                <Trigger type="error">{errorMessage}</Trigger>}
+            {errorMessage || localErrorMessage &&
+                <Trigger type="error">{errorMessage ?? localErrorMessage}</Trigger>}
         </Popup>
     )
 }

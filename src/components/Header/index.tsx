@@ -59,7 +59,11 @@ const Header = () => {
                             </div>}
 
                         <div className={styles.header__navigationProfile}>
-                            <Link to="/perfil" title="Meu Perfil">
+                            <Link
+                                to="/perfil"
+                                title={user
+                                    ? `Perfil de ${firstName(user.fullname)}`
+                                    : "Meu Perfil"}>
                                 <PiUserCircle />
                             </Link>
                         </div>
@@ -68,7 +72,7 @@ const Header = () => {
                             <Link to="/carrinho" title="Carrinho">
                                 <PiShoppingCartSimple />
 
-                                {cart && cart.length &&
+                                {cart && cart.length > 0 &&
                                     <span className={styles.header__navigationCartQt}>
                                         {cart.length}
                                     </span>}

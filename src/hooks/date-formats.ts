@@ -1,6 +1,25 @@
 import type { IOrderCreate } from "../types/order"
 
 export const useDateFormats = () => {
+    const dateFormat = (date: Date | string) => {
+        if (typeof date === "string") {
+            date = new Date(date)
+        }
+
+        return date.toLocaleDateString()
+    }
+
+    const dateTimeFormat = (date: Date | string) => {
+        if (typeof date === "string") {
+            date = new Date(date)
+        }
+
+        const hours = String(date.getHours()).padStart(2, "0")
+        const minutes = String(date.getMinutes()).padStart(2, "0")
+
+        return `${hours}:${minutes}`
+    }
+
     const combineDateAndTime = (date: Date | null, time: IOrderCreate["time"]) => {
         if (!date) {
             return null
@@ -39,5 +58,5 @@ export const useDateFormats = () => {
     }
 
     // Retorna a função para ser usada no componente
-    return { combineDateAndTime, isPastDate }
+    return { dateFormat, dateTimeFormat, combineDateAndTime, isPastDate }
 }
