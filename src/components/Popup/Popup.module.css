@@ -56,12 +56,16 @@
     flex-direction: column;
 }
 
-.popup__actionSpaced {
+.popup__spaced {
     justify-content: space-between;
 }
 
-.popup__actionCentered {
+.popup__centered {
     justify-content: center;
+}
+
+.popup__stretched {
+    align-items: stretch;
 }
 
 .popup__iconClaret {

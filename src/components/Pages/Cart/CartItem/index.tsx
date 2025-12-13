@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import type { ICartItem } from "../../../../types/cart"
 import styles from "./CartItem.module.css"
-import { PiMinus, PiMinusCircle, PiPlus } from "react-icons/pi"
+import { PiBeerBottle, PiMinus, PiMinusCircle, PiPlus } from "react-icons/pi"
 import { useAppContext } from "../../../../context/context"
 import Modal from "react-modal"
 import ConfirmRemove from "../ConfirmRemove"
@@ -60,6 +60,12 @@ const CartItem = ({ cartItem }: Props) => {
                         </p>
 
                         <p className={styles.item__description}>{cartItem.plate.description}</p>
+                        <p className={styles.item__pairing}>
+                            <PiBeerBottle />{" "}
+                            <span>
+                                Acompanha bem um <strong>{cartItem.plate.pairing}</strong>
+                            </span>
+                        </p>
                     </div>
 
                     <div className={styles.item__actions}>

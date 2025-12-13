@@ -14,7 +14,7 @@ const ConfirmRemove = ({ onConfirmRemove, setModalIsOpen }: Props) => {
                 <h2>Deseja excluir este prato do carrinho?</h2>
             </header>
 
-            <div className={`${styles.popup__action} ${styles.popup__actionCentered}`}>
+            <div className={`${styles.popup__action} ${styles.popup__centered}`}>
                 <button
                     className="button primary outline"
                     onClick={() => setModalIsOpen(false)}>Não</button>

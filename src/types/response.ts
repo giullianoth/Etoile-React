@@ -45,3 +45,10 @@ export interface IPlatesFetchSuccessResponse extends ISuccessResponse {
 }
 
 export type IPlatesFetchResponse = IPlatesFetchSuccessResponse | IErrorResponse
+
+// Orders
+export interface IOrdersCreateSuccessResponse extends ISuccessResponse {
+    body: IOrder
+}
+
+export type IOrdersCreateResponse = IOrdersCreateSuccessResponse | IErrorResponse

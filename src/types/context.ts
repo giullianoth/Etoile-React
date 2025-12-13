@@ -1,4 +1,5 @@
 import type { ICartItem } from "./cart";
+import type { IOrderCreate } from "./order";
 import type { IPlate } from "./plate";
 import type { IAuthState, IOrdersState, IPlatesState } from "./reducer-states";
 import type { IUserRegister } from "./user";
@@ -27,9 +28,12 @@ interface IAuthContext extends IAuthState {
 }
 
 interface IOrdersContext extends IOrdersState {
+    handleChangeOrderFormFields: (name: keyof IOrderCreate, value: string | IPlate[]) => void
     handleClearOrdersData: () => void
+    handleClearOrderFormFields: () => void
     handleFetchOrders: () => Promise<void>
     handleFetchOrdersByUser: (userId: string) => Promise<void>
+    handleCreateOrder: (orderItems: IOrderCreate["items"], orderDate: Date) => Promise<void>
 }
 
 interface IPlatesContext extends IPlatesState {

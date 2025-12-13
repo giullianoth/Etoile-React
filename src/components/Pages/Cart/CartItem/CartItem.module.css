@@ -23,7 +23,7 @@
     flex-basis: calc(100% - 70px - 20px);
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-end;
     flex-wrap: wrap;
     row-gap: 20px;
 }
@@ -56,6 +56,18 @@
 
 .item__description {
     line-height: 1;
+    margin-bottom: 8px;
+}
+
+.item__pairing {
+    display: flex;
+    align-items: center;
+    column-gap: 8px;
+}
+
+.item__pairing svg {
+    color: var(--color-murrey);
+    flex-basis: 30px;
 }
 
 .item__actions {

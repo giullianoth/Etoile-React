@@ -16,3 +16,11 @@ export interface IOrderItem {
     orderId: string
     itemDetails: IPlate
 }
+
+export interface IOrderCreate extends IOrder {
+    userId: string
+    items: {
+        plateId: string
+        quantity: number
+    }[]
+}

@@ -1,4 +1,4 @@
-import type { IOrder } from "./order"
+import type { IOrder, IOrderCreate } from "./order"
 import type { ICategory, IPlate } from "./plate"
 import type { IUser, IUserRegister } from "./user"
 
@@ -27,12 +27,18 @@ export type IAuthActions =
 // Orders
 export interface IOrdersState extends IReducerStates {
     orders: IOrder[]
+    orderFormFields: Partial<IOrderCreate>
 }
 
 export type IOrdersActions =
     | { type: "ORDERS_FETCH_START" }
     | { type: "ORDERS_FETCH_SUCCESS", payload: IOrder[] }
     | { type: "ORDERS_FETCH_FAILURE", payload: string }
+    | { type: "ORDERS_CHANGE_FORM_FIELDS", payload: { name: keyof IOrderCreate, value: string | IPlate[] } }
+    | { type: "ORDERS_CREATE_START" }
+    | { type: "ORDERS_CREATE_SUCCESS", payload: { order: IOrder, message: string } }
+    | { type: "ORDERS_CREATE_FAILURE", payload: string }
+    | { type: "ORDERS_CLEAR_FORM_FIELDS" }
     | { type: "ORDERS_CLEAR_DATA" }
 
 // Plates & Categories

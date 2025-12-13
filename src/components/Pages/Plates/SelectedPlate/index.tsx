@@ -45,7 +45,7 @@ const SelectedPlate = ({ plate, setModalIsOpen }: Props) => {
                 Acompanha muito bem um <strong>{plate.pairing}</strong>
             </p>
 
-            <div className={`${styles.popup__action} ${styles.popup__actionSpaced}`}>
+            <div className={`${styles.popup__action} ${styles.popup__spaced}`}>
                 <p className={styles.popup__detachedText}>
                     {currency(plate.price)}
                 </p>

@@ -1,4 +1,4 @@
-*:has(.loading.inButton) {
+*:has(> .loading.inButton) {
     position: relative;
 }
 
