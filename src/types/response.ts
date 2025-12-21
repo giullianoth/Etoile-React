@@ -52,3 +52,10 @@ export interface IOrdersCreateSuccessResponse extends ISuccessResponse {
 }
 
 export type IOrdersCreateResponse = IOrdersCreateSuccessResponse | IErrorResponse
+
+// Users
+export interface IUserUpdateSuccessResponse extends ISuccessResponse {
+    body: IUser
+}
+
+export type IUserUpdateResponse = IUserUpdateSuccessResponse | IErrorResponse

@@ -2,8 +2,8 @@ import type { ICartItem } from "./cart";
 import type { IMessageType } from "./message";
 import type { IOrderCreate } from "./order";
 import type { IPlate } from "./plate";
-import type { IAuthState, IOrdersState, IPlatesState } from "./reducer-states";
-import type { IUserRegister } from "./user";
+import type { IAuthState, IOrdersState, IPlatesState, IUsersState } from "./reducer-states";
+import type { IUser, IUserRegister, IUserUpdate } from "./user";
 
 interface IMessageContext {
     message: string | null
@@ -25,6 +25,7 @@ interface ICartContext {
 interface IAuthContext extends IAuthState {
     handleChangeAuthForm: (name: keyof IUserRegister, value: string) => void
     handleClearAuthForm: () => void
+    handleClearAuthData: () => void
     handleLogin: () => Promise<void>
     handleRegister: () => Promise<void>
     handleLogout: () => void
@@ -47,10 +48,19 @@ interface IPlatesContext extends IPlatesState {
     handleFetchAvailablePlates: () => Promise<void>
 }
 
+interface IUsersContext extends IUsersState {
+    handleChangeUsersUpdateFormFields: (name: keyof IUserUpdate, value: string | boolean) => void
+    handleClearUsersFormFields: () => void
+    handleClearUsersData: () => void
+    handleSetUserToEdit: (userData: IUser | null) => void
+    handleUpdateUser: () => Promise<void>
+}
+
 export interface IContext {
     message: IMessageContext
     cart: ICartContext
     auth: IAuthContext
     orders: IOrdersContext
     plates: IPlatesContext
+    users: IUsersContext
 }

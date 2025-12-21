@@ -4,15 +4,15 @@ import type { IUser, IUserRegister } from "../types/user";
 import { useValidateEmail } from "../hooks/validate-email";
 import authServices from "../services/auth-service";
 
-const storagedAuth = localStorage.getItem("etoile-auth")
+const storagedAuth = () => localStorage.getItem("etoile-auth")
 
 const initialState: IAuthState = {
-    success: storagedAuth ? true : false,
+    success: storagedAuth() ? true : false,
     loading: false,
     errorMessage: null,
     successMessage: null,
-    user: storagedAuth ? JSON.parse(storagedAuth).user as IUser : null,
-    token: storagedAuth ? JSON.parse(storagedAuth).token as string : null,
+    user: storagedAuth() ? JSON.parse(storagedAuth()!).user as IUser : null,
+    token: storagedAuth() ? JSON.parse(storagedAuth()!).token as string : null,
     authFormFields: {
         fullname: "",
         email: "",
@@ -80,6 +80,9 @@ const authReducerActions = (state: IAuthState, action: IAuthActions): IAuthState
                 token: null
             }
 
+        case "AUTH_CLEAR_DATA":
+            return initialState
+
         default:
             return state
     }
@@ -99,6 +102,10 @@ export const useAuthReducer = () => {
 
     const handleClearAuthForm = useCallback(() => {
         dispatch({ type: "AUTH_CLEAR_FORM" })
+    }, [])
+
+    const handleClearAuthData = useCallback(() => {
+        dispatch({ type: "AUTH_CLEAR_DATA" })
     }, [])
 
     const handleLogin = useCallback(async () => {
@@ -246,6 +253,7 @@ export const useAuthReducer = () => {
         ...authState,
         handleChangeAuthForm,
         handleClearAuthForm,
+        handleClearAuthData,
         handleLogin,
         handleRegister,
         handleLogout

@@ -20,7 +20,12 @@ const Auth = ({ setTitle }: Props) => {
     const navigate = useNavigate()
     const { addMessage } = useAppContext().message
     const { pendingOrder, removePendingOrder } = usePendingOrder()
-    const { handleCreateOrder, loading: loadingOrders } = useAppContext().orders
+    const {
+        handleCreateOrder,
+        loading: loadingOrders,
+        successMessage: ordersSuccessMessage
+    } = useAppContext().orders
+
     const { clearCart } = useAppContext().cart
 
     const {
@@ -67,7 +72,7 @@ const Auth = ({ setTitle }: Props) => {
                 }
 
                 if (successMessage) {
-                    addMessage(successMessage)
+                    addMessage(ordersSuccessMessage ?? successMessage)
                 }
 
                 navigate("/perfil")
