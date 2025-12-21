@@ -1,15 +1,15 @@
-import { useState } from "react"
+import { useCallback, useState } from "react"
 import type { ICartItem } from "../types/cart"
 import type { IPlate } from "../types/plate"
 
-const storagedCart = localStorage.getItem("etoile-cart")
+const storagedCart = () => localStorage.getItem("etoile-cart")
 
 export const useCart = () => {
     const [cart, setCart] = useState<ICartItem[]>(
-        storagedCart ? JSON.parse(storagedCart) : []
+        storagedCart() ? JSON.parse(storagedCart()!) : []
     )
 
-    const addToCart = (cartItem: IPlate) => {
+    const addToCart = useCallback((cartItem: IPlate) => {
         const existingItem = cart.find(item => item.plate._id === cartItem._id)
         const quantity = existingItem ? existingItem.quantity + 1 : 1
 
@@ -24,9 +24,9 @@ export const useCart = () => {
 
         localStorage.setItem("etoile-cart", JSON.stringify(newCartList))
         setCart(newCartList)
-    }
+    }, [])
 
-    const updateQuantity = (cartItem: IPlate, quantity: number) => {
+    const updateQuantity = useCallback((cartItem: IPlate, quantity: number) => {
         const updatedCartList = cart.map(item => {
             if (item.plate === cartItem) {
                 item.quantity = quantity
@@ -36,19 +36,19 @@ export const useCart = () => {
 
         localStorage.setItem("etoile-cart", JSON.stringify(updatedCartList))
         setCart(updatedCartList)
-    }
+    }, [])
 
-    const removeFromCart = (cartItem: IPlate) => {
+    const removeFromCart = useCallback((cartItem: IPlate) => {
         const strippedCartList = cart.filter(item => item.plate !== cartItem)
 
         localStorage.setItem("etoile-cart", JSON.stringify(strippedCartList))
         setCart(strippedCartList)
-    }
+    }, [])
 
-    const clearCart = () => {
+    const clearCart = useCallback(() => {
         localStorage.removeItem("etoile-cart")
         setCart([])
-    }
+    }, [])
 
     return {
         cart,

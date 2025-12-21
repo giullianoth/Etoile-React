@@ -1,15 +1,16 @@
+import { useCallback } from "react"
 import type { IOrderCreate } from "../types/order"
 
 export const useDateFormats = () => {
-    const dateFormat = (date: Date | string) => {
+    const dateFormat = useCallback((date: Date | string) => {
         if (typeof date === "string") {
             date = new Date(date)
         }
 
         return date.toLocaleDateString()
-    }
+    }, [])
 
-    const dateTimeFormat = (date: Date | string) => {
+    const dateTimeFormat = useCallback((date: Date | string) => {
         if (typeof date === "string") {
             date = new Date(date)
         }
@@ -18,9 +19,9 @@ export const useDateFormats = () => {
         const minutes = String(date.getMinutes()).padStart(2, "0")
 
         return `${hours}:${minutes}`
-    }
+    }, [])
 
-    const combineDateAndTime = (date: Date | null, time: IOrderCreate["time"]) => {
+    const combineDateAndTime = useCallback((date: Date | null, time: IOrderCreate["time"]) => {
         if (!date) {
             return null
         }
@@ -43,20 +44,17 @@ export const useDateFormats = () => {
         const newDateTime = new Date(date)
 
         newDateTime.setHours(hours, minutes, 0, 0)
-
         return newDateTime
-    }
+    }, [])
 
-    const isPastDate = (date: Date | string) => {
+    const isPastDate = useCallback((date: Date | string) => {
         if (typeof date === "string") {
             date = new Date(date)
         }
 
         const currentDate = new Date()
-
         return date.getTime() < currentDate.getTime()
-    }
+    }, [])
 
-    // Retorna a função para ser usada no componente
     return { dateFormat, dateTimeFormat, combineDateAndTime, isPastDate }
 }

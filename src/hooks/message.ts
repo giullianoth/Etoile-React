@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useCallback, useState } from "react"
 import type { IMessageType } from "../types/message"
 
 export const useMessage = () => {
@@ -7,15 +7,15 @@ export const useMessage = () => {
     const [messageIsVisible, setMessageIsVisible] = useState<boolean>(false)
     const [fading, setFading] = useState<boolean>(false)
 
-    const addMessage = (text: string, type?: IMessageType) => {
+    const addMessage = useCallback((text: string, type?: IMessageType) => {
         setMessage(text)
 
         if (type) {
             setMessageType(type)
         }
-    }
+    }, [])
 
-    const showMessage = (timeout: number = 3000) => {
+    const showMessage = useCallback((timeout: number = 3000) => {
         setMessageIsVisible(true)
 
         setTimeout(() => {
@@ -28,7 +28,7 @@ export const useMessage = () => {
                 setMessageType("success")
             }, 300)
         }, timeout)
-    }
+    }, [])
 
     return {
         message,

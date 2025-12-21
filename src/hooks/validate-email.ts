@@ -1,4 +1,9 @@
+import { useCallback } from "react"
+
 export const useValidateEmail = () => {
-    const validate = (email: string) => /\S+@\S+\.\S+/.test(email)
+    const validate = useCallback((email: string) => {
+        return /\S+@\S+\.\S+/.test(email)
+    }, [])
+    
     return validate
 }
