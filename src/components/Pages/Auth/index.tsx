@@ -58,8 +58,6 @@ const Auth = ({ setTitle }: Props) => {
     useEffect(() => {
         const authenticate = async () => {
             if (success) {
-                console.log(pendingOrder)
-
                 if (pendingOrder) {
                     await handleCreateOrder(
                         pendingOrder.items!,

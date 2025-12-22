@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import type { ICartItem } from "../../../../types/cart"
 import styles from "./CartItem.module.css"
 import { PiBeerBottle, PiMinus, PiMinusCircle, PiPlus } from "react-icons/pi"
@@ -11,26 +11,17 @@ type Props = {
 }
 
 const CartItem = ({ cartItem }: Props) => {
-    const [quantity, setQuantity] = useState<number>(0)
+    const [quantity, setQuantity] = useState<number>(cartItem.quantity)
     const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
     const { updateQuantity, removeFromCart } = useAppContext().cart
     const { addMessage } = useAppContext().message
 
-    useEffect(() => {
-        if (cartItem) {
-            setQuantity(cartItem.quantity)
-        }
-    }, [cartItem])
-
     const handleChangeQuantity = (mode: "minus" | "plus") => {
-        if (mode === "minus" && quantity > 1) {
-            updateQuantity(cartItem.plate, quantity - 1)
-            setQuantity(quantity - 1)
-        }
+        const newQuantity = mode === "plus" ? quantity + 1 : quantity - 1
 
-        if (mode === "plus") {
-            updateQuantity(cartItem.plate, quantity + 1)
-            setQuantity(quantity + 1)
+        if (newQuantity >= 1) {
+            setQuantity(newQuantity)
+            updateQuantity(cartItem.plate._id, newQuantity)
         }
     }
 

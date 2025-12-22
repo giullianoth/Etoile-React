@@ -26,16 +26,16 @@ export const useCart = () => {
         setCart(newCartList)
     }, [])
 
-    const updateQuantity = useCallback((cartItem: IPlate, quantity: number) => {
-        const updatedCartList = cart.map(item => {
-            if (item.plate === cartItem) {
-                item.quantity = quantity
-            }
-            return item
+    const updateQuantity = useCallback((plateId: string, quantity: number) => {
+        setCart(prevCart => {
+            const updatedCartList = prevCart.map(item => 
+                item.plate._id === plateId 
+                    ? { ...item, quantity: quantity } 
+                    : item
+            )
+            localStorage.setItem("etoile-cart", JSON.stringify(updatedCartList))
+            return updatedCartList
         })
-
-        localStorage.setItem("etoile-cart", JSON.stringify(updatedCartList))
-        setCart(updatedCartList)
     }, [])
 
     const removeFromCart = useCallback((cartItem: IPlate) => {
