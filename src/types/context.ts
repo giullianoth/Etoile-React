@@ -26,6 +26,7 @@ interface IAuthContext extends IAuthState {
     handleChangeAuthForm: (name: keyof IUserRegister, value: string) => void
     handleClearAuthForm: () => void
     handleClearAuthData: () => void
+    handleUpdateLoggedUser: (userData: IUser) => void
     handleLogin: () => Promise<void>
     handleRegister: () => Promise<void>
     handleLogout: () => void

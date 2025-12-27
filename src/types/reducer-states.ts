@@ -20,6 +20,7 @@ export type IAuthActions =
     | { type: "AUTH_FORM_FIELDS_CHANGE", payload: { name: keyof IUserRegister, value: string } }
     | { type: "AUTH_CLEAR_FORM" }
     | { type: "AUTH_CLEAR_DATA" }
+    | { type: "AUTH_UPDATE_USER", payload: IUser }
     | { type: "AUTH_SUBMIT_START" }
     | { type: "AUTH_SUBMIT_SUCCESS", payload: { user: IUser, token: string, message: string } }
     | { type: "AUTH_SUBMIT_FAILURE", payload: string }

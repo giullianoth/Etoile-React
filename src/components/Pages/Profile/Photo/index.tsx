@@ -16,7 +16,7 @@ type Props = {
 const Photo = ({ photo, userName, className }: Props) => {
     const [previewImage, setPreviewImage] = useState<File | null>(null)
 
-    const { user, handleClearAuthData } = useAppContext().auth
+    const { user } = useAppContext().auth
     const { addMessage } = useAppContext().message
 
     const {
@@ -25,8 +25,14 @@ const Photo = ({ photo, userName, className }: Props) => {
         successMessage,
         success,
         handleUpdateUserPhoto,
-        handleSetUserToEdit
+        handleSetUserToEdit,
+        handleClearUsersFormFields
     } = useAppContext().users
+
+    useEffect(() => {
+        handleClearUsersFormFields()
+        handleSetUserToEdit(user)
+    }, [previewImage])
 
     useEffect(() => {
         if (errorMessage) {
@@ -36,12 +42,10 @@ const Photo = ({ photo, userName, className }: Props) => {
         if (success && successMessage) {
             addMessage(successMessage)
             setPreviewImage(null)
-            handleClearAuthData()
         }
     }, [errorMessage, success, successMessage, handleUpdateUserPhoto])
 
     const handleChangePhoto = (event: ChangeEvent<HTMLInputElement>) => {
-        handleSetUserToEdit(user)
         const file = event.target.files?.[0]
         setPreviewImage(file || null)
     }

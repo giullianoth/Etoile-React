@@ -17,7 +17,6 @@ type Props = {
 const UpdateProfile = ({ user, setModalIsOpen }: Props) => {
     const [collapsed, setCollapsed] = useState<boolean>(false)
     const { addMessage } = useAppContext().message
-    const { handleClearAuthData } = useAppContext().auth
 
     const {
         userUpdateFormFields,
@@ -39,7 +38,6 @@ const UpdateProfile = ({ user, setModalIsOpen }: Props) => {
     useEffect(() => {
         if (success && successMessage) {
             addMessage(successMessage)
-            handleClearAuthData()
             setModalIsOpen(false)
         }
     }, [success, successMessage, handleUpdateUser])

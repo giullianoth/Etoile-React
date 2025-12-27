@@ -14,13 +14,20 @@ type Props = {
 const AppContext = createContext<IContext | null>(null)
 
 export const AppProvider = ({ children }: Props) => {
+    const authReducer = useAuthReducer()
+    const messageHook = useMessage()
+    const cartHook = useCart()
+    const ordersReducer = useOrdersReducer()
+    const platesReducer = usePlatesReducer()
+    const usersReducer = useUsersReducer(authReducer.handleUpdateLoggedUser)
+
     const contextValue: IContext = {
-        message: useMessage(),
-        cart: useCart(),
-        auth: useAuthReducer(),
-        orders: useOrdersReducer(),
-        plates: usePlatesReducer(),
-        users: useUsersReducer()
+        message: messageHook,
+        cart: cartHook,
+        auth: authReducer,
+        orders: ordersReducer,
+        plates: platesReducer,
+        users: usersReducer
     }
 
     return (

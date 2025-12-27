@@ -63,6 +63,12 @@ const authReducerActions = (state: IAuthState, action: IAuthActions): IAuthState
                 errorMessage: action.payload
             }
 
+        case "AUTH_UPDATE_USER":
+            return {
+                ...state,
+                user: action.payload
+            }
+
         case "AUTH_CLEAR_FORM":
             return {
                 ...state,
@@ -106,6 +112,13 @@ export const useAuthReducer = () => {
 
     const handleClearAuthData = useCallback(() => {
         dispatch({ type: "AUTH_CLEAR_DATA" })
+    }, [])
+
+    const handleUpdateLoggedUser = useCallback((userData: IUser) => {
+        dispatch({
+            type: "AUTH_UPDATE_USER",
+            payload: userData
+        })
     }, [])
 
     const handleLogin = useCallback(async () => {
@@ -254,6 +267,7 @@ export const useAuthReducer = () => {
         handleChangeAuthForm,
         handleClearAuthForm,
         handleClearAuthData,
+        handleUpdateLoggedUser,
         handleLogin,
         handleRegister,
         handleLogout

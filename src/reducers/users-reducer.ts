@@ -98,7 +98,7 @@ const storageUpdatedUserData = (userData: IUser) => {
     localStorage.setItem("etoile-auth", JSON.stringify(newUserData))
 }
 
-export const useUsersReducer = () => {
+export const useUsersReducer = (handleUpdateLoggedUser: (userData: IUser) => void) => {
     const [usersState, dispatch] = useReducer<
         IUsersState,
         [action: IUsersActions]
@@ -213,6 +213,7 @@ export const useUsersReducer = () => {
         }
 
         storageUpdatedUserData(response.body)
+        handleUpdateLoggedUser(response.body)
 
         dispatch({
             type: "USERS_UPDATE_SUCCESS",
@@ -264,6 +265,7 @@ export const useUsersReducer = () => {
         }
 
         storageUpdatedUserData(response.body)
+        handleUpdateLoggedUser(response.body)
 
         dispatch({
             type: "USERS_UPDATE_SUCCESS",
