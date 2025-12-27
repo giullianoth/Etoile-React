@@ -1,11 +1,13 @@
 import type { IPlate } from "./plate"
 import type { IUser } from "./user"
 
+export type IOrderStatus = "Pendente" | "Cancelado" | "Concluído"
+
 export interface IOrder {
     _id: string
     userDetails: IUser[]
     orderItems: IOrderItem[]
-    status: "Pendente" | "Cancelado" | "Concluído"
+    status: IOrderStatus
     time: string | Date
 }
 
