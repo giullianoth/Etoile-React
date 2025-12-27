@@ -10,27 +10,27 @@ export const useCart = () => {
     )
 
     const addToCart = useCallback((cartItem: IPlate) => {
-        const existingItem = cart.find(item => item.plate._id === cartItem._id)
-        const quantity = existingItem ? existingItem.quantity + 1 : 1
+        setCart(prevCart => {
+            const existingItem = prevCart.find(item => item.plate._id === cartItem._id)
 
-        const newCartList = existingItem
-            ? cart.map(item => {
-                if (item === existingItem) {
-                    item.quantity = quantity
-                }
-                return item
-            })
-            : [...cart, { plate: cartItem, quantity }]
+            const newCartList = existingItem
+                ? prevCart.map(item =>
+                    item.plate._id === cartItem._id
+                        ? { ...item, quantity: item.quantity + 1 }
+                        : item
+                )
+                : [...prevCart, { plate: cartItem, quantity: 1 }]
 
-        localStorage.setItem("etoile-cart", JSON.stringify(newCartList))
-        setCart(newCartList)
+            localStorage.setItem("etoile-cart", JSON.stringify(newCartList))
+            return newCartList
+        })
     }, [])
 
     const updateQuantity = useCallback((plateId: string, quantity: number) => {
         setCart(prevCart => {
-            const updatedCartList = prevCart.map(item => 
-                item.plate._id === plateId 
-                    ? { ...item, quantity: quantity } 
+            const updatedCartList = prevCart.map(item =>
+                item.plate._id === plateId
+                    ? { ...item, quantity: quantity }
                     : item
             )
             localStorage.setItem("etoile-cart", JSON.stringify(updatedCartList))
@@ -39,10 +39,11 @@ export const useCart = () => {
     }, [])
 
     const removeFromCart = useCallback((cartItem: IPlate) => {
-        const strippedCartList = cart.filter(item => item.plate !== cartItem)
-
-        localStorage.setItem("etoile-cart", JSON.stringify(strippedCartList))
-        setCart(strippedCartList)
+        setCart(prevCart => {
+            const strippedCartList = prevCart.filter(item => item.plate._id !== cartItem._id)
+            localStorage.setItem("etoile-cart", JSON.stringify(strippedCartList))
+            return strippedCartList
+        })
     }, [])
 
     const clearCart = useCallback(() => {
