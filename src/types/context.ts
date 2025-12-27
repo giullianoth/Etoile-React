@@ -54,6 +54,7 @@ interface IUsersContext extends IUsersState {
     handleClearUsersData: () => void
     handleSetUserToEdit: (userData: IUser | null) => void
     handleUpdateUser: () => Promise<void>
+    handleUpdateUserPhoto: (photo: File) => Promise<void>
 }
 
 export interface IContext {

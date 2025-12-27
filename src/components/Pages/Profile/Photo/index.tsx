@@ -1,23 +1,100 @@
-import { PiCameraBold } from "react-icons/pi"
+import { PiCameraBold, PiCheck, PiX } from "react-icons/pi"
 import styles from "./Photo.module.css"
 import avatar from "/images/user.png"
+import { useEffect, useState, type ChangeEvent, type FormEvent } from "react"
+import Trigger from "../../../Trigger"
+import { uploadsURL } from "../../../../services/api"
+import { useAppContext } from "../../../../context/context"
+import Loading from "../../../Loading"
 
 type Props = {
     photo?: string
     userName: string
-    className?: string
+    className: string
 }
 
 const Photo = ({ photo, userName, className }: Props) => {
+    const [previewImage, setPreviewImage] = useState<File | null>(null)
+
+    const { user, handleClearAuthData } = useAppContext().auth
+    const { addMessage } = useAppContext().message
+
+    const {
+        loading,
+        errorMessage,
+        successMessage,
+        success,
+        handleUpdateUserPhoto,
+        handleSetUserToEdit
+    } = useAppContext().users
+
+    useEffect(() => {
+        if (errorMessage) {
+            addMessage(errorMessage, "error")
+        }
+
+        if (success && successMessage) {
+            addMessage(successMessage)
+            setPreviewImage(null)
+            handleClearAuthData()
+        }
+    }, [errorMessage, success, successMessage, handleUpdateUserPhoto])
+
+    const handleChangePhoto = (event: ChangeEvent<HTMLInputElement>) => {
+        handleSetUserToEdit(user)
+        const file = event.target.files?.[0]
+        setPreviewImage(file || null)
+    }
+
+    const handleSubmit = async (event: FormEvent) => {
+        event.preventDefault()
+        await handleUpdateUserPhoto(previewImage!)
+    }
+
     return (
-        <div className={styles.photo + (className ? ` ${className}` : "")}>
-            <img src={photo ?? avatar} alt={userName} />
+        <form className={`${styles.photo} ${className}`} onSubmit={handleSubmit}>
+            <img
+                src={
+                    photo || previewImage
+                        ? (previewImage
+                            ? URL.createObjectURL(previewImage)
+                            : `${uploadsURL}/users/${photo}`)
+                        : avatar
+                }
+                alt={userName} />
 
             <label className={styles.photo__change} title="Alterar foto de perfil">
                 <PiCameraBold />
-                <input type="file" name="photo" />
+                <input
+                    type="file"
+                    name="photo"
+                    onChange={handleChangePhoto} />
             </label>
-        </div>
+
+            {previewImage &&
+                (loading
+                    ? <Loading className={styles.photo__confirm} />
+
+                    : <div className={styles.photo__confirm}>
+                        <span
+                            title="Cancelar"
+                            onClick={() => setPreviewImage(null)}>
+                            <Trigger type="error" icon={<PiX />}>
+                                {""}
+                            </Trigger>
+                        </span>
+
+                        <button
+                            type="submit"
+                            className="button clear"
+                            title="Confirmar">
+                            <Trigger type="success" icon={<PiCheck />}>
+                                {""}
+                            </Trigger>
+                        </button>
+                    </div>
+                )}
+        </form>
     )
 }
 

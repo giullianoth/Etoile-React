@@ -10,7 +10,7 @@
     position: relative;
 }
 
-.photo:hover .photo__change {
+.photo:not(:has(.photo__confirm)):hover .photo__change {
     visibility: visible;
     opacity: 1;
 }
@@ -37,4 +37,32 @@
     background-image: var(--color-night-gradient-2);
     visibility: hidden;
     opacity: 0;
+}
+
+.photo__confirm {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-night-overlay);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.photo__confirm span ,
+.photo__confirm button {
+    display: block;
+}
+
+.photo__confirm span > *,
+.photo__confirm button > * {
+    padding: 0 !important;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    opacity: 0.9;
+    border-radius: 50%;
 }
