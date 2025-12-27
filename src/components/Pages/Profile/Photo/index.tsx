@@ -73,7 +73,9 @@ const Photo = ({ photo, userName, className }: Props) => {
 
             {previewImage &&
                 (loading
-                    ? <Loading className={styles.photo__confirm} />
+                    ? <Loading
+                        small
+                        className={styles.photo__confirm} />
 
                     : <div className={styles.photo__confirm}>
                         <span

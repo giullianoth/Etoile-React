@@ -17,13 +17,15 @@
     background-color: var(--color-murrey);
 }
 
-.loading.inButton .loading__circle {
+.loading.inButton .loading__circle,
+.loading.small .loading__circle {
     width: 24px;
     height: 24px;
     border-width: 2px;
 }
 
-.loading.inButton .loading__spinner {
+.loading.inButton .loading__spinner,
+.loading.small .loading__spinner {
     border-width: 2px;
     width: calc(100% + 4px);
     height: calc(100% + 4px);
