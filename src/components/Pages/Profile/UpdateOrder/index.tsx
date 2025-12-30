@@ -3,7 +3,7 @@ import type { IOrderItem } from "../../../../types/order"
 import Checkbox from "../../../Form/Checkbox"
 import Popup from "../../../Popup"
 import styles from "../../../Popup/Popup.module.css"
-import { useState, type Dispatch, type SetStateAction } from "react"
+import { useState, type Dispatch, type FormEvent, type SetStateAction } from "react"
 import Modal from "react-modal"
 import ConfirmCancelItem from "../ConfirmCancelItem"
 
@@ -25,15 +25,12 @@ const UpdateOrder = ({ orderItems, setUpdateIsOpen }: Props) => {
     setItemToCancel(orderItem)
   }
 
-  const handleUnsetItemToCancel = () => {
+  const handleCancelItem = () => {
     setCancelItemIsOpen(false)
-    setItemToCancel(null)
   }
 
-  const handleCancelItem = () => {
-    console.log(itemToCancel)
-    setItemToCancel(null)
-    setCancelItemIsOpen(false)
+  const handleSubmit = (event: FormEvent) => {
+    event.preventDefault()
   }
 
   return (
@@ -65,18 +62,18 @@ const UpdateOrder = ({ orderItems, setUpdateIsOpen }: Props) => {
 
               {orderItems.length > 1 &&
                 <div className={styles.popup__listAction}>
-                  <button
+                  <span
                     className="button primary clear"
                     title="Cancelar este item"
                     onClick={() => handleSetItemToCancel(item)}>
                     <PiTrash />
-                  </button>
+                  </span>
                 </div>}
             </div>
           ))}
         </div>
 
-        <form className={styles.popup__form}>
+        <form className={styles.popup__form} onSubmit={handleSubmit}>
           <div className={`${styles.popup__action} ${styles.popup__stretched}`}>
             <input
               type="time"
@@ -119,13 +116,15 @@ const UpdateOrder = ({ orderItems, setUpdateIsOpen }: Props) => {
 
       <Modal
         isOpen={cancelItemIsOpen}
-        onRequestClose={handleUnsetItemToCancel}
+        onRequestClose={() => setCancelItemIsOpen(false)}
+        onAfterClose={() => setItemToCancel(null)}
         closeTimeoutMS={300}
         className="modal"
         overlayClassName="modal-overlay">
         <ConfirmCancelItem
-          onCloseModal={handleUnsetItemToCancel}
-          onConfirmCancel={handleCancelItem} />
+          onCloseModal={setCancelItemIsOpen}
+          onConfirmCancel={handleCancelItem}
+          orderItem={itemToCancel!} />
       </Modal>
     </>
   )

@@ -1,4 +1,4 @@
-import type { IOrder, IOrderCreate } from "./order"
+import type { IOrder, IOrderCreate, IOrderItem } from "./order"
 import type { ICategory, IPlate } from "./plate"
 import type { IUser, IUserRegister, IUserUpdate } from "./user"
 
@@ -40,6 +40,9 @@ export type IOrdersActions =
     | { type: "ORDERS_CREATE_START" }
     | { type: "ORDERS_CREATE_SUCCESS", payload: { order: IOrder, message: string } }
     | { type: "ORDERS_CREATE_FAILURE", payload: string }
+    | { type: "ORDERS_UPDATE_START" }
+    | { type: "ORDERS_UPDATE_SUCCESS", payload: { orderResult: IOrder | IOrderItem, message: string } }
+    | { type: "ORDERS_UPDATE_FAILURE", payload: string }
     | { type: "ORDERS_CLEAR_FORM_FIELDS" }
     | { type: "ORDERS_CLEAR_DATA" }
 

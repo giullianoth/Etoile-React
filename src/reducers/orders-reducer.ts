@@ -1,7 +1,7 @@
 import { useCallback, useReducer } from "react";
 import type { IOrdersActions, IOrdersState } from "../types/reducer-states";
 import ordersServices from "../services/orders-services";
-import type { IOrderCreate } from "../types/order";
+import type { IOrder, IOrderCreate } from "../types/order";
 import type { IPlate } from "../types/plate";
 import { useDateFormats } from "../hooks/date-formats";
 
@@ -22,6 +22,7 @@ const ordersReducerActions = (state: IOrdersState, action: IOrdersActions): IOrd
     switch (action.type) {
         case "ORDERS_FETCH_START":
         case "ORDERS_CREATE_START":
+        case "ORDERS_UPDATE_START":
             return {
                 ...state,
                 loading: true,
@@ -49,8 +50,38 @@ const ordersReducerActions = (state: IOrdersState, action: IOrdersActions): IOrd
                 orders: [...state.orders, action.payload.order]
             }
 
+        case "ORDERS_UPDATE_SUCCESS":
+            const { orderResult, message } = action.payload
+
+            const updatedOrders = state.orders.map(order => {
+                if ("orderItems" in orderResult) {
+                    return order._id === orderResult._id ? (orderResult as IOrder) : order
+                }
+
+                const isTargetOrder = order._id === orderResult.orderId
+
+                if (isTargetOrder || !orderResult.orderId) {
+                    return {
+                        ...order,
+                        orderItems: order.orderItems.filter(item => item._id !== orderResult._id)
+                    }
+                }
+
+                return order
+            })
+
+            return {
+                ...state,
+                loading: false,
+                success: true,
+                errorMessage: null,
+                successMessage: message,
+                orders: updatedOrders
+            }
+
         case "ORDERS_FETCH_FAILURE":
         case "ORDERS_CREATE_FAILURE":
+        case "ORDERS_UPDATE_FAILURE":
             return {
                 ...state,
                 loading: false,
@@ -159,7 +190,7 @@ export const useOrdersReducer = () => {
         }
 
         if (isPastDate(orderDate)) {
-             dispatch({
+            dispatch({
                 type: "ORDERS_CREATE_FAILURE",
                 payload: "Hora inválida."
             })
@@ -190,6 +221,36 @@ export const useOrdersReducer = () => {
         })
     }, [ordersState.orderFormFields])
 
+    const handleCancelOrderItem = useCallback(async (orderItemId: string) => {
+        dispatch({ type: "ORDERS_UPDATE_START" })
+
+        if (!orderItemId) {
+            dispatch({
+                type: "ORDERS_UPDATE_FAILURE",
+                payload: "Erro inesperado ao cancelar o item do pedido."
+            })
+            return
+        }
+
+        const response = await ordersServices.cancelOrderItem(orderItemId)
+
+        if (!response.success) {
+            dispatch({
+                type: "ORDERS_UPDATE_FAILURE",
+                payload: response.body.text ?? "Erro ao cancelar item do pedido."
+            })
+            return
+        }
+
+        dispatch({
+            type: "ORDERS_UPDATE_SUCCESS",
+            payload: {
+                orderResult: response.body,
+                message: "Item do pedido cancelado."
+            }
+        })
+    }, [])
+
     return {
         ...ordersState,
         handleChangeOrderFormFields,
@@ -197,6 +258,7 @@ export const useOrdersReducer = () => {
         handleClearOrderFormFields,
         handleFetchOrders,
         handleFetchOrdersByUser,
-        handleCreateOrder
+        handleCreateOrder,
+        handleCancelOrderItem
     }
 }

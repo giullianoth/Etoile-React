@@ -1,4 +1,4 @@
-import type { IOrder } from "./order"
+import type { IOrder, IOrderItem } from "./order"
 import type { ICategory, IPlate } from "./plate"
 import type { IUser } from "./user"
 
@@ -52,6 +52,12 @@ export interface IOrdersCreateSuccessResponse extends ISuccessResponse {
 }
 
 export type IOrdersCreateResponse = IOrdersCreateSuccessResponse | IErrorResponse
+
+export interface IOrdersUpdateSuccessResponse extends ISuccessResponse {
+    body: IOrder | IOrderItem
+}
+
+export type IOrdersUpdateResponse = IOrdersUpdateSuccessResponse | IErrorResponse
 
 // Users
 export interface IUserUpdateSuccessResponse extends ISuccessResponse {
