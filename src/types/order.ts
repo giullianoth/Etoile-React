@@ -26,3 +26,7 @@ export interface IOrderCreate extends IOrder {
         quantity: number
     }[]
 }
+
+export interface IOrderUpdate extends IOrderCreate {
+    orderReceived: boolean
+}

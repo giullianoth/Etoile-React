@@ -102,6 +102,17 @@
     font-size: 0.8em;
 }
 
+.popup__listAction {
+    position: relative;
+    min-width: fit-content;
+    display: flex;
+    align-items: center;
+}
+
+.popup__listLoading {
+    background-color: var(--color-white-smoke);
+}
+
 .popup__action {
     display: flex;
     align-items: center;

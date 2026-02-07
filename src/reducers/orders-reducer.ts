@@ -1,7 +1,7 @@
 import { useCallback, useReducer } from "react";
 import type { IOrdersActions, IOrdersState } from "../types/reducer-states";
 import ordersServices from "../services/orders-services";
-import type { IOrder, IOrderCreate } from "../types/order";
+import type { IOrder, IOrderCreate, IOrderUpdate } from "../types/order";
 import type { IPlate } from "../types/plate";
 import { useDateFormats } from "../hooks/date-formats";
 
@@ -11,15 +11,29 @@ const initialState: IOrdersState = {
     errorMessage: null,
     successMessage: null,
     orders: [],
+    currentOrder: null,
     orderFormFields: {
         userId: "",
         time: "",
-        items: []
+        items: [],
+        orderReceived: false
     }
 }
 
 const ordersReducerActions = (state: IOrdersState, action: IOrdersActions): IOrdersState => {
     switch (action.type) {
+        case "SET_ORDER_TO_EDIT":
+            return {
+                ...state,
+                currentOrder: action.payload,
+                orderFormFields: {
+                    ...state.orderFormFields,
+                    userId: action.payload ? action.payload.userDetails[0]._id : "",
+                    time: action.payload ? action.payload.time : "",
+                    items: action.payload ? action.payload.orderItems : []
+                }
+            }
+
         case "ORDERS_FETCH_START":
         case "ORDERS_CREATE_START":
         case "ORDERS_UPDATE_START":
@@ -70,13 +84,21 @@ const ordersReducerActions = (state: IOrdersState, action: IOrdersActions): IOrd
                 return order
             })
 
+            const updatedCurrentOrder = state.currentOrder
+                ? {
+                    ...state.currentOrder,
+                    orderItems: state.currentOrder.orderItems.filter(item => item._id !== orderResult._id)
+                }
+                : null
+
             return {
                 ...state,
                 loading: false,
                 success: true,
                 errorMessage: null,
                 successMessage: message,
-                orders: updatedOrders
+                orders: updatedOrders,
+                currentOrder: updatedCurrentOrder
             }
 
         case "ORDERS_FETCH_FAILURE":
@@ -106,7 +128,8 @@ const ordersReducerActions = (state: IOrdersState, action: IOrdersActions): IOrd
                 errorMessage: null,
                 successMessage: null,
                 success: false,
-                orderFormFields: initialState.orderFormFields
+                orderFormFields: initialState.orderFormFields,
+                currentOrder: null
             }
 
         case "ORDERS_CLEAR_DATA":
@@ -125,7 +148,7 @@ export const useOrdersReducer = () => {
 
     const { isPastDate } = useDateFormats()
 
-    const handleChangeOrderFormFields = useCallback((name: keyof IOrderCreate, value: string | IPlate[]) => {
+    const handleChangeOrderFormFields = useCallback((name: keyof IOrderCreate | keyof IOrderUpdate, value: string | boolean | IPlate[]) => {
         dispatch({
             type: "ORDERS_CHANGE_FORM_FIELDS",
             payload: { name, value }
@@ -138,6 +161,10 @@ export const useOrdersReducer = () => {
 
     const handleClearOrderFormFields = useCallback(() => {
         dispatch({ type: "ORDERS_CLEAR_FORM_FIELDS" })
+    }, [])
+
+    const handleSetOrderToEdit = useCallback((order: IOrder | null) => {
+        dispatch({ type: "SET_ORDER_TO_EDIT", payload: order })
     }, [])
 
     const handleFetchOrders = useCallback(async () => {
@@ -221,6 +248,20 @@ export const useOrdersReducer = () => {
         })
     }, [ordersState.orderFormFields])
 
+    const handleUpdateOrder = useCallback(async (orderDate: Date | null) => {
+        dispatch({ type: "ORDERS_UPDATE_START" })
+
+        if (!orderDate) {
+            dispatch({
+                type: "ORDERS_CREATE_FAILURE",
+                payload: "Preencha o horário de comparecimento."
+            })
+            return
+        }
+
+        console.log(isPastDate(orderDate, ordersState.orderFormFields.time))
+    }, [ordersState.orderFormFields])
+
     const handleCancelOrderItem = useCallback(async (orderItemId: string) => {
         dispatch({ type: "ORDERS_UPDATE_START" })
 
@@ -253,12 +294,14 @@ export const useOrdersReducer = () => {
 
     return {
         ...ordersState,
+        handleSetOrderToEdit,
         handleChangeOrderFormFields,
         handleClearOrdersData,
         handleClearOrderFormFields,
         handleFetchOrders,
         handleFetchOrdersByUser,
         handleCreateOrder,
+        handleUpdateOrder,
         handleCancelOrderItem
     }
 }

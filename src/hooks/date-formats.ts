@@ -47,13 +47,17 @@ export const useDateFormats = () => {
         return newDateTime
     }, [])
 
-    const isPastDate = useCallback((date: Date | string) => {
+    const isPastDate = useCallback((date: Date | string, referenceDate?: Date | string) => {
+        if (referenceDate && typeof referenceDate === "string") {
+            referenceDate = new Date(referenceDate)
+        }
+
         if (typeof date === "string") {
             date = new Date(date)
         }
 
         const currentDate = new Date()
-        return date.getTime() < currentDate.getTime()
+        return date.getTime() < (referenceDate ? (referenceDate as Date).getTime() : currentDate.getTime())
     }, [])
 
     return { dateFormat, dateTimeFormat, combineDateAndTime, isPastDate }
