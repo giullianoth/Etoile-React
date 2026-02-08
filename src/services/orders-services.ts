@@ -110,12 +110,33 @@ const cancelOrderItem = async (orderItemId: string) => {
     }
 }
 
+const cancelOrder = async (orderId: string) => {
+    try {
+        const response = await fetch(`${url}/cancel/${orderId}`, {
+            method: "PATCH"
+        }).then(res => res.json())
+
+        return response as IOrdersUpdateResponse
+    } catch (error) {
+        console.error(error)
+
+        return {
+            success: false,
+            statusCode: 500,
+            body: {
+                text: "Erro de rede ou comunicação com o servidor."
+            }
+        } as IErrorResponse
+    }
+}
+
 const ordersServices = {
     fetchOrders,
     fetchOrdersByUser,
     createOrder,
     updateOrder,
-    cancelOrderItem
+    cancelOrderItem,
+    cancelOrder
 }
 
 export default ordersServices

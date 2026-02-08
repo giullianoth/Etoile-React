@@ -8,6 +8,7 @@ import { useDateFormats } from "../../../../hooks/date-formats"
 type Props = {
     order: IOrder
     onOpenUpdate: () => void
+    onOpenCancel: () => void
 }
 
 const statusConfig = {
@@ -25,7 +26,7 @@ const statusConfig = {
     }
 }
 
-const Order = ({ order, onOpenUpdate }: Props) => {
+const Order = ({ order, onOpenUpdate, onOpenCancel }: Props) => {
     const { dateFormat, dateTimeFormat } = useDateFormats()
     const currentStatus = statusConfig[order.status as keyof typeof statusConfig] || statusConfig.Pendente
 
@@ -42,6 +43,12 @@ const Order = ({ order, onOpenUpdate }: Props) => {
     const handleActionClick = () => {
         if (order.status === "Pendente") {
             onOpenUpdate()
+        }
+    }
+
+    const handleDeleteClick = () => {
+        if (order.status === "Pendente") {
+            onOpenCancel()
         }
     }
 
@@ -96,7 +103,9 @@ const Order = ({ order, onOpenUpdate }: Props) => {
                     </Trigger>
                 </div>
 
-                <div className={styles.order__button}>
+                <div
+                    className={styles.order__button}
+                    onClick={handleDeleteClick}>
                     <Trigger
                         bullet
                         type="error"

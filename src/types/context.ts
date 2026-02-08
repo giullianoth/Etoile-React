@@ -42,6 +42,7 @@ interface IOrdersContext extends IOrdersState {
     handleCreateOrder: (orderItems: IOrderCreate["items"], orderDate: Date | null, userId?: string) => Promise<void>
     handleUpdateOrder: (orderDate: Date | null) => Promise<void>
     handleCancelOrderItem: (orderItemId: string) => Promise<void>
+    handleCancelOrder: (orderId: string) => Promise<void>
 }
 
 interface IPlatesContext extends IPlatesState {

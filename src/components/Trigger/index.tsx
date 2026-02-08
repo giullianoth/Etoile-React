@@ -28,8 +28,7 @@ const Trigger = ({ children, type, bullet, icon, floating, fading }: Props) => {
                 ` ${styles[type]}` +
                 (bullet ? ` ${styles.bullet}` : "") +
                 (floating ? ` ${styles.floating}` : "") +
-                (fading ? ` ${styles.fading}` : "")
-            }>
+                (fading ? ` ${styles.fading}` : "")}>
             {renderedIcon}
             {children}
         </div>

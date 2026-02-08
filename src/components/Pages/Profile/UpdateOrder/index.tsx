@@ -16,6 +16,7 @@ type Props = {
 const UpdateOrder = ({ setUpdateIsOpen }: Props) => {
   const [itemToCancel, setItemToCancel] = useState<IOrderItem | null>(null)
   const [cancelItemIsOpen, setCancelItemIsOpen] = useState<boolean>(false)
+  const [cancelOrderIsOpen, setCancelOrderIsOpen] = useState<boolean>(false)
   const { dateTimeFormat, combineDateAndTime } = useDateFormats()
   const { addMessage } = useAppContext().message
 
@@ -29,7 +30,8 @@ const UpdateOrder = ({ setUpdateIsOpen }: Props) => {
     handleUpdateOrder,
     cancellingOrderItem,
     successMessage,
-    success
+    success,
+    handleCancelOrder
   } = useAppContext().orders
 
   useEffect(() => {
@@ -81,6 +83,15 @@ const UpdateOrder = ({ setUpdateIsOpen }: Props) => {
 
     const combinedDateValue = combineDateAndTime(new Date(currentOrder?.time!), orderFormFields.time!)
     await handleUpdateOrder(combinedDateValue)
+  }
+
+  const handleCancelCurrentOrder = async () => {
+    if (!currentOrder?._id) {
+      return
+    }
+
+    await handleCancelOrder(currentOrder._id)
+    setUpdateIsOpen(false)
   }
 
   return (
@@ -150,7 +161,8 @@ const UpdateOrder = ({ setUpdateIsOpen }: Props) => {
                 type="time"
                 name="time"
                 value={orderFormFields.time as string}
-                onChange={handleChangeOrderData} />
+                onChange={handleChangeOrderData}
+                disabled={cancelOrderIsOpen} />
 
               <p>
                 <strong className={styles.popup__strongDetached}>Atenção:</strong>{" "}
@@ -162,7 +174,8 @@ const UpdateOrder = ({ setUpdateIsOpen }: Props) => {
               <Checkbox
                 name="orderReceived"
                 checked={orderFormFields.orderReceived}
-                onChange={handleChangeOrderData} />
+                onChange={handleChangeOrderData}
+                disabled={cancelOrderIsOpen} />
 
               <span>Recebi meu pedido</span>
             </label>
@@ -179,16 +192,39 @@ const UpdateOrder = ({ setUpdateIsOpen }: Props) => {
                 <button
                   type="submit"
                   className="button primary"
-                  disabled={loading}>
+                  disabled={loading || cancelOrderIsOpen}>
                   Atualizar
                   {loading && <Loading inButton />}
                 </button>
               </div>
 
-              <span className="button primary clear">
-                <PiTrash />
-                Cancelar pedido
-              </span>
+              <div className={styles.popup__action}>
+                {cancelOrderIsOpen
+                  ? <>
+                    <span className={styles.popup__subtitle}>Tem certeza?</span>
+
+                    <span
+                      className="button clear"
+                      title="Voltar"
+                      onClick={() => setCancelOrderIsOpen(false)}>
+                      <PiX />
+                    </span>
+
+                    <span
+                      className="button clear"
+                      title="Cancelar pedido"
+                      onClick={handleCancelCurrentOrder}>
+                      <PiCheckBold />
+                    </span>
+                  </>
+
+                  : <span
+                    className="button primary clear"
+                    onClick={() => setCancelOrderIsOpen(true)}>
+                    <PiTrash />
+                    Cancelar pedido
+                  </span>}
+              </div>
             </div>
           </form>
 

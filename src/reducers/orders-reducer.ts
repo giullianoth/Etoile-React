@@ -364,6 +364,36 @@ export const useOrdersReducer = () => {
         })
     }, [])
 
+    const handleCancelOrder = useCallback(async (orderId: string) => {
+        dispatch({ type: "ORDERS_UPDATE_START" })
+
+        if (!orderId) {
+            dispatch({
+                type: "ORDERS_UPDATE_FAILURE",
+                payload: "Erro inesperado ao cancelar pedido."
+            })
+            return
+        }
+
+        const response = await ordersServices.cancelOrder(orderId)
+
+        if (!response.success) {
+            dispatch({
+                type: "ORDERS_UPDATE_FAILURE",
+                payload: response.body.text ?? "Erro ao cancelar pedido."
+            })
+            return
+        }
+
+        dispatch({
+            type: "ORDERS_UPDATE_SUCCESS",
+            payload: {
+                orderResult: response.body as IOrder,
+                message: "Pedido cancelado com sucesso."
+            }
+        })
+    }, [])
+
     return {
         ...ordersState,
         handleSetOrderToEdit,
@@ -374,6 +404,7 @@ export const useOrdersReducer = () => {
         handleFetchOrdersByUser,
         handleCreateOrder,
         handleUpdateOrder,
-        handleCancelOrderItem
+        handleCancelOrderItem,
+        handleCancelOrder
     }
 }
