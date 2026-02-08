@@ -1,4 +1,3 @@
-import { useEffect, useState, type ReactNode } from "react"
 import type { IOrder } from "../../../../types/order"
 import styles from "./Order.module.css"
 import type { IMessageType } from "../../../../types/message"
@@ -11,29 +10,34 @@ type Props = {
     onOpenUpdate: () => void
 }
 
+const statusConfig = {
+    Pendente: {
+        icon: <PiClock />,
+        type: "warning" as IMessageType
+    },
+    Cancelado: {
+        icon: <PiWarningCircle />,
+        type: "error" as IMessageType
+    },
+    Concluído: {
+        icon: <PiCheckCircle />,
+        type: "success" as IMessageType
+    }
+}
+
 const Order = ({ order, onOpenUpdate }: Props) => {
-    const [statusIcon, setStatusIcon] = useState<ReactNode | null>(null)
-    const [statusType, setStatusType] = useState<IMessageType | null>(null)
     const { dateFormat, dateTimeFormat } = useDateFormats()
+    const currentStatus = statusConfig[order.status as keyof typeof statusConfig] || statusConfig.Pendente
 
-    useEffect(() => {
-        switch (order.status) {
-            case "Pendente":
-                setStatusIcon(<PiClock />)
-                setStatusType("warning")
-                break
+    const actionButton = {
+        label: order.status === "Pendente" ? "Editar" : "Pedir de novo",
+        icon: order.status === "Pendente" ? <PiNotePencil /> : <PiArrowsClockwise />
+    }
 
-            case "Cancelado":
-                setStatusIcon(<PiWarningCircle />)
-                setStatusType("error")
-                break
-
-            case "Concluído":
-                setStatusIcon(<PiCheckCircle />)
-                setStatusType("success")
-                break
-        }
-    }, [order])
+    const deleteButton = {
+        label: order.status === "Pendente" ? "Cancelar pedido" : "Excluir",
+        icon: order.status === "Pendente" ? <PiX /> : <PiTrash />
+    }
 
     const handleActionClick = () => {
         if (order.status === "Pendente") {
@@ -44,7 +48,7 @@ const Order = ({ order, onOpenUpdate }: Props) => {
     return (
         <article className={styles.order}>
             <div className={styles.order__status}>
-                <Trigger type={statusType!} icon={statusIcon} bullet>
+                <Trigger type={currentStatus.type} icon={currentStatus.icon} bullet>
                     {order.status}
                 </Trigger>
             </div>
@@ -87,8 +91,8 @@ const Order = ({ order, onOpenUpdate }: Props) => {
                     <Trigger
                         bullet
                         type="info"
-                        icon={order.status === "Pendente" ? <PiNotePencil /> : <PiArrowsClockwise />}>
-                        {order.status === "Pendente" ? "Editar" : "Pedir de novo"}
+                        icon={actionButton.icon}>
+                        {actionButton.label}
                     </Trigger>
                 </div>
 
@@ -96,8 +100,8 @@ const Order = ({ order, onOpenUpdate }: Props) => {
                     <Trigger
                         bullet
                         type="error"
-                        icon={order.status === "Pendente" ? <PiX /> : <PiTrash />}>
-                        {order.status === "Pendente" ? "Cancelar pedido" : "Excluir"}
+                        icon={deleteButton.icon}>
+                        {deleteButton.label}
                     </Trigger>
                 </div>
             </div>

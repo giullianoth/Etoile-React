@@ -20,9 +20,10 @@ type Props = {
 
 const Orders = ({ orders, errorMessage, loading }: Props) => {
     const [updateIsOpen, setUpdateIsOpen] = useState<boolean>(false)
-    const { handleSetOrderToEdit, currentOrder } = useAppContext().orders
+    const { handleSetOrderToEdit, currentOrder, handleClearOrderFormFields } = useAppContext().orders
 
     const handleOpenUpdate = (order: IOrder) => {
+        handleClearOrderFormFields()
         handleSetOrderToEdit(order)
         setUpdateIsOpen(true)
     }

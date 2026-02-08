@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react"
+import type { ReactNode } from "react"
 import type { IMessageType } from "../../types/message"
 import styles from "./Trigger.module.css"
 import { PiCheckCircleThin, PiInfo, PiWarning, PiXCircle } from "react-icons/pi"
@@ -13,27 +13,14 @@ type Props = {
 }
 
 const Trigger = ({ children, type, bullet, icon, floating, fading }: Props) => {
-    const [currentIcon, setCurrentIcon] = useState<ReactNode | null>(null)
+    const defaultIcons = {
+        success: <PiCheckCircleThin />,
+        info: <PiInfo />,
+        warning: <PiWarning />,
+        error: <PiXCircle />
+    }
 
-    useEffect(() => {
-        switch (type) {
-            case "success":
-                setCurrentIcon(icon ?? <PiCheckCircleThin />)
-                break
-
-            case "info":
-                setCurrentIcon(icon ?? <PiInfo />)
-                break
-
-            case "warning":
-                setCurrentIcon(icon ?? <PiWarning />)
-                break
-
-            case "error":
-                setCurrentIcon(icon ?? <PiXCircle />)
-                break
-        }
-    }, [type])
+    const renderedIcon = icon ?? defaultIcons[type]
 
     return (
         <div
@@ -43,7 +30,7 @@ const Trigger = ({ children, type, bullet, icon, floating, fading }: Props) => {
                 (floating ? ` ${styles.floating}` : "") +
                 (fading ? ` ${styles.fading}` : "")
             }>
-            {currentIcon}
+            {renderedIcon}
             {children}
         </div>
     )

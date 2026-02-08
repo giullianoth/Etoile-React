@@ -3,7 +3,7 @@ import type { IOrderItem, IOrderUpdate } from "../../../../types/order"
 import Checkbox from "../../../Form/Checkbox"
 import Popup from "../../../Popup"
 import styles from "../../../Popup/Popup.module.css"
-import { useState, type ChangeEvent, type Dispatch, type FormEvent, type SetStateAction } from "react"
+import { useEffect, useState, type ChangeEvent, type Dispatch, type FormEvent, type SetStateAction } from "react"
 import { useAppContext } from "../../../../context/context"
 import Trigger from "../../../Trigger"
 import { useDateFormats } from "../../../../hooks/date-formats"
@@ -16,8 +16,8 @@ type Props = {
 const UpdateOrder = ({ setUpdateIsOpen }: Props) => {
   const [itemToCancel, setItemToCancel] = useState<IOrderItem | null>(null)
   const [cancelItemIsOpen, setCancelItemIsOpen] = useState<boolean>(false)
-  const [cancelItemLoading, setCancelItemLoading] = useState<boolean>(false)
-  const { dateTimeFormat } = useDateFormats()
+  const { dateTimeFormat, combineDateAndTime } = useDateFormats()
+  const { addMessage } = useAppContext().message
 
   const {
     currentOrder,
@@ -25,8 +25,28 @@ const UpdateOrder = ({ setUpdateIsOpen }: Props) => {
     handleChangeOrderFormFields,
     handleCancelOrderItem,
     errorMessage,
-    loading
+    loading,
+    handleUpdateOrder,
+    cancellingOrderItem,
+    successMessage,
+    success
   } = useAppContext().orders
+
+  useEffect(() => {
+    if (success && successMessage) {
+      addMessage(successMessage)
+      setUpdateIsOpen(false)
+    }
+  }, [success, successMessage, handleUpdateOrder, addMessage])
+
+  useEffect(() => {
+    if (currentOrder?.time) {
+      handleChangeOrderFormFields(
+        "time",
+        dateTimeFormat(currentOrder?.time!)
+      )
+    }
+  }, [currentOrder, dateTimeFormat, handleChangeOrderFormFields])
 
   const handleCloseCancel = () => {
     setCancelItemIsOpen(false)
@@ -43,12 +63,10 @@ const UpdateOrder = ({ setUpdateIsOpen }: Props) => {
       return
     }
 
-    setCancelItemLoading(true)
     await handleCancelOrderItem(itemToCancel?._id)
-    
+
     setCancelItemIsOpen(false)
     setItemToCancel(null)
-    setCancelItemLoading(false)
   }
 
   const handleChangeOrderData = (event: ChangeEvent<HTMLInputElement>) => {
@@ -58,8 +76,11 @@ const UpdateOrder = ({ setUpdateIsOpen }: Props) => {
     )
   }
 
-  const handleSubmit = (event: FormEvent) => {
+  const handleSubmit = async (event: FormEvent) => {
     event.preventDefault()
+
+    const combinedDateValue = combineDateAndTime(new Date(currentOrder?.time!), orderFormFields.time!)
+    await handleUpdateOrder(combinedDateValue)
   }
 
   return (
@@ -108,7 +129,7 @@ const UpdateOrder = ({ setUpdateIsOpen }: Props) => {
                           <PiCheckBold />
                         </span>
 
-                        {loading && cancelItemLoading &&
+                        {cancellingOrderItem &&
                           <Loading className={styles.popup__listLoading} small />}
                       </span>
 
@@ -128,7 +149,7 @@ const UpdateOrder = ({ setUpdateIsOpen }: Props) => {
               <input
                 type="time"
                 name="time"
-                value={dateTimeFormat(orderFormFields.time!)}
+                value={orderFormFields.time as string}
                 onChange={handleChangeOrderData} />
 
               <p>
@@ -155,8 +176,12 @@ const UpdateOrder = ({ setUpdateIsOpen }: Props) => {
                   Voltar
                 </span>
 
-                <button type="submit" className="button primary">
+                <button
+                  type="submit"
+                  className="button primary"
+                  disabled={loading}>
                   Atualizar
+                  {loading && <Loading inButton />}
                 </button>
               </div>
 

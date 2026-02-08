@@ -12,8 +12,8 @@ const Profile = () => {
 
     const {
         handleFetchOrdersByUser,
-        loading: loadingOrders,
-        errorMessage,
+        fetching: loadingOrders,
+        fetchErrorMessage,
         orders,
         handleClearOrdersData
     } = useAppContext().orders
@@ -28,16 +28,16 @@ const Profile = () => {
     }, [])
 
     useEffect(() => {
-        handleClearOrdersData()
-
         const fetchOrders = async () => {
-            if (user) {
+            if (user?._id && !loading) {
                 await handleFetchOrdersByUser(user._id)
             }
         }
 
         fetchOrders()
-    }, [user, handleFetchOrdersByUser])
+
+        return () => handleClearOrdersData()
+    }, [user?._id, loading])
 
     return (
         loading
@@ -49,7 +49,7 @@ const Profile = () => {
                     <Orders
                         orders={orders}
                         loading={loadingOrders}
-                        errorMessage={errorMessage} />}
+                        errorMessage={fetchErrorMessage} />}
             </>
     )
 }

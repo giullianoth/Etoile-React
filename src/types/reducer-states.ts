@@ -31,6 +31,9 @@ export interface IOrdersState extends IReducerStates {
     orders: IOrder[]
     currentOrder: IOrder | null
     orderFormFields: Partial<IOrderCreate & IOrderUpdate>
+    fetching: boolean
+    cancellingOrderItem: boolean
+    fetchErrorMessage: string | null
 }
 
 export type IOrdersActions =
@@ -43,8 +46,11 @@ export type IOrdersActions =
     | { type: "ORDERS_CREATE_FAILURE", payload: string }
     | { type: "SET_ORDER_TO_EDIT", payload: IOrder | null }
     | { type: "ORDERS_UPDATE_START" }
-    | { type: "ORDERS_UPDATE_SUCCESS", payload: { orderResult: IOrder | IOrderItem, message: string } }
+    | { type: "ORDERS_CANCEL_ITEM_START" }
+    | { type: "ORDERS_UPDATE_SUCCESS", payload: { orderResult: IOrder, message: string } }
+    | { type: "ORDERS_CANCEL_ITEM_SUCCESS", payload: { orderResult: IOrderItem, message: string } }
     | { type: "ORDERS_UPDATE_FAILURE", payload: string }
+    | { type: "ORDERS_CANCEL_ITEM_FAILURE", payload: string }
     | { type: "ORDERS_CLEAR_FORM_FIELDS" }
     | { type: "ORDERS_CLEAR_DATA" }
 

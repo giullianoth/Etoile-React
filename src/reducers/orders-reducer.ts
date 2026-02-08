@@ -1,7 +1,7 @@
 import { useCallback, useReducer } from "react";
 import type { IOrdersActions, IOrdersState } from "../types/reducer-states";
 import ordersServices from "../services/orders-services";
-import type { IOrder, IOrderCreate, IOrderUpdate } from "../types/order";
+import type { IOrder, IOrderCreate, IOrderItem, IOrderStatus, IOrderUpdate } from "../types/order";
 import type { IPlate } from "../types/plate";
 import { useDateFormats } from "../hooks/date-formats";
 
@@ -12,6 +12,9 @@ const initialState: IOrdersState = {
     successMessage: null,
     orders: [],
     currentOrder: null,
+    fetching: false,
+    fetchErrorMessage: null,
+    cancellingOrderItem: false,
     orderFormFields: {
         userId: "",
         time: "",
@@ -35,6 +38,23 @@ const ordersReducerActions = (state: IOrdersState, action: IOrdersActions): IOrd
             }
 
         case "ORDERS_FETCH_START":
+            return {
+                ...state,
+                fetching: true,
+                success: false,
+                successMessage: null,
+                fetchErrorMessage: null
+            }
+
+        case "ORDERS_CANCEL_ITEM_START":
+            return {
+                ...state,
+                cancellingOrderItem: true,
+                success: false,
+                successMessage: null,
+                errorMessage: null
+            }
+
         case "ORDERS_CREATE_START":
         case "ORDERS_UPDATE_START":
             return {
@@ -48,9 +68,9 @@ const ordersReducerActions = (state: IOrdersState, action: IOrdersActions): IOrd
         case "ORDERS_FETCH_SUCCESS":
             return {
                 ...state,
-                loading: false,
+                fetching: false,
                 success: true,
-                errorMessage: null,
+                fetchErrorMessage: null,
                 orders: action.payload
             }
 
@@ -65,19 +85,28 @@ const ordersReducerActions = (state: IOrdersState, action: IOrdersActions): IOrd
             }
 
         case "ORDERS_UPDATE_SUCCESS":
-            const { orderResult, message } = action.payload
+            const updatedOrders = state.orders.map(order => order._id === action.payload.orderResult._id
+                ? { ...order, ...action.payload.orderResult }
+                : order)
 
-            const updatedOrders = state.orders.map(order => {
-                if ("orderItems" in orderResult) {
-                    return order._id === orderResult._id ? (orderResult as IOrder) : order
-                }
+            return {
+                ...state,
+                loading: false,
+                success: true,
+                errorMessage: null,
+                successMessage: action.payload.message,
+                orders: updatedOrders,
+                currentOrder: { ...state.currentOrder, ...action.payload.orderResult }
+            }
 
-                const isTargetOrder = order._id === orderResult.orderId
+        case "ORDERS_CANCEL_ITEM_SUCCESS":
+            const updatedOrdersAfterCancelItem = state.orders.map(order => {
+                const isTargetOrder = order._id === action.payload.orderResult.orderId
 
-                if (isTargetOrder || !orderResult.orderId) {
+                if (isTargetOrder || !action.payload.orderResult.orderId) {
                     return {
                         ...order,
-                        orderItems: order.orderItems.filter(item => item._id !== orderResult._id)
+                        orderItems: order.orderItems.filter(item => item._id !== action.payload.orderResult._id)
                     }
                 }
 
@@ -87,25 +116,36 @@ const ordersReducerActions = (state: IOrdersState, action: IOrdersActions): IOrd
             const updatedCurrentOrder = state.currentOrder
                 ? {
                     ...state.currentOrder,
-                    orderItems: state.currentOrder.orderItems.filter(item => item._id !== orderResult._id)
+                    orderItems: state.currentOrder.orderItems.filter(item =>
+                        item._id !== action.payload.orderResult._id)
                 }
                 : null
 
             return {
                 ...state,
-                loading: false,
+                cancellingOrderItem: false,
                 success: true,
                 errorMessage: null,
-                successMessage: message,
-                orders: updatedOrders,
+                successMessage: action.payload.message,
+                orders: updatedOrdersAfterCancelItem,
                 currentOrder: updatedCurrentOrder
             }
 
         case "ORDERS_FETCH_FAILURE":
-        case "ORDERS_CREATE_FAILURE":
-        case "ORDERS_UPDATE_FAILURE":
             return {
                 ...state,
+                fetching: false,
+                success: false,
+                successMessage: null,
+                fetchErrorMessage: action.payload
+            }
+
+        case "ORDERS_CREATE_FAILURE":
+        case "ORDERS_UPDATE_FAILURE":
+        case "ORDERS_CANCEL_ITEM_FAILURE":
+            return {
+                ...state,
+                cancellingOrderItem: false,
                 loading: false,
                 success: false,
                 successMessage: null,
@@ -128,8 +168,7 @@ const ordersReducerActions = (state: IOrdersState, action: IOrdersActions): IOrd
                 errorMessage: null,
                 successMessage: null,
                 success: false,
-                orderFormFields: initialState.orderFormFields,
-                currentOrder: null
+                orderFormFields: initialState.orderFormFields
             }
 
         case "ORDERS_CLEAR_DATA":
@@ -224,9 +263,11 @@ export const useOrdersReducer = () => {
             return
         }
 
+        const { orderReceived, ...orderDataRest } = ordersState.orderFormFields
+
         const response = await ordersServices.createOrder({
-            ...ordersState.orderFormFields,
-            userId: userId ? userId : ordersState.orderFormFields.userId,
+            ...orderDataRest,
+            userId: userId ? userId : orderDataRest.userId,
             items: orderItems,
             time: orderDate
         })
@@ -253,21 +294,52 @@ export const useOrdersReducer = () => {
 
         if (!orderDate) {
             dispatch({
-                type: "ORDERS_CREATE_FAILURE",
+                type: "ORDERS_UPDATE_FAILURE",
                 payload: "Preencha o horário de comparecimento."
             })
             return
         }
 
-        console.log(isPastDate(orderDate, ordersState.orderFormFields.time))
+        if (isPastDate(orderDate, ordersState.currentOrder?.time)) {
+            dispatch({
+                type: "ORDERS_UPDATE_FAILURE",
+                payload: "O horário precisa ser posterior."
+            })
+            return
+        }
+
+        const { orderReceived, userId, items, ...orderDataRest } = ordersState.orderFormFields
+        orderDataRest.time = orderDate
+        orderDataRest.status = orderReceived ? "Concluído" : ordersState.currentOrder?.status as IOrderStatus
+
+        const response = await ordersServices.updateOrder(
+            orderDataRest,
+            ordersState.currentOrder?._id!
+        )
+
+        if (!response.success) {
+            dispatch({
+                type: "ORDERS_UPDATE_FAILURE",
+                payload: response.body.text ?? "Erro ao atualizar pedido."
+            })
+            return
+        }
+
+        dispatch({
+            type: "ORDERS_UPDATE_SUCCESS",
+            payload: {
+                orderResult: response.body as IOrder,
+                message: "Pedido atualizado com sucesso."
+            }
+        })
     }, [ordersState.orderFormFields])
 
     const handleCancelOrderItem = useCallback(async (orderItemId: string) => {
-        dispatch({ type: "ORDERS_UPDATE_START" })
+        dispatch({ type: "ORDERS_CANCEL_ITEM_START" })
 
         if (!orderItemId) {
             dispatch({
-                type: "ORDERS_UPDATE_FAILURE",
+                type: "ORDERS_CANCEL_ITEM_FAILURE",
                 payload: "Erro inesperado ao cancelar o item do pedido."
             })
             return
@@ -277,16 +349,16 @@ export const useOrdersReducer = () => {
 
         if (!response.success) {
             dispatch({
-                type: "ORDERS_UPDATE_FAILURE",
+                type: "ORDERS_CANCEL_ITEM_FAILURE",
                 payload: response.body.text ?? "Erro ao cancelar item do pedido."
             })
             return
         }
 
         dispatch({
-            type: "ORDERS_UPDATE_SUCCESS",
+            type: "ORDERS_CANCEL_ITEM_SUCCESS",
             payload: {
-                orderResult: response.body,
+                orderResult: response.body as IOrderItem,
                 message: "Item do pedido cancelado."
             }
         })
