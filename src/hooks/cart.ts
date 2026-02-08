@@ -9,7 +9,7 @@ export const useCart = () => {
         storagedCart() ? JSON.parse(storagedCart()!) : []
     )
 
-    const addToCart = useCallback((cartItem: IPlate) => {
+    const addToCart = useCallback((cartItem: IPlate, quantity: number = 1) => {
         setCart(prevCart => {
             const existingItem = prevCart.find(item => item.plate._id === cartItem._id)
 
@@ -19,7 +19,7 @@ export const useCart = () => {
                         ? { ...item, quantity: item.quantity + 1 }
                         : item
                 )
-                : [...prevCart, { plate: cartItem, quantity: 1 }]
+                : [...prevCart, { plate: cartItem, quantity }]
 
             localStorage.setItem("etoile-cart", JSON.stringify(newCartList))
             return newCartList

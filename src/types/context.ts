@@ -16,7 +16,7 @@ interface IMessageContext {
 
 interface ICartContext {
     cart: ICartItem[]
-    addToCart: (cartItem: IPlate) => void
+    addToCart: (cartItem: IPlate, quantity?: number) => void
     updateQuantity: (plateId: string, quantity: number) => void
     removeFromCart: (cartItem: IPlate) => void
     clearCart: () => void
