@@ -10,6 +10,7 @@ type Props = {
     onOpenUpdate: () => void
     onOpenCancel: () => void
     onOpenReorder: () => void
+    onOpenDeleteOrder: () => void
 }
 
 const statusConfig = {
@@ -27,7 +28,7 @@ const statusConfig = {
     }
 }
 
-const Order = ({ order, onOpenUpdate, onOpenCancel, onOpenReorder }: Props) => {
+const Order = ({ order, onOpenUpdate, onOpenCancel, onOpenReorder, onOpenDeleteOrder }: Props) => {
     const { dateFormat, dateTimeFormat } = useDateFormats()
     const currentStatus = statusConfig[order.status as keyof typeof statusConfig] || statusConfig.Pendente
 
@@ -53,7 +54,10 @@ const Order = ({ order, onOpenUpdate, onOpenCancel, onOpenReorder }: Props) => {
     const handleDeleteClick = () => {
         if (order.status === "Pendente") {
             onOpenCancel()
+            return
         }
+
+        onOpenDeleteOrder()
     }
 
     return (

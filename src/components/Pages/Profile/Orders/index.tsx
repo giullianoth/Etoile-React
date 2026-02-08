@@ -13,6 +13,7 @@ import { useAppContext } from "../../../../context/context"
 import UpdateOrder from "../UpdateOrder"
 import ConfirmCancelOrder from "../ConfirmCancelOrder"
 import Reorder from "../Reorder"
+import DeleteOrder from "../DeleteOrder"
 
 type Props = {
     orders: IOrder[]
@@ -24,6 +25,7 @@ const Orders = ({ orders, errorMessage, loading }: Props) => {
     const [updateIsOpen, setUpdateIsOpen] = useState<boolean>(false)
     const [cancelIsOpen, setCancelIsOpen] = useState<boolean>(false)
     const [reorderIsOpen, setReorderIsOpen] = useState<boolean>(false)
+    const [deleteOrderIsOpen, setDeleteOrderIsOpen] = useState<boolean>(false)
     const { handleSetOrderToEdit, currentOrder, handleClearOrderFormFields } = useAppContext().orders
 
     const handleOpenUpdate = (order: IOrder) => {
@@ -40,6 +42,11 @@ const Orders = ({ orders, errorMessage, loading }: Props) => {
     const handleOpenReorder = (order: IOrder) => {
         handleSetOrderToEdit(order)
         setReorderIsOpen(true)
+    }
+
+    const handleOpenDeleteOrder = (order: IOrder) => {
+        handleSetOrderToEdit(order)
+        setDeleteOrderIsOpen(true)
     }
 
     return (
@@ -63,7 +70,8 @@ const Orders = ({ orders, errorMessage, loading }: Props) => {
                                             order={order}
                                             onOpenUpdate={() => handleOpenUpdate(order)}
                                             onOpenCancel={() => handleOpenCancel(order)}
-                                            onOpenReorder={() => handleOpenReorder(order)} />
+                                            onOpenReorder={() => handleOpenReorder(order)}
+                                            onOpenDeleteOrder={() => handleOpenDeleteOrder(order)} />
                                     ))}
                                 </Grid>
 
@@ -104,6 +112,16 @@ const Orders = ({ orders, errorMessage, loading }: Props) => {
                 className="modal"
                 overlayClassName="modal-overlay">
                 {currentOrder && <Reorder setReorderIsOpen={setReorderIsOpen} />}
+            </Modal>
+
+            <Modal
+                isOpen={deleteOrderIsOpen}
+                onRequestClose={() => setDeleteOrderIsOpen(false)}
+                onAfterClose={() => handleSetOrderToEdit(null)}
+                closeTimeoutMS={300}
+                className="modal"
+                overlayClassName="modal-overlay">
+                {currentOrder && <DeleteOrder setDeleteOrderIsOpen={setDeleteOrderIsOpen} />}
             </Modal>
         </>
     )

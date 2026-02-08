@@ -57,6 +57,7 @@ const ordersReducerActions = (state: IOrdersState, action: IOrdersActions): IOrd
 
         case "ORDERS_CREATE_START":
         case "ORDERS_UPDATE_START":
+        case "ORDERS_DELETE_START":
             return {
                 ...state,
                 loading: true,
@@ -131,6 +132,19 @@ const ordersReducerActions = (state: IOrdersState, action: IOrdersActions): IOrd
                 currentOrder: updatedCurrentOrder
             }
 
+        case "ORDERS_DELETE_SUCCESS":
+            const updatedOrdersAfterDelete = state.orders.filter(order =>
+                order._id !== action.payload.orderId)
+
+            return {
+                ...state,
+                loading: false,
+                success: true,
+                errorMessage: null,
+                successMessage: action.payload.message,
+                orders: updatedOrdersAfterDelete
+            }
+
         case "ORDERS_FETCH_FAILURE":
             return {
                 ...state,
@@ -143,6 +157,7 @@ const ordersReducerActions = (state: IOrdersState, action: IOrdersActions): IOrd
         case "ORDERS_CREATE_FAILURE":
         case "ORDERS_UPDATE_FAILURE":
         case "ORDERS_CANCEL_ITEM_FAILURE":
+        case "ORDERS_DELETE_FAILURE":
             return {
                 ...state,
                 cancellingOrderItem: false,
@@ -394,6 +409,36 @@ export const useOrdersReducer = () => {
         })
     }, [])
 
+    const handleDeleteOrder = useCallback(async (orderId: string) => {
+        dispatch({ type: "ORDERS_DELETE_START" })
+
+        if (!orderId) {
+            dispatch({
+                type: "ORDERS_DELETE_FAILURE",
+                payload: "Erro inesperado ao excluir pedido."
+            })
+            return
+        }
+
+        const response = await ordersServices.deleteOrder(orderId)
+
+        if (!response.success) {
+            dispatch({
+                type: "ORDERS_DELETE_FAILURE",
+                payload: response.body.text ?? "Erro ao cancelar pedido."
+            })
+            return
+        }
+
+        dispatch({
+            type: "ORDERS_DELETE_SUCCESS",
+            payload: {
+                orderId: response.body.orderToDelete._id,
+                message: "Pedido excluído com sucesso."
+            }
+        })
+    }, [])
+
     return {
         ...ordersState,
         handleSetOrderToEdit,
@@ -405,6 +450,7 @@ export const useOrdersReducer = () => {
         handleCreateOrder,
         handleUpdateOrder,
         handleCancelOrderItem,
-        handleCancelOrder
+        handleCancelOrder,
+        handleDeleteOrder
     }
 }

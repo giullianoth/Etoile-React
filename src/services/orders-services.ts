@@ -1,5 +1,5 @@
 import type { IOrder, IOrderCreate } from "../types/order"
-import type { IErrorResponse, IOrderFetchResponse, IOrdersCreateResponse, IOrdersUpdateResponse } from "../types/response"
+import type { IErrorResponse, IOrderFetchResponse, IOrdersCreateResponse, IOrdersDeleteResponse, IOrdersUpdateResponse } from "../types/response"
 import { apiURL } from "./api"
 
 const url = `${apiURL}/orders`
@@ -130,13 +130,34 @@ const cancelOrder = async (orderId: string) => {
     }
 }
 
+const deleteOrder = async (orderId: string) => {
+    try {
+        const response = await fetch(`${url}/${orderId}`, {
+            method: "DELETE"
+        }).then(res => res.json())
+
+        return response as IOrdersDeleteResponse
+    } catch (error) {
+        console.error(error)
+
+        return {
+            success: false,
+            statusCode: 500,
+            body: {
+                text: "Erro de rede ou comunicação com o servidor."
+            }
+        } as IErrorResponse
+    }
+}
+
 const ordersServices = {
     fetchOrders,
     fetchOrdersByUser,
     createOrder,
     updateOrder,
     cancelOrderItem,
-    cancelOrder
+    cancelOrder,
+    deleteOrder
 }
 
 export default ordersServices

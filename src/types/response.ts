@@ -59,6 +59,18 @@ export interface IOrdersUpdateSuccessResponse extends ISuccessResponse {
 
 export type IOrdersUpdateResponse = IOrdersUpdateSuccessResponse | IErrorResponse
 
+export interface IOrdersDeleteSuccessResponse extends ISuccessResponse {
+    body: {
+        itemsToDelete: {
+            acknowledged: boolean,
+            deletedCount: number
+        },
+        orderToDelete: IOrder
+    }
+}
+
+export type IOrdersDeleteResponse = IOrdersDeleteSuccessResponse | IErrorResponse
+
 // Users
 export interface IUserUpdateSuccessResponse extends ISuccessResponse {
     body: IUser

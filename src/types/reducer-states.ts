@@ -51,6 +51,10 @@ export type IOrdersActions =
     | { type: "ORDERS_CANCEL_ITEM_SUCCESS", payload: { orderResult: IOrderItem, message: string } }
     | { type: "ORDERS_UPDATE_FAILURE", payload: string }
     | { type: "ORDERS_CANCEL_ITEM_FAILURE", payload: string }
+    | { type: "ORDERS_DELETE_START" }
+    | { type: "ORDERS_DELETE_SUCCESS", payload: { orderId: string, message: string } }
+    | { type: "ORDERS_DELETE_FAILURE", payload: string }
+    | { type: "ORDERS_DELETE_START" }
     | { type: "ORDERS_CLEAR_FORM_FIELDS" }
     | { type: "ORDERS_CLEAR_DATA" }
 
