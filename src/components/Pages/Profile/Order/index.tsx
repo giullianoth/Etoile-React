@@ -4,6 +4,8 @@ import type { IMessageType } from "../../../../types/message"
 import { PiArrowsClockwise, PiCheckCircle, PiClock, PiNotePencil, PiTrash, PiWarningCircle, PiX } from "react-icons/pi"
 import Trigger from "../../../Trigger"
 import { useDateFormats } from "../../../../hooks/date-formats"
+import { useEffect, useState } from "react"
+import { useAppContext } from "../../../../context/context"
 
 type Props = {
     order: IOrder
@@ -29,8 +31,12 @@ const statusConfig = {
 }
 
 const Order = ({ order, onOpenUpdate, onOpenCancel, onOpenReorder, onOpenDeleteOrder }: Props) => {
-    const { dateFormat, dateTimeFormat } = useDateFormats()
+    const { dateFormat, dateTimeFormat, isPastDate } = useDateFormats()
     const currentStatus = statusConfig[order.status as keyof typeof statusConfig] || statusConfig.Pendente
+    const [cancelledMessage, setCancelledMessage] = useState<boolean>(false)
+    const [cancelledConfirm, setCancelledConfirm] = useState<boolean>(false)
+
+    const { handleCancelOrder, loading, success } = useAppContext().orders
 
     const actionButton = {
         label: order.status === "Pendente" ? "Editar" : "Pedir de novo",
@@ -41,6 +47,25 @@ const Order = ({ order, onOpenUpdate, onOpenCancel, onOpenReorder, onOpenDeleteO
         label: order.status === "Pendente" ? "Cancelar pedido" : "Excluir",
         icon: order.status === "Pendente" ? <PiX /> : <PiTrash />
     }
+
+    useEffect(() => {
+        const verifyPendingOrder = async () => {
+            const currentDate = new Date()
+
+            if (order.status === "Pendente" && isPastDate(order.time, currentDate)) {
+                await handleCancelOrder(order._id)
+                setCancelledConfirm(true)
+            }
+        }
+
+        verifyPendingOrder()
+    }, [])
+
+    useEffect(() => {
+        if (cancelledConfirm && success) {
+            setCancelledMessage(true)
+        }
+    }, [cancelledConfirm, success, handleCancelOrder])
 
     const handleActionClick = () => {
         if (order.status === "Pendente") {
@@ -102,7 +127,7 @@ const Order = ({ order, onOpenUpdate, onOpenCancel, onOpenReorder, onOpenDeleteO
             <div className={styles.order__actions}>
                 <div
                     className={styles.order__button}
-                    onClick={handleActionClick}>
+                    onClick={() => !loading && handleActionClick()}>
                     <Trigger
                         bullet
                         type="info"
@@ -113,7 +138,7 @@ const Order = ({ order, onOpenUpdate, onOpenCancel, onOpenReorder, onOpenDeleteO
 
                 <div
                     className={styles.order__button}
-                    onClick={handleDeleteClick}>
+                    onClick={() => !loading && handleDeleteClick()}>
                     <Trigger
                         bullet
                         type="error"
@@ -122,6 +147,8 @@ const Order = ({ order, onOpenUpdate, onOpenCancel, onOpenReorder, onOpenDeleteO
                     </Trigger>
                 </div>
             </div>
+
+            {cancelledMessage && <p>Pedido cancelado por exceder o prazo.</p>}
         </article>
     )
 }

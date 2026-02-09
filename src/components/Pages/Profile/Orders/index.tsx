@@ -35,16 +35,19 @@ const Orders = ({ orders, errorMessage, loading }: Props) => {
     }
 
     const handleOpenCancel = (order: IOrder) => {
+        handleClearOrderFormFields()
         handleSetOrderToEdit(order)
         setCancelIsOpen(true)
     }
 
     const handleOpenReorder = (order: IOrder) => {
+        handleClearOrderFormFields()
         handleSetOrderToEdit(order)
         setReorderIsOpen(true)
     }
 
     const handleOpenDeleteOrder = (order: IOrder) => {
+        handleClearOrderFormFields()
         handleSetOrderToEdit(order)
         setDeleteOrderIsOpen(true)
     }
@@ -91,7 +94,8 @@ const Orders = ({ orders, errorMessage, loading }: Props) => {
                 closeTimeoutMS={300}
                 className="modal"
                 overlayClassName="modal-overlay">
-                {currentOrder && <UpdateOrder setUpdateIsOpen={setUpdateIsOpen} />}
+                {currentOrder && currentOrder.status === "Pendente" &&
+                    <UpdateOrder setUpdateIsOpen={setUpdateIsOpen} />}
             </Modal>
 
             <Modal
@@ -101,7 +105,8 @@ const Orders = ({ orders, errorMessage, loading }: Props) => {
                 closeTimeoutMS={300}
                 className="modal"
                 overlayClassName="modal-overlay">
-                {currentOrder && <ConfirmCancelOrder setCancelIsOpen={setCancelIsOpen} />}
+                {currentOrder && currentOrder.status === "Pendente" &&
+                    <ConfirmCancelOrder setCancelIsOpen={setCancelIsOpen} />}
             </Modal>
 
             <Modal
@@ -111,7 +116,8 @@ const Orders = ({ orders, errorMessage, loading }: Props) => {
                 closeTimeoutMS={300}
                 className="modal"
                 overlayClassName="modal-overlay">
-                {currentOrder && <Reorder setReorderIsOpen={setReorderIsOpen} />}
+                {currentOrder && currentOrder.status !== "Pendente" &&
+                    <Reorder setReorderIsOpen={setReorderIsOpen} />}
             </Modal>
 
             <Modal
@@ -121,7 +127,8 @@ const Orders = ({ orders, errorMessage, loading }: Props) => {
                 closeTimeoutMS={300}
                 className="modal"
                 overlayClassName="modal-overlay">
-                {currentOrder && <DeleteOrder setDeleteOrderIsOpen={setDeleteOrderIsOpen} />}
+                {currentOrder && currentOrder.status !== "Pendente" &&
+                    <DeleteOrder setDeleteOrderIsOpen={setDeleteOrderIsOpen} />}
             </Modal>
         </>
     )
