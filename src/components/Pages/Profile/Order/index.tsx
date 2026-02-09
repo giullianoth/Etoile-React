@@ -59,7 +59,7 @@ const Order = ({ order, onOpenUpdate, onOpenCancel, onOpenReorder, onOpenDeleteO
         }
 
         verifyPendingOrder()
-    }, [])
+    }, [handleCancelOrder, isPastDate, order._id, order.status, order.time])
 
     useEffect(() => {
         if (cancelledConfirm && success) {

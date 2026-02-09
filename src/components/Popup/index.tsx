@@ -3,11 +3,12 @@ import styles from "./Popup.module.css"
 
 type Props = {
     children?: ReactNode
+    divided?: boolean
 }
 
-const Popup = ({ children }: Props) => {
+const Popup = ({ children, divided }: Props) => {
     return (
-        <div className={styles.popup}>
+        <div className={styles.popup + (divided ? ` ${styles.divided}` : "")}>
             {children}
         </div>
     )

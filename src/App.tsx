@@ -1,16 +1,11 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom"
+import { Outlet } from "react-router-dom"
 import "./App.css"
 import Modal from "react-modal"
-import Home from "./pages/Home"
 import Header from "./components/Header"
 import Footer from "./components/Footer"
-import Auth from "./pages/Auth"
-import Profile from "./pages/Profile"
 import Trigger from "./components/Trigger"
 import { useAppContext } from "./context/context"
 import { useEffect } from "react"
-import Plates from "./pages/Plates"
-import Cart from "./pages/Cart"
 
 Modal.setAppElement("#root")
 
@@ -21,20 +16,14 @@ function App() {
     if (message) {
       showMessage()
     }
-  }, [message])
+  }, [message, showMessage])
 
   return (
-    <BrowserRouter>
+    <>
       <Header />
 
       <main>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/pratos" element={<Plates />} />
-          <Route path="/carrinho" element={<Cart />} />
-          <Route path="/autenticacao" element={<Auth />} />
-          <Route path="/perfil" element={<Profile />} />
-        </Routes>
+        <Outlet />
       </main>
 
       <Footer />
@@ -44,7 +33,7 @@ function App() {
           type={messageType}
           fading={fading}
           floating>{message}</Trigger>}
-    </BrowserRouter>
+    </>
   )
 }
 

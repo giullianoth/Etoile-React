@@ -39,13 +39,13 @@ const UpdateOrder = ({ setUpdateIsOpen }: Props) => {
       addMessage(successMessage)
       setUpdateIsOpen(false)
     }
-  }, [success, successMessage, handleUpdateOrder, addMessage])
+  }, [success, successMessage, handleUpdateOrder, addMessage, setUpdateIsOpen])
 
   useEffect(() => {
     if (currentOrder?.time) {
       handleChangeOrderFormFields(
         "time",
-        dateTimeFormat(currentOrder?.time!)
+        dateTimeFormat(currentOrder?.time)
       )
     }
   }, [currentOrder, dateTimeFormat, handleChangeOrderFormFields])
@@ -81,7 +81,14 @@ const UpdateOrder = ({ setUpdateIsOpen }: Props) => {
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault()
 
-    const combinedDateValue = combineDateAndTime(new Date(currentOrder?.time!), orderFormFields.time!)
+    const combinedDateValue = currentOrder?.time
+      ? combineDateAndTime(new Date(currentOrder?.time), orderFormFields.time!)
+      : null
+
+    if (!combineDateAndTime) {
+      return
+    }
+
     await handleUpdateOrder(combinedDateValue)
   }
 

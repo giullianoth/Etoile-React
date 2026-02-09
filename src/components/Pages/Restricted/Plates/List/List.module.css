@@ -1,0 +1,59 @@
+.plates {
+    margin-bottom: 80px;
+}
+
+.plates__title {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+    row-gap: 20px;
+}
+
+.plates__title button {
+    width: 100%;
+}
+
+.plate__image {
+    display: flex;
+    width: fit-content;
+}
+
+.plate__image img {
+    width: 90px;
+    height: 100%;
+    object-fit: center;
+}
+
+.plate__available {
+    color: var(--color-success-text);
+}
+
+.plate__notAvailable {
+    color: var(--color-error-text);
+}
+
+.plate__actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+span:has(.plate__checkbox) {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-color: var(--color-white-smoke);
+}
+
+@media screen and (min-width: 576px) {
+    .plates__title {
+        flex-direction: row;
+    }
+
+    .plates__title button {
+        width: auto;
+    }
+}

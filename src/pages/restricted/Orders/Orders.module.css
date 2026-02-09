@@ -1,0 +1,43 @@
+.orders__title {
+    margin-bottom: 40px;
+}
+
+.orders__list {
+    border: none;
+}
+
+.order__row {
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.order__pending {
+    background-color: var(--color-warning-overlay) !important;
+}
+
+.order__completed {
+    background-color: var(--color-success-overlay) !important;
+}
+
+.order__cancelled {
+    background-color: var(--color-error-overlay) !important;
+}
+
+.order__pending:hover {
+    background-color: var(--color-warning);
+}
+
+.order__completed:hover {
+    background-color: var(--color-success);
+}
+
+.order__cancelled:hover {
+    background-color: var(--color-error);
+}
+
+span:has(.order__checkbox) {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-color: var(--color-white-smoke);
+}

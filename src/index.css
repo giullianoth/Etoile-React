@@ -23,6 +23,11 @@
   --color-warning-text: #B26903;
   --color-error-text: #790707;
 
+  --color-success-overlay: #76F69880;
+  --color-info-overlay: #8BC7F280;
+  --color-warning-overlay: #FBD9A980;
+  --color-error-overlay: #F98E8E80;
+
   --color-night-overlay: rgba(19, 16, 17, 0.6);
   --color-old-gold-overlay: rgba(226, 191, 78, 0.3);
   --color-battleship-gray-overlay: rgba(138, 138, 138, 0.5);
@@ -100,7 +105,7 @@ label {
   cursor: pointer;
 }
 
-input {
+input, select, textarea {
   padding: 12px;
   background: none;
   border: 1px solid var(--color-night);
@@ -124,6 +129,10 @@ input[type="file"] {
   display: none;
 }
 
+select {
+  cursor: pointer;
+}
+
 button {
   font-family: inherit;
   font-size: inherit;
@@ -138,4 +147,64 @@ strong {
 
 svg {
   vertical-align: middle;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  border: 1px solid var(--color-lavender-blush);
+}
+
+thead {
+  display: none;
+}
+
+tr {
+  display: grid;
+  grid-template-columns: 1fr;
+  font-size: 0.875em;
+  padding-block: 7px;
+}
+
+tr:nth-child(odd) {
+  background-color: var(--color-lavender-blush);
+}
+
+th, td {
+  padding: 7px;
+}
+
+th {
+  color: var(--color-claret);
+  font-family: var(--font-cinzel);
+  font-size: 0.7em;
+  text-align: left;
+  background-color: var(--color-lavender-blush);
+}
+
+@media screen and (min-width: 992px) {
+  thead {
+    display: table-header-group;
+  }
+
+  tr {
+    display: table-row;
+    padding: 0;
+  }
+
+  tr:nth-child(odd) {
+    background-color: transparent;
+  }
+
+  tr:nth-child(even) {
+    background-color: var(--color-lavender-blush);
+  }
+
+  td .label-on-cell {
+    display: none;
+  }
+  
+  th.centered, td.centered {
+    text-align: center;
+  }
 }

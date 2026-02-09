@@ -11,6 +11,53 @@
     row-gap: 20px;
 }
 
+.popup__half {
+    position: relative;
+}
+
+.popup__half:not(:has(.popup__preview)) .popup__previewButton {
+    opacity: 1;
+    background-color: transparent;
+    border: 1px solid transparent;
+}
+
+.popup__half:not(:has(.popup__preview)) .popup__previewButton:hover {
+    border-color: var(--color-murrey);
+}
+
+.popup__half:not(:has(.popup__preview)) .popup__previewButton svg {
+    color: var(--color-murrey);
+}
+
+.popup__preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.popup__previewButton {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--color-night-overlay);
+    transition: var(--transition);
+    opacity: 0;
+}
+
+.popup__previewButton:hover {
+    opacity: 1;
+}
+
+.popup__previewButton svg {
+    font-size: 3em;
+    color: var(--color-white-smoke);
+}
+
 .popup__strongDetached {
     color: var(--color-murrey);
 }
@@ -113,6 +160,16 @@
     background-color: var(--color-white-smoke);
 }
 
+.popup__listSmall {
+    font-size: 1em;
+}
+
+.popup__listItem input[type="number"] {
+    width: 100%;
+    font-size: 1.4em;
+    padding: 6px;
+}
+
 .popup__action {
     display: flex;
     align-items: center;
@@ -167,7 +224,23 @@
     }
 }
 
+@media screen and (min-width: 768px) {
+    .popup.divided {
+        flex-direction: row;
+    }
+
+    .popup__half {
+        flex-basis: 50%;
+    }
+
+    .popup__half .popup__form,
+    .popup__half .popup__heading {
+        padding-left: 20px;
+    }
+}
+
 @media screen and (min-width: 992px) {
+
     .popup__heading h2,
     .popup__heading h3,
     .popup__heading h4,
