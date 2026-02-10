@@ -174,7 +174,7 @@ export const useAuthReducer = () => {
                 token: response.body.token
             }
         })
-    }, [authState.authFormFields])
+    }, [authState.authFormFields, validateEmail])
 
     const handleRegister = useCallback(async () => {
         dispatch({ type: "AUTH_SUBMIT_START" })
@@ -255,7 +255,7 @@ export const useAuthReducer = () => {
                 token: response.body.token
             }
         })
-    }, [authState.authFormFields])
+    }, [authState.authFormFields, validateEmail])
 
     const handleLogout = useCallback(() => {
         localStorage.removeItem("etoile-auth")

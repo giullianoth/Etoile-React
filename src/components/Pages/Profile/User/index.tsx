@@ -18,7 +18,7 @@ const User = ({ user }: Props) => {
 
     useEffect(() => {
         handleClearUsersData()
-    }, [modalIsOpen])
+    }, [modalIsOpen, handleClearUsersData])
 
     return (
         <>

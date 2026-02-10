@@ -38,7 +38,7 @@ const Plates = () => {
         }
 
         fetchData()
-    }, [])
+    }, [handleClearPlatesData, handleFetchAvailableCategories, handleFetchAvailablePlates])
 
     useEffect(() => {
         if (selectedPlate) {

@@ -25,7 +25,7 @@ const Profile = () => {
         }
 
         setLoading(false)
-    }, [])
+    }, [authenticated, navigate])
 
     useEffect(() => {
         const fetchOrders = async () => {
@@ -37,7 +37,7 @@ const Profile = () => {
         fetchOrders()
 
         return () => handleClearOrdersData()
-    }, [user?._id, loading])
+    }, [user?._id, loading, handleClearOrdersData, handleFetchOrdersByUser])
 
     return (
         loading

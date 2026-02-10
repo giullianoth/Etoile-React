@@ -43,7 +43,7 @@ const Auth = ({ setTitle }: Props) => {
 
     useEffect(() => {
         handleClearAuthForm()
-    }, [])
+    }, [handleClearAuthForm])
 
     useEffect(() => {
         if (formType === "login") {
@@ -53,7 +53,7 @@ const Auth = ({ setTitle }: Props) => {
         if (formType === "register") {
             setTitle("Cadastro")
         }
-    }, [formType])
+    }, [formType, setTitle])
 
     useEffect(() => {
         const authenticate = async () => {
@@ -78,7 +78,20 @@ const Auth = ({ setTitle }: Props) => {
         }
 
         authenticate()
-    }, [success, handleLogin, handleRegister])
+    }, [
+        success,
+        handleLogin,
+        handleRegister,
+        addMessage,
+        clearCart,
+        handleCreateOrder,
+        navigate,
+        ordersSuccessMessage,
+        pendingOrder,
+        removePendingOrder,
+        successMessage,
+        user?._id
+    ])
 
     const handleChangeFormType = () => {
         setFormType(formType === "login" ? "register" : "login")

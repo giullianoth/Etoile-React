@@ -42,14 +42,14 @@ const ConfirmOrder = ({ setModalIsOpen }: Props) => {
         if (user?._id) {
             handleChangeOrderFormFields("userId", user._id)
         }
-    }, [])
+    }, [handleChangeOrderFormFields, handleClearOrderFormFields, user?._id])
 
     useEffect(() => {
         if (success && successMessage) {
             addMessage(successMessage)
             navigate("/perfil")
         }
-    }, [handleCreateOrder, success, successMessage])
+    }, [handleCreateOrder, success, successMessage, addMessage, navigate])
 
     const handleChangeFormData = (event: ChangeEvent<HTMLInputElement>) => {
         handleChangeOrderFormFields(

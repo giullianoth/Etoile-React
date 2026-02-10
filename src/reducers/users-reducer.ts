@@ -129,6 +129,14 @@ export const useUsersReducer = (handleUpdateLoggedUser: (userData: IUser) => voi
     const handleUpdateUser = useCallback(async () => {
         dispatch({ type: "USERS_UPDATE_START" })
 
+        if (!usersState.currentUser?._id) {
+            dispatch({
+                type: "USERS_UPDATE_FAILURE",
+                payload: "Erro inesperado ao atualizar perfil."
+            })
+            return
+        }
+
         if (!usersState.userUpdateFormFields.fullname) {
             dispatch({
                 type: "USERS_UPDATE_FAILURE",
@@ -201,7 +209,7 @@ export const useUsersReducer = (handleUpdateLoggedUser: (userData: IUser) => voi
 
         const response = await usersServices.updateUser(
             userDataRest,
-            usersState.currentUser?._id!
+            usersState.currentUser?._id
         )
 
         if (!response.success) {
@@ -219,10 +227,18 @@ export const useUsersReducer = (handleUpdateLoggedUser: (userData: IUser) => voi
             type: "USERS_UPDATE_SUCCESS",
             payload: "Perfil atualizado com sucesso."
         })
-    }, [usersState.userUpdateFormFields])
+    }, [usersState.userUpdateFormFields, handleUpdateLoggedUser, usersState.currentUser?._id, usersState.currentUser?.email])
 
     const handleUpdateUserPhoto = useCallback(async (photo: File) => {
         dispatch({ type: "USERS_UPDATE_START" })
+
+        if (!usersState.currentUser?._id) {
+            dispatch({
+                type: "USERS_UPDATE_FAILURE",
+                payload: "Erro inesperado ao atualizar foto de perfil."
+            })
+            return
+        }
 
         if (!photo) {
             dispatch({
@@ -253,7 +269,7 @@ export const useUsersReducer = (handleUpdateLoggedUser: (userData: IUser) => voi
 
         const response = await usersServices.updateUserPhoto(
             formData,
-            usersState.currentUser?._id!
+            usersState.currentUser?._id
         )
 
         if (!response.success) {
@@ -271,7 +287,7 @@ export const useUsersReducer = (handleUpdateLoggedUser: (userData: IUser) => voi
             type: "USERS_UPDATE_SUCCESS",
             payload: "Foto de perfil atualizada com sucesso."
         })
-    }, [usersState.currentUser])
+    }, [usersState.currentUser, handleUpdateLoggedUser])
 
     return {
         ...usersState,

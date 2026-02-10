@@ -79,9 +79,9 @@ const Header = () => {
                             </Link>
                         </div>
 
-                        {isAuthenticated && user &&
+                        {isAuthenticated && user?.fullname &&
                             <p className={styles.header__welcome}>
-                                Bem-vindo, <strong>{firstName(user?.fullname!)}</strong>!
+                                Bem-vindo, <strong>{firstName(user?.fullname)}</strong>!
                             </p>}
 
                         {!isAuthenticated &&

@@ -24,6 +24,11 @@ const initialState: IOrdersState = {
 }
 
 const ordersReducerActions = (state: IOrdersState, action: IOrdersActions): IOrdersState => {
+    let updatedOrders: IOrder[]
+    let updatedOrdersAfterCancelItem: IOrder[]
+    let updatedCurrentOrder: IOrder | null
+    let updatedOrdersAfterDelete: IOrder[]
+
     switch (action.type) {
         case "SET_ORDER_TO_EDIT":
             return {
@@ -86,7 +91,7 @@ const ordersReducerActions = (state: IOrdersState, action: IOrdersActions): IOrd
             }
 
         case "ORDERS_UPDATE_SUCCESS":
-            const updatedOrders = state.orders.map(order => order._id === action.payload.orderResult._id
+            updatedOrders = state.orders.map(order => order._id === action.payload.orderResult._id
                 ? { ...order, ...action.payload.orderResult }
                 : order)
 
@@ -101,7 +106,7 @@ const ordersReducerActions = (state: IOrdersState, action: IOrdersActions): IOrd
             }
 
         case "ORDERS_CANCEL_ITEM_SUCCESS":
-            const updatedOrdersAfterCancelItem = state.orders.map(order => {
+            updatedOrdersAfterCancelItem = state.orders.map(order => {
                 const isTargetOrder = order._id === action.payload.orderResult.orderId
 
                 if (isTargetOrder || !action.payload.orderResult.orderId) {
@@ -114,7 +119,7 @@ const ordersReducerActions = (state: IOrdersState, action: IOrdersActions): IOrd
                 return order
             })
 
-            const updatedCurrentOrder = state.currentOrder
+            updatedCurrentOrder = state.currentOrder
                 ? {
                     ...state.currentOrder,
                     orderItems: state.currentOrder.orderItems.filter(item =>
@@ -133,7 +138,7 @@ const ordersReducerActions = (state: IOrdersState, action: IOrdersActions): IOrd
             }
 
         case "ORDERS_DELETE_SUCCESS":
-            const updatedOrdersAfterDelete = state.orders.filter(order =>
+            updatedOrdersAfterDelete = state.orders.filter(order =>
                 order._id !== action.payload.orderId)
 
             return {
@@ -278,11 +283,12 @@ export const useOrdersReducer = () => {
             return
         }
 
-        const { orderReceived, ...orderDataRest } = ordersState.orderFormFields
+        const orderData = ordersState.orderFormFields
+        delete(orderData.orderReceived)
 
         const response = await ordersServices.createOrder({
-            ...orderDataRest,
-            userId: userId ? userId : orderDataRest.userId,
+            ...orderData,
+            userId: userId ? userId : orderData.userId,
             items: orderItems,
             time: orderDate
         })
@@ -302,10 +308,18 @@ export const useOrdersReducer = () => {
                 message: "Pedido criado com sucesso."
             }
         })
-    }, [ordersState.orderFormFields])
+    }, [ordersState.orderFormFields, isPastDate])
 
     const handleUpdateOrder = useCallback(async (orderDate: Date | null) => {
         dispatch({ type: "ORDERS_UPDATE_START" })
+
+        if (!ordersState.currentOrder) {
+            dispatch({
+                type: "ORDERS_UPDATE_FAILURE",
+                payload: "Erro inesperado ao atualizar pedido."
+            })
+            return
+        }
 
         if (!orderDate) {
             dispatch({
@@ -323,13 +337,17 @@ export const useOrdersReducer = () => {
             return
         }
 
-        const { orderReceived, userId, items, ...orderDataRest } = ordersState.orderFormFields
+        const orderData = ordersState.orderFormFields
+        delete(orderData.userId)
+        delete(orderData.items)
+
+        const { orderReceived, ...orderDataRest } = orderData
         orderDataRest.time = orderDate
         orderDataRest.status = orderReceived ? "Concluído" : ordersState.currentOrder?.status as IOrderStatus
 
         const response = await ordersServices.updateOrder(
             orderDataRest,
-            ordersState.currentOrder?._id!
+            ordersState.currentOrder?._id
         )
 
         if (!response.success) {
@@ -347,7 +365,7 @@ export const useOrdersReducer = () => {
                 message: "Pedido atualizado com sucesso."
             }
         })
-    }, [ordersState.orderFormFields])
+    }, [ordersState.orderFormFields, isPastDate, ordersState.currentOrder])
 
     const handleCancelOrderItem = useCallback(async (orderItemId: string) => {
         dispatch({ type: "ORDERS_CANCEL_ITEM_START" })
