@@ -33,14 +33,14 @@ const UpdateProfile = ({ user, setModalIsOpen }: Props) => {
     useEffect(() => {
         handleClearUsersFormFields()
         handleSetUserToEdit(user)
-    }, [])
+    }, [handleClearUsersFormFields, handleSetUserToEdit, user])
 
     useEffect(() => {
         if (success && successMessage) {
             addMessage(successMessage)
             setModalIsOpen(false)
         }
-    }, [success, successMessage, handleUpdateUser])
+    }, [success, successMessage, handleUpdateUser, addMessage, setModalIsOpen])
 
     const handleChangeFormData = (event: ChangeEvent<HTMLInputElement>) => {
         if (event.target.name === "changePassword") {

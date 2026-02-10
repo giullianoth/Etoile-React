@@ -12,17 +12,17 @@ const Home = () => {
                     Pedidos
                 </Link>
 
-                <Link to="/admin/pedidos" className={styles.dashboard__link}>
+                <Link to="/admin/pratos" className={styles.dashboard__link}>
                     <PiBowlSteam />
                     Pratos
                 </Link>
 
-                <Link to="/admin/pedidos" className={styles.dashboard__link}>
+                <Link to="/admin/usuarios" className={styles.dashboard__link}>
                     <PiUserList />
                     Usuários
                 </Link>
 
-                <Link to="/admin/pedidos" className={styles.dashboard__link}>
+                <Link to="/admin/perfil" className={styles.dashboard__link}>
                     <PiUser />
                     Perfil
                 </Link>

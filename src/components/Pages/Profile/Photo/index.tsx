@@ -32,7 +32,7 @@ const Photo = ({ photo, userName, className }: Props) => {
     useEffect(() => {
         handleClearUsersFormFields()
         handleSetUserToEdit(user)
-    }, [previewImage])
+    }, [previewImage, handleClearUsersFormFields, handleSetUserToEdit, user])
 
     useEffect(() => {
         if (errorMessage) {
@@ -43,7 +43,7 @@ const Photo = ({ photo, userName, className }: Props) => {
             addMessage(successMessage)
             setPreviewImage(null)
         }
-    }, [errorMessage, success, successMessage, handleUpdateUserPhoto])
+    }, [errorMessage, success, successMessage, handleUpdateUserPhoto, addMessage])
 
     const handleChangePhoto = (event: ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0]

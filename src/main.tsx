@@ -12,8 +12,9 @@ import Profile from './pages/Profile/index.tsx'
 import NotFound from './pages/NotFound/index.tsx'
 import Admin from './pages/restricted/Admin/index.tsx'
 import RestrictedHome from "./pages/restricted/Home"
-import RestrictedOrders from "./pages/restricted/Orders"
+import RestrictedOrders from "./pages/restricted/Orders/index.tsx"
 import RestrictedPlates from "./pages/restricted/Plates"
+import RestrictedUsers from "./pages/restricted/Users"
 
 const pages = createBrowserRouter([
   {
@@ -35,6 +36,7 @@ const pages = createBrowserRouter([
       { path: "/admin", element: <RestrictedHome /> },
       { path: "/admin/pedidos", element: <RestrictedOrders /> },
       { path: "/admin/pratos", element: <RestrictedPlates /> },
+      { path: "/admin/usuarios", element: <RestrictedUsers /> },
     ]
   }
 ])
