@@ -182,6 +182,10 @@ th {
   background-color: var(--color-lavender-blush);
 }
 
+a.active {
+  background-color: var(--color-claret);
+}
+
 @media screen and (min-width: 992px) {
   thead:not(.not-hidden) {
     display: table-header-group;

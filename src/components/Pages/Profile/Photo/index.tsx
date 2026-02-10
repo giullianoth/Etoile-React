@@ -10,7 +10,7 @@ import Loading from "../../../Loading"
 type Props = {
     photo?: string
     userName: string
-    className: string
+    className?: string
 }
 
 const Photo = ({ photo, userName, className }: Props) => {

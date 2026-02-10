@@ -15,6 +15,7 @@ import RestrictedHome from "./pages/restricted/Home"
 import RestrictedOrders from "./pages/restricted/Orders/index.tsx"
 import RestrictedPlates from "./pages/restricted/Plates"
 import RestrictedUsers from "./pages/restricted/Users"
+import RestrictedProfile from "./pages/restricted/Profile"
 
 const pages = createBrowserRouter([
   {
@@ -37,6 +38,7 @@ const pages = createBrowserRouter([
       { path: "/admin/pedidos", element: <RestrictedOrders /> },
       { path: "/admin/pratos", element: <RestrictedPlates /> },
       { path: "/admin/usuarios", element: <RestrictedUsers /> },
+      { path: "/admin/perfil", element: <RestrictedProfile /> },
     ]
   }
 ])
