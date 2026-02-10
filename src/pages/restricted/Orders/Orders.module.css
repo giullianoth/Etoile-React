@@ -23,16 +23,16 @@
     background-color: var(--color-error-overlay) !important;
 }
 
-.order__pending:hover {
-    background-color: var(--color-warning);
+.order__pending:hover, .order__pending.selected {
+    background-color: var(--color-warning) !important;
 }
 
-.order__completed:hover {
-    background-color: var(--color-success);
+.order__completed:hover, .order__completed.selected {
+    background-color: var(--color-success) !important;
 }
 
-.order__cancelled:hover {
-    background-color: var(--color-error);
+.order__cancelled:hover, .order__cancelled.selected {
+    background-color: var(--color-error) !important;
 }
 
 span:has(.order__checkbox) {
@@ -40,4 +40,14 @@ span:has(.order__checkbox) {
     width: 20px;
     height: 20px;
     background-color: var(--color-white-smoke);
+}
+
+.orders__actions {
+    margin-top: 20px;
+    padding: 7px;
+    background-color: var(--color-lavender-blush);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 40px;
 }

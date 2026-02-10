@@ -155,7 +155,7 @@ table {
   border: 1px solid var(--color-lavender-blush);
 }
 
-thead {
+thead:not(.not-hidden) {
   display: none;
 }
 
@@ -183,7 +183,7 @@ th {
 }
 
 @media screen and (min-width: 992px) {
-  thead {
+  thead:not(.not-hidden) {
     display: table-header-group;
   }
 

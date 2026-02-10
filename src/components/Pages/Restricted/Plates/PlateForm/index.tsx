@@ -17,10 +17,10 @@ const PlateForm = ({ title, setPlateFormIsOpen }: Props) => {
     return (
         <Popup divided>
             <div className={styles.popup__half}>
-                {/* <img
+                <img
                     src="/images/plates/ravioli-de-ricota-e-espinafre-ao-sugo.png"
                     alt="Prato"
-                    className={styles.popup__preview} /> */}
+                    className={styles.popup__preview} />
 
                 <label
                     htmlFor="plate-image"
@@ -52,6 +52,7 @@ const PlateForm = ({ title, setPlateFormIsOpen }: Props) => {
                     </select>
 
                     <input type="number" placeholder="Preço *" />
+                    <input type="text" placeholder="Acompanhamento" />
 
                     <div className={`${styles.popup__action} ${styles.popup__stretched}`}>
                         <span

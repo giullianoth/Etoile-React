@@ -48,6 +48,16 @@ span:has(.plate__checkbox) {
     background-color: var(--color-white-smoke);
 }
 
+.plates__actions {
+    margin-top: 20px;
+    padding: 7px;
+    background-color: var(--color-lavender-blush);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 40px;
+}
+
 @media screen and (min-width: 576px) {
     .plates__title {
         flex-direction: row;

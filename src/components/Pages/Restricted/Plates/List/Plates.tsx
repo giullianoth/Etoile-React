@@ -4,9 +4,13 @@ import { useState } from "react"
 import Checkbox from "../../../../Form/Checkbox"
 import Modal from "react-modal"
 import PlateForm from "../PlateForm"
+import Delete from "../Delete"
+import SetAvailability from "../SetAvailability"
 
 const Plates = () => {
     const [plateFormIsOpen, setPlateFormIsOpen] = useState<boolean>(false)
+    const [deleteIsOpen, setDeleteIsOpen] = useState<boolean>(false)
+    const [changeAvailabilityIsOpen, setChangeAvailabilityIsOpen] = useState<boolean>(false)
 
     return (
         <>
@@ -31,6 +35,16 @@ const Plates = () => {
                             <th>Descrição</th>
                             <th>Preço</th>
                             <th className="centered">Ações</th>
+                        </tr>
+                    </thead>
+
+                    <thead className="not-hidden">
+                        <tr>
+                            <th>
+                                <Checkbox className={styles.plate__checkbox} />
+                            </th>
+
+                            <th colSpan={7}>Selecionar todos</th>
                         </tr>
                     </thead>
 
@@ -87,7 +101,10 @@ const Plates = () => {
                                         <PiNotePencil />
                                     </button>
 
-                                    <button className="button clear" title="Excluit prato">
+                                    <button
+                                        className="button clear"
+                                        title="Excluit prato"
+                                        onClick={() => setDeleteIsOpen(true)}>
                                         <PiTrash />
                                     </button>
                                 </p>
@@ -146,7 +163,10 @@ const Plates = () => {
                                         <PiNotePencil />
                                     </button>
 
-                                    <button className="button clear" title="Excluit prato">
+                                    <button
+                                        className="button clear"
+                                        title="Excluit prato"
+                                        onClick={() => setDeleteIsOpen(true)}>
                                         <PiTrash />
                                     </button>
                                 </p>
@@ -154,6 +174,28 @@ const Plates = () => {
                         </tr>
                     </tbody>
                 </table>
+
+                <p className={styles.plates__actions}>
+                    <strong>Ações em massa:</strong>
+
+                    <button
+                        className="button clear small"
+                        onClick={() => setChangeAvailabilityIsOpen(true)}>
+                        Marcar como Indisponível
+                    </button>
+
+                    <button
+                        className="button clear small"
+                        onClick={() => setChangeAvailabilityIsOpen(true)}>
+                        Marcar como Disponível
+                    </button>
+
+                    <button
+                        className="button clear small"
+                        onClick={() => setDeleteIsOpen(true)}>
+                        Excluir
+                    </button>
+                </p>
             </section>
 
             <Modal
@@ -165,6 +207,29 @@ const Plates = () => {
                 <PlateForm
                     title="Novo prato"
                     setPlateFormIsOpen={setPlateFormIsOpen} />
+            </Modal>
+
+            <Modal
+                isOpen={changeAvailabilityIsOpen}
+                onRequestClose={() => setChangeAvailabilityIsOpen(false)}
+                closeTimeoutMS={300}
+                className="modal"
+                overlayClassName="modal-overlay">
+                <SetAvailability
+                    setModalIsOpen={setChangeAvailabilityIsOpen}
+                    availability="available" />
+            </Modal>
+
+            <Modal
+                isOpen={deleteIsOpen}
+                onRequestClose={() => setDeleteIsOpen(false)}
+                closeTimeoutMS={300}
+                className="modal"
+                overlayClassName="modal-overlay">
+                <Delete
+                    setModalIsOpen={setDeleteIsOpen}
+                    title="Excluir prato?"
+                    itemToDelete="plate" />
             </Modal>
         </>
     )

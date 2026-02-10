@@ -1,11 +1,21 @@
-import { useState } from "react"
+import { useState, type MouseEvent } from "react"
 import Checkbox from "../../../components/Form/Checkbox"
 import styles from "./Orders.module.css"
 import Modal from "react-modal"
 import EditOrder from "../../../components/Pages/Restricted/Orders/EditOrder"
+import { PiTrash } from "react-icons/pi"
+import DeleteOrder from "../../../components/Pages/Restricted/Orders/DeleteOrder"
+import SetAsCancelled from "../../../components/Pages/Restricted/Orders/SetAsCancelled"
 
 const Orders = () => {
-    const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
+    const [editIsOpen, setEditIsOpen] = useState<boolean>(false)
+    const [deleteIsOpen, setDeleteIsOpen] = useState<boolean>(false)
+    const [cancelIsOpen, setCancelIsOpen] = useState<boolean>(false)
+
+    const handleOpenDelete = (event: MouseEvent) => {
+        event.stopPropagation()
+        setDeleteIsOpen(true)
+    }
 
     return (
         <>
@@ -23,15 +33,28 @@ const Orders = () => {
                             <th>Horário</th>
                             <th>Cliente</th>
                             <th>Itens</th>
+                            <th className="centered">Ações</th>
+                        </tr>
+                    </thead>
+
+                    <thead className="not-hidden">
+                        <tr>
+                            <th>
+                                <Checkbox className={styles.order__checkbox} />
+                            </th>
+
+                            <th colSpan={6}>Selecionar todos</th>
                         </tr>
                     </thead>
 
                     <tbody>
                         <tr
                             className={`${styles.order__row} ${styles.order__pending}`}
-                            onClick={() => setModalIsOpen(true)}>
+                            onClick={() => setEditIsOpen(true)}>
                             <td>
-                                <Checkbox className={styles.order__checkbox} />
+                                <Checkbox
+                                    className={styles.order__checkbox}
+                                    onClick={event => event.stopPropagation()} />
                             </td>
 
                             <td>
@@ -68,11 +91,24 @@ const Orders = () => {
                                 </span>
                                 While Grain Bread, Grilled Salmon, Smoked Sordfish...
                             </td>
+
+                            <td className="centered">
+                                <p>
+                                    <button
+                                        className="button clear"
+                                        title="Excluit pedido"
+                                        onClick={handleOpenDelete}>
+                                        <PiTrash />
+                                    </button>
+                                </p>
+                            </td>
                         </tr>
 
                         <tr className={`${styles.order__row} ${styles.order__completed}`}>
                             <td>
-                                <Checkbox className={styles.order__checkbox} />
+                                <Checkbox
+                                    className={styles.order__checkbox}
+                                    onClick={event => event.stopPropagation()} />
                             </td>
 
                             <td>
@@ -109,11 +145,24 @@ const Orders = () => {
                                 </span>
                                 While Grain Bread, Grilled Salmon, Smoked Sordfish...
                             </td>
+
+                            <td className="centered">
+                                <p>
+                                    <button
+                                        className="button clear"
+                                        title="Excluit pedido"
+                                        onClick={handleOpenDelete}>
+                                        <PiTrash />
+                                    </button>
+                                </p>
+                            </td>
                         </tr>
 
                         <tr className={`${styles.order__row} ${styles.order__cancelled}`}>
                             <td>
-                                <Checkbox className={styles.order__checkbox} />
+                                <Checkbox
+                                    className={styles.order__checkbox}
+                                    onClick={event => event.stopPropagation()} />
                             </td>
 
                             <td>
@@ -150,19 +199,66 @@ const Orders = () => {
                                 </span>
                                 While Grain Bread, Grilled Salmon, Smoked Sordfish...
                             </td>
+
+                            <td className="centered">
+                                <p>
+                                    <button
+                                        className="button clear"
+                                        title="Excluit pedido"
+                                        onClick={handleOpenDelete}>
+                                        <PiTrash />
+                                    </button>
+                                </p>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
+
+                <p className={styles.orders__actions}>
+                    <strong>Ações em massa:</strong>
+
+                    <button
+                        className="button clear small"
+                        onClick={() => setCancelIsOpen(true)}>
+                        Marcar como Cancelado
+                    </button>
+
+                    <button
+                        className="button clear small"
+                        onClick={handleOpenDelete}>
+                        Excluir
+                    </button>
+                </p>
             </section>
 
             <Modal
-                isOpen={modalIsOpen}
-                onRequestClose={() => setModalIsOpen(false)}
+                isOpen={editIsOpen}
+                onRequestClose={() => setEditIsOpen(false)}
                 closeTimeoutMS={300}
                 className="modal"
                 overlayClassName="modal-overlay">
                 <EditOrder
-                    setModalIsOpen={setModalIsOpen} />
+                    setModalIsOpen={setEditIsOpen} />
+            </Modal>
+
+            <Modal
+                isOpen={cancelIsOpen}
+                onRequestClose={() => setCancelIsOpen(false)}
+                closeTimeoutMS={300}
+                className="modal"
+                overlayClassName="modal-overlay">
+                <SetAsCancelled setModalIsOpen={setCancelIsOpen} />
+            </Modal>
+
+            <Modal
+                isOpen={deleteIsOpen}
+                onRequestClose={() => setDeleteIsOpen(false)}
+                closeTimeoutMS={300}
+                className="modal"
+                overlayClassName="modal-overlay">
+                <DeleteOrder
+                    title="Excluir pedido?"
+                    setModalIsOpen={setDeleteIsOpen} />
             </Modal>
         </>
     )
