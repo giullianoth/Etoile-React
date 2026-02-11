@@ -43,10 +43,22 @@ const Users = () => {
                     <thead className="not-hidden">
                         <tr>
                             <th>
-                                <Checkbox className={styles.user__checkbox} />
+                                <Checkbox
+                                    id="select-all-users"
+                                    className={styles.user__checkbox} />
                             </th>
 
-                            <th colSpan={6}>Selecionar todos</th>
+                            <th>
+                                <label htmlFor="select-all-users">
+                                    Selecionar todos
+                                </label>
+                            </th>
+
+                            <th colSpan={5}>
+                                <button className="button clear">
+                                    Cancelar
+                                </button>
+                            </th>
                         </tr>
                     </thead>
 

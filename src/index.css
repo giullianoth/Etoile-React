@@ -155,6 +155,10 @@ table {
   border: 1px solid var(--color-lavender-blush);
 }
 
+thead {
+  border-bottom: 1px solid var(--color-murrey);
+}
+
 thead:not(.not-hidden) {
   display: none;
 }

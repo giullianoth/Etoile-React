@@ -41,10 +41,22 @@ const Plates = () => {
                     <thead className="not-hidden">
                         <tr>
                             <th>
-                                <Checkbox className={styles.plate__checkbox} />
+                                <Checkbox
+                                    id="select-all-plates"
+                                    className={styles.plate__checkbox} />
                             </th>
 
-                            <th colSpan={7}>Selecionar todos</th>
+                            <th>
+                                <label htmlFor="select-all-plates">
+                                    Selecionar todos
+                                </label>
+                            </th>
+
+                            <th colSpan={6}>
+                                <button className="button clear">
+                                    Cancelar
+                                </button>
+                            </th>
                         </tr>
                     </thead>
 

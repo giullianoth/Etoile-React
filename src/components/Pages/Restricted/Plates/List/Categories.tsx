@@ -37,10 +37,22 @@ const Categories = () => {
                     <thead className="not-hidden">
                         <tr>
                             <th>
-                                <Checkbox className={styles.plate__checkbox} />
+                                <Checkbox
+                                    id="select-all-categories"
+                                    className={styles.plate__checkbox} />
                             </th>
 
-                            <th colSpan={7}>Selecionar todos</th>
+                            <th>
+                                <label htmlFor="select-all-categories">
+                                    Selecionar todos
+                                </label>
+                            </th>
+
+                            <th colSpan={2}>
+                                <button className="button clear">
+                                    Cancelar
+                                </button>
+                            </th>
                         </tr>
                     </thead>
 

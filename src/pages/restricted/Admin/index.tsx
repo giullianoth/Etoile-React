@@ -4,7 +4,7 @@ import { useState } from "react"
 import Auth from "../Auth"
 
 const Admin = () => {
-    const [authenticated] = useState<boolean>(true)
+    const [authenticated] = useState<boolean>(false)
 
     if (!authenticated) {
         return <Auth />
