@@ -19,6 +19,7 @@ const EditOrder = ({ setModalIsOpen }: Props) => {
             </div>
 
             <form className={styles.popup__form} onSubmit={handleSubmit}>
+                <input type="date" placeholder="Data de comparecimento" />
                 <input type="time" placeholder="Horário de comparecimento" />
                 <select>
                     <option value="Pendente">Pendente</option>

@@ -3,11 +3,13 @@ import Checkbox from "../../../components/Form/Checkbox"
 import styles from "./Orders.module.css"
 import Modal from "react-modal"
 import EditOrder from "../../../components/Pages/Restricted/Orders/EditOrder"
-import { PiTrash } from "react-icons/pi"
+import { PiPlusCircle, PiTrash } from "react-icons/pi"
 import DeleteOrder from "../../../components/Pages/Restricted/Orders/DeleteOrder"
 import SetAsCancelled from "../../../components/Pages/Restricted/Orders/SetAsCancelled"
+import CreateOrder from "../../../components/Pages/Restricted/Orders/CreateOrder"
 
 const Orders = () => {
+    const [createIsOpen, setCreateIsOpen] = useState<boolean>(false)
     const [editIsOpen, setEditIsOpen] = useState<boolean>(false)
     const [deleteIsOpen, setDeleteIsOpen] = useState<boolean>(false)
     const [cancelIsOpen, setCancelIsOpen] = useState<boolean>(false)
@@ -22,6 +24,11 @@ const Orders = () => {
             <section>
                 <header className={styles.orders__title}>
                     <h2>Lista de pedidos</h2>
+
+                    <button className="button primary small" onClick={() => setCreateIsOpen(true)}>
+                        <PiPlusCircle />
+                        Novo pedido
+                    </button>
                 </header>
 
                 <table className={styles.orders__list}>
@@ -230,6 +237,15 @@ const Orders = () => {
                     </button>
                 </p>
             </section>
+
+            <Modal
+                isOpen={createIsOpen}
+                onRequestClose={() => setCreateIsOpen(false)}
+                closeTimeoutMS={300}
+                className="modal"
+                overlayClassName="modal-overlay">
+                <CreateOrder setModalIsOpen={setCreateIsOpen} />
+            </Modal>
 
             <Modal
                 isOpen={editIsOpen}

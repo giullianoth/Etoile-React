@@ -178,6 +178,12 @@
     text-align: left;
 }
 
+.popup__listInfoCentered {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
 .popup__listName {
     margin-bottom: 10px;
     color: inherit;
@@ -189,6 +195,18 @@
 
 .popup__listDetails {
     font-size: 0.8em;
+}
+
+.popup__listQuantity {
+    display: flex;
+}
+
+.popup__listQuantity .popup__quantity {
+    width: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: var(--font-cinzel);
 }
 
 .popup__listAction {

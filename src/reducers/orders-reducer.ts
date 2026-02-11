@@ -1,7 +1,7 @@
 import { useCallback, useReducer } from "react";
 import type { IOrdersActions, IOrdersState } from "../types/reducer-states";
 import ordersServices from "../services/orders-services";
-import type { IOrder, IOrderCreate, IOrderItem, IOrderStatus, IOrderUpdate } from "../types/order";
+import type { IOrder, IOrderCreate, IOrderItem, IOrderUpdate } from "../types/order";
 import type { IPlate } from "../types/plate";
 import { useDateFormats } from "../hooks/date-formats";
 
@@ -329,7 +329,7 @@ export const useOrdersReducer = () => {
             return
         }
 
-        if (isPastDate(orderDate, ordersState.currentOrder?.time)) {
+        if (isPastDate(orderDate, ordersState.currentOrder.time)) {
             dispatch({
                 type: "ORDERS_UPDATE_FAILURE",
                 payload: "O horário precisa ser posterior."
@@ -343,11 +343,11 @@ export const useOrdersReducer = () => {
 
         const { orderReceived, ...orderDataRest } = orderData
         orderDataRest.time = orderDate
-        orderDataRest.status = orderReceived ? "Concluído" : ordersState.currentOrder?.status as IOrderStatus
+        orderDataRest.status = orderReceived ? "Concluído" : ordersState.currentOrder.status
 
         const response = await ordersServices.updateOrder(
             orderDataRest,
-            ordersState.currentOrder?._id
+            ordersState.currentOrder._id
         )
 
         if (!response.success) {
