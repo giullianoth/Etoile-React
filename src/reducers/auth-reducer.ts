@@ -121,7 +121,7 @@ export const useAuthReducer = () => {
         })
     }, [])
 
-    const handleLogin = useCallback(async () => {
+    const handleLogin = useCallback(async (toRestrictedArea?: boolean) => {
         dispatch({ type: "AUTH_SUBMIT_START" })
 
         if (!authState.authFormFields.email) {
@@ -159,6 +159,18 @@ export const useAuthReducer = () => {
                 payload: response.body.text ?? "Erro ao realizar login."
             })
             return
+        }
+
+        if (toRestrictedArea) {
+            const isAdmin = response.body.user.role === "admin"
+
+            if (!isAdmin) {
+                dispatch({
+                    type: "AUTH_SUBMIT_FAILURE",
+                    payload: "Acesso não permitido a este perfil."
+                })
+                return
+            }
         }
 
         localStorage.setItem("etoile-auth", JSON.stringify({

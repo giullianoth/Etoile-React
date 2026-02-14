@@ -5,9 +5,19 @@ import { useState, type FormEvent } from "react"
 import Checkbox from "../../../components/Form/Checkbox"
 import AnimateHeight from "react-animate-height"
 import Password from "../../../components/Form/Password"
+import { useAppContext } from "../../../context/context"
+import { useNavigate } from "react-router-dom"
 
 const Profile = () => {
     const [collapsed] = useState<boolean>(true)
+    const navigate = useNavigate()
+
+    const { handleLogout } = useAppContext().auth
+
+    const handleLogoutAccount = () => {
+        handleLogout()
+        navigate("/admin")
+    }
 
     const handleSubmit = (event: FormEvent) => {
         event.preventDefault()
@@ -18,7 +28,10 @@ const Profile = () => {
             <header className={styles.profile__title}>
                 <h2>Perfil de Giulliano Guimarães</h2>
 
-                <button className="button primary small">
+                <button
+                    className="button primary small"
+                    title="Sair"
+                    onClick={handleLogoutAccount}>
                     Logout
                     <PiSignOut />
                 </button>
@@ -47,14 +60,14 @@ const Profile = () => {
                             duration={300}
                             height={collapsed ? "auto" : 0}
                             contentClassName={styles.profile__formRow}>
-                                <Password placeholder="Senha *" />
-                                <Password placeholder="Nova senha *" />
-                                <Password placeholder="Confirmar senha *" />
-                            </AnimateHeight>
+                            <Password placeholder="Senha *" />
+                            <Password placeholder="Nova senha *" />
+                            <Password placeholder="Confirmar senha *" />
+                        </AnimateHeight>
 
-                            <button type="submit" className="button primary">
-                                Salvar dados
-                            </button>
+                        <button type="submit" className="button primary">
+                            Salvar dados
+                        </button>
                     </form>
                 </div>
             </div>

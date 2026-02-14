@@ -27,7 +27,7 @@ interface IAuthContext extends IAuthState {
     handleClearAuthForm: () => void
     handleClearAuthData: () => void
     handleUpdateLoggedUser: (userData: IUser) => void
-    handleLogin: () => Promise<void>
+    handleLogin: (toRestrictedArea?: boolean) => Promise<void>
     handleRegister: () => Promise<void>
     handleLogout: () => void
 }

@@ -1,12 +1,24 @@
 import { Outlet } from "react-router-dom"
 import Dashboard from "../../../components/Dashboard"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Auth from "../Auth"
+import { useAppContext } from "../../../context/context"
 
 const Admin = () => {
-    const [authenticated] = useState<boolean>(false)
+    const [isAdmin, setIsAdmin] = useState<boolean>(false)
+    const { user, success: authenticated } = useAppContext().auth
 
-    if (!authenticated) {
+    useEffect(() => {
+        if (user && authenticated) {
+            setIsAdmin(
+                authenticated && user.role === "admin"
+            )
+        } else {
+            setIsAdmin(false)
+        }
+    }, [authenticated, user])
+
+    if (!isAdmin) {
         return <Auth />
     }
 
