@@ -1,13 +1,41 @@
 import { PiTrash } from "react-icons/pi"
 import Popup from "../../../../Popup"
 import styles from "../../../../Popup/Popup.module.css"
-import type { Dispatch, FormEvent, SetStateAction } from "react"
+import { useEffect, useState, type ChangeEvent, type Dispatch, type FormEvent, type SetStateAction } from "react"
+import { useAppContext } from "../../../../../context/context"
+import { useDateFormats } from "../../../../../hooks/date-formats"
+import type { IOrderCreate } from "../../../../../types/order"
 
 type Props = {
     setModalIsOpen: Dispatch<SetStateAction<boolean>>
 }
 
 const EditOrder = ({ setModalIsOpen }: Props) => {
+    const [date, setDate] = useState<string>("")
+    const [time, setTime] = useState<string>("")
+    const { dateTimeFormat, defaultDateFormat } = useDateFormats()
+
+    const {
+        currentOrder,
+        orderFormFields,
+        handleChangeOrderFormFields
+    } = useAppContext().orders
+
+    useEffect(() => {
+        if (currentOrder) {
+            setDate(defaultDateFormat(currentOrder.time as string))
+            setTime(dateTimeFormat(currentOrder.time))
+            handleChangeOrderFormFields("status", currentOrder.status)
+        }
+    }, [currentOrder, defaultDateFormat, dateTimeFormat, handleChangeOrderFormFields])
+
+    const handleChangeOrdersData = (event: ChangeEvent<HTMLSelectElement>) => {
+        handleChangeOrderFormFields(
+            event.target.name as keyof IOrderCreate,
+            event.target.value
+        )
+    }
+
     const handleSubmit = (event: FormEvent) => {
         event.preventDefault()
     }
@@ -19,9 +47,24 @@ const EditOrder = ({ setModalIsOpen }: Props) => {
             </div>
 
             <form className={styles.popup__form} onSubmit={handleSubmit}>
-                <input type="date" placeholder="Data de comparecimento" />
-                <input type="time" placeholder="Horário de comparecimento" />
-                <select>
+                <input
+                    type="date"
+                    name="date"
+                    placeholder="Data de comparecimento"
+                    value={date}
+                    onChange={event => setDate(event.target.value)} />
+
+                <input
+                    type="time"
+                    name="time"
+                    placeholder="Horário de comparecimento"
+                    value={time}
+                    onChange={event => setTime(event.target.value)} />
+
+                <select
+                    name="status"
+                    value={orderFormFields.status}
+                    onChange={handleChangeOrdersData}>
                     <option value="Pendente">Pendente</option>
                     <option value="Cancelado">Cancelado</option>
                     <option value="Concluído">Concluído</option>

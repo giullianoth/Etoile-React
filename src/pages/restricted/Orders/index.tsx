@@ -3,15 +3,15 @@ import Checkbox from "../../../components/Form/Checkbox"
 import styles from "./Orders.module.css"
 import Modal from "react-modal"
 import EditOrder from "../../../components/Pages/Restricted/Orders/EditOrder"
-import { PiPlusCircle, PiTrash } from "react-icons/pi"
+import { PiPlusCircle } from "react-icons/pi"
 import DeleteOrder from "../../../components/Pages/Restricted/Orders/DeleteOrder"
 import SetAsCancelled from "../../../components/Pages/Restricted/Orders/SetAsCancelled"
 import CreateOrder from "../../../components/Pages/Restricted/Orders/CreateOrder"
 import { useAppContext } from "../../../context/context"
 import Loading from "../../../components/Loading"
 import Trigger from "../../../components/Trigger"
-import { useDateFormats } from "../../../hooks/date-formats"
 import type { IOrder } from "../../../types/order"
+import OrderRow from "../../../components/Pages/Restricted/Orders/OrderRow"
 
 const Orders = () => {
     const [createIsOpen, setCreateIsOpen] = useState<boolean>(false)
@@ -20,20 +20,15 @@ const Orders = () => {
     const [cancelIsOpen, setCancelIsOpen] = useState<boolean>(false)
     const [selectedOrders, setSelectedOrders] = useState<{ order: IOrder, selected: boolean }[]>([])
     const [allOrdersSelected, setAllOrdersSelected] = useState<boolean>(false)
-    const { dateFormat, dateTimeFormat } = useDateFormats()
 
     const {
         handleFetchOrders,
         fetching,
         fetchErrorMessage,
-        orders
+        orders,
+        handleSetOrderToEdit,
+        currentOrder
     } = useAppContext().orders
-
-    const statusClassName = {
-        Pendente: "order__pending",
-        Cancelado: "order__cancelled",
-        Concluído: "order__completed",
-    }
 
     useEffect(() => {
         const fetchOrders = async () => {
@@ -67,9 +62,9 @@ const Orders = () => {
         return selected ?? false
     }
 
-    const handleSelectOrder = (order: IOrder, selected: boolean) => {
+    const handleSelectOrder = (orderId: string, selected: boolean) => {
         setSelectedOrders(prevOrders => prevOrders.map(prevOrder => {
-            if (prevOrder.order._id === order._id) {
+            if (prevOrder.order._id === orderId) {
                 return {
                     ...prevOrder,
                     selected
@@ -87,6 +82,11 @@ const Orders = () => {
             ...info,
             selected: checked
         })))
+    }
+
+    const handleOpenEdit = (orderToEdit: IOrder) => {
+        handleSetOrderToEdit(orderToEdit)
+        setEditIsOpen(true)
     }
 
     const handleOpenDelete = (event: MouseEvent) => {
@@ -151,72 +151,13 @@ const Orders = () => {
 
                                     <tbody>
                                         {orders.map(order => (
-                                            <tr
+                                            <OrderRow
                                                 key={order._id}
-                                                className={
-                                                    `${styles.order__row} ${styles[statusClassName[order.status]]}`
-                                                }
-                                                onClick={() => setEditIsOpen(true)}>
-                                                <td>
-                                                    <Checkbox
-                                                        title="Selecionar pedido"
-                                                        className={styles.order__checkbox}
-                                                        onClick={event => event.stopPropagation()}
-                                                        checked={orderCheck(order._id)}
-                                                        onChange={event => handleSelectOrder(
-                                                            order,
-                                                            event.target.checked
-                                                        )} />
-                                                </td>
-
-                                                <td>
-                                                    <span className="label-on-cell">
-                                                        <strong>Status:</strong>&nbsp;
-                                                    </span>
-                                                    {order.status}
-                                                </td>
-
-                                                <td>
-                                                    <span className="label-on-cell">
-                                                        <strong>Data de comparecimento:</strong>&nbsp;
-                                                    </span>
-                                                    {dateFormat(order.time)}
-                                                </td>
-
-                                                <td>
-                                                    <span className="label-on-cell">
-                                                        <strong>Horário de comparecimento:</strong>&nbsp;
-                                                    </span>
-                                                    {dateTimeFormat(order.time)}
-                                                </td>
-
-                                                <td>
-                                                    <span className="label-on-cell">
-                                                        <strong>Cliente:</strong>&nbsp;
-                                                    </span>
-                                                    {order.userDetails[0].fullname}
-                                                </td>
-
-                                                <td>
-                                                    <span className="label-on-cell">
-                                                        <strong>Itens:</strong>&nbsp;
-                                                    </span>
-                                                    {order.orderItems
-                                                        .map(item => item.itemDetails.name)
-                                                        .join(", ")}
-                                                </td>
-
-                                                <td className="centered">
-                                                    <p>
-                                                        <button
-                                                            className="button clear"
-                                                            title="Excluit pedido"
-                                                            onClick={handleOpenDelete}>
-                                                            <PiTrash />
-                                                        </button>
-                                                    </p>
-                                                </td>
-                                            </tr>
+                                                order={order}
+                                                checked={orderCheck(order._id)}
+                                                onOpenEdit={handleOpenEdit}
+                                                onOpenDelete={handleOpenDelete}
+                                                onSelectOrder={handleSelectOrder} />
                                         ))}
                                     </tbody>
                                 </table>
@@ -259,8 +200,7 @@ const Orders = () => {
                 closeTimeoutMS={300}
                 className="modal"
                 overlayClassName="modal-overlay">
-                <EditOrder
-                    setModalIsOpen={setEditIsOpen} />
+                {currentOrder && <EditOrder setModalIsOpen={setEditIsOpen} />}
             </Modal>
 
             <Modal

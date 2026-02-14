@@ -21,6 +21,18 @@ export const useDateFormats = () => {
         return `${hours}:${minutes}`
     }, [])
 
+    const defaultDateFormat = useCallback((date: Date | string) => {
+        if (typeof date === "string") {
+            date = new Date(date)
+        }
+
+        const day = String(date.getDate()).padStart(2, "0")
+        const month = String(date.getMonth() + 1).padStart(2, "0")
+        const year = date.getFullYear()
+
+        return `${year}-${month}-${day}`
+    }, [])
+
     const combineDateAndTime = useCallback((date: Date | null, time: IOrderCreate["time"]) => {
         if (!date) {
             return null
@@ -60,5 +72,5 @@ export const useDateFormats = () => {
         return date.getTime() < (referenceDate ? (referenceDate as Date).getTime() : currentDate.getTime())
     }, [])
 
-    return { dateFormat, dateTimeFormat, combineDateAndTime, isPastDate }
+    return { dateFormat, dateTimeFormat, combineDateAndTime, isPastDate, defaultDateFormat }
 }
