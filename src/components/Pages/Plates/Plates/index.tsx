@@ -18,8 +18,8 @@ const Plates = () => {
     const {
         categories,
         handleFetchAvailableCategories,
-        loading,
-        errorMessage,
+        fetching,
+        fetchErrorMessage,
         handleClearPlatesData,
         plates,
         handleFetchAvailablePlates
@@ -88,11 +88,11 @@ const Plates = () => {
                     <Divider />
 
                     <div className={styles.plates__byCategory}>
-                        {loading
+                        {fetching
                             ? <Loading />
 
-                            : (errorMessage
-                                ? <Trigger type="error">{errorMessage}</Trigger>
+                            : (fetchErrorMessage
+                                ? <Trigger type="error">{fetchErrorMessage}</Trigger>
 
                                 : (categories && categories.length
                                     && plates && plates.length

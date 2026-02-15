@@ -1,7 +1,7 @@
 import type { ICartItem } from "./cart";
 import type { IMessageType } from "./message";
 import type { IOrder, IOrderCreate, IOrderUpdate } from "./order";
-import type { IPlate } from "./plate";
+import type { ICategory, IPlate } from "./plate";
 import type { IAuthState, IOrdersState, IPlatesState, IUsersState } from "./reducer-states";
 import type { IUser, IUserRegister, IUserUpdate } from "./user";
 
@@ -47,7 +47,10 @@ interface IOrdersContext extends IOrdersState {
 }
 
 interface IPlatesContext extends IPlatesState {
+    handleChangeCategoryFormFields: (name: keyof ICategory, value: string) => void
     handleClearPlatesData: () => void
+    handleClearCategoryFormFields: () => void
+    handleSetCategoryToEdit: (category: ICategory | null) => void
     handleFetchCategories: () => Promise<void>
     handleFetchAvailableCategories: () => Promise<void>
     handleFetchPlates: () => Promise<void>

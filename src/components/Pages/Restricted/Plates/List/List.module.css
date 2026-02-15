@@ -34,13 +34,6 @@
     color: var(--color-error-text);
 }
 
-.plate__actions {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-}
-
 span:has(.plate__checkbox) {
     display: inline-block;
     width: 20px;

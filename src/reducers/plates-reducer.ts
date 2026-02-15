@@ -1,68 +1,99 @@
 import { useCallback, useReducer } from "react";
 import platesServices from "../services/plates-services";
 import type { IPlatesActions, IPlatesState } from "../types/reducer-states";
+import type { ICategory } from "../types/plate";
 
 const initialState: IPlatesState = {
     loading: false,
     success: false,
     errorMessage: null,
     successMessage: null,
+    fetching: false,
+    fetchErrorMessage: null,
     categories: [],
-    plates: []
+    plates: [],
+    currentCategory: null,
+    currentPlate: null,
+    categoryFormFields: {
+        name: "",
+        description: ""
+    },
+    plateFormFields: {
+        name: "",
+        description: "",
+        ingredients: [],
+        available: true,
+        price: 0,
+        pairing: ""
+    }
 }
 
 const platesReducerActions = (state: IPlatesState, action: IPlatesActions): IPlatesState => {
     switch (action.type) {
-        case "CATEGORIES_FETCH_START":
+        case "SET_CATEGORY_TO_EDIT":
             return {
                 ...state,
-                loading: true,
+                currentCategory: action.payload,
+                categoryFormFields: {
+                    ...state.categoryFormFields,
+                    name: action.payload ? action.payload.name : "",
+                    description: action.payload ? action.payload.description : ""
+                }
+            }
+
+        case "CATEGORIES_FETCH_START":
+        case "PLATES_FETCH_START":
+            return {
+                ...state,
+                fetching: true,
                 success: false,
                 successMessage: null,
-                errorMessage: null
+                fetchErrorMessage: null
             }
 
         case "CATEGORIES_FETCH_SUCCESS":
             return {
                 ...state,
-                loading: false,
-                errorMessage: null,
+                fetching: false,
+                fetchErrorMessage: null,
                 categories: action.payload
-            }
-
-        case "CATEGORIES_FETCH_FAILURE":
-            return {
-                ...state,
-                loading: false,
-                success: false,
-                successMessage: null,
-                errorMessage: action.payload
-            }
-
-            case "PLATES_FETCH_START":
-            return {
-                ...state,
-                loading: true,
-                success: false,
-                successMessage: null,
-                errorMessage: null
             }
 
         case "PLATES_FETCH_SUCCESS":
             return {
                 ...state,
-                loading: false,
-                errorMessage: null,
+                fetching: false,
+                fetchErrorMessage: null,
                 plates: action.payload
             }
 
+        case "CATEGORIES_FETCH_FAILURE":
         case "PLATES_FETCH_FAILURE":
             return {
                 ...state,
-                loading: false,
+                fetching: false,
                 success: false,
                 successMessage: null,
-                errorMessage: action.payload
+                fetchErrorMessage: action.payload
+            }
+
+        case "CATEGORY_CHANGE_FORM_FIELDS":
+            return {
+                ...state,
+                errorMessage: null,
+                categoryFormFields: {
+                    ...state.categoryFormFields,
+                    [action.payload.name]: action.payload.value
+                }
+            }
+
+        case "CATEGORIES_CLEAR_FORM_FIELDS":
+            return {
+                ...state,
+                errorMessage: null,
+                successMessage: null,
+                success: false,
+                categoryFormFields: initialState.categoryFormFields
             }
 
         case "PLATES_CLEAR_DATA":
@@ -79,8 +110,23 @@ export const usePlatesReducer = () => {
         [action: IPlatesActions]
     >(platesReducerActions, initialState)
 
+    const handleChangeCategoryFormFields = useCallback((name: keyof ICategory, value: string) => {
+        dispatch({
+            type: "CATEGORY_CHANGE_FORM_FIELDS",
+            payload: { name, value }
+        })
+    }, [])
+
     const handleClearPlatesData = useCallback(() => {
         dispatch({ type: "PLATES_CLEAR_DATA" })
+    }, [])
+
+    const handleClearCategoryFormFields = useCallback(() => {
+        dispatch({ type: "CATEGORIES_CLEAR_FORM_FIELDS" })
+    }, [])
+
+    const handleSetCategoryToEdit = useCallback((category: ICategory | null) => {
+        dispatch({ type: "SET_CATEGORY_TO_EDIT", payload: category })
     }, [])
 
     const handleFetchCategories = useCallback(async () => {
@@ -161,7 +207,10 @@ export const usePlatesReducer = () => {
 
     return {
         ...platesState,
+        handleChangeCategoryFormFields,
         handleClearPlatesData,
+        handleClearCategoryFormFields,
+        handleSetCategoryToEdit,
         handleFetchCategories,
         handleFetchAvailableCategories,
         handleFetchPlates,

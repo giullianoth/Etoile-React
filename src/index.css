@@ -181,7 +181,7 @@ th, td {
 th {
   color: var(--color-claret);
   font-family: var(--font-cinzel);
-  font-size: 0.7em;
+  font-size: 0.875em;
   text-align: left;
   background-color: var(--color-lavender-blush);
 }
