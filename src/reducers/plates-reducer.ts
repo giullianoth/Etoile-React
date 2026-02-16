@@ -29,6 +29,7 @@ const initialState: IPlatesState = {
 }
 
 const platesReducerActions = (state: IPlatesState, action: IPlatesActions): IPlatesState => {
+    let categoriesWithAddedOne: ICategory[]
     let updatedCategories: ICategory[]
 
     switch (action.type) {
@@ -82,6 +83,7 @@ const platesReducerActions = (state: IPlatesState, action: IPlatesActions): IPla
                 fetchErrorMessage: action.payload
             }
 
+        case "CATEGORY_CREATE_START":
         case "CATEGORY_UPDATE_START":
             return {
                 ...state,
@@ -89,6 +91,18 @@ const platesReducerActions = (state: IPlatesState, action: IPlatesActions): IPla
                 success: false,
                 successMessage: null,
                 errorMessage: null
+            }
+
+        case "CATEGORY_CREATE_SUCCESS":
+            categoriesWithAddedOne = [...state.categories, action.payload.category]
+
+            return {
+                ...state,
+                loading: false,
+                success: true,
+                successMessage: action.payload.message,
+                errorMessage: null,
+                categories: categoriesWithAddedOne
             }
 
         case "CATEGORY_UPDATE_SUCCESS":
@@ -106,6 +120,7 @@ const platesReducerActions = (state: IPlatesState, action: IPlatesActions): IPla
                 currentCategory: action.payload.category
             }
 
+        case "CATEGORY_CREATE_FAILURE":
         case "CATEGORY_UPDATE_FAILURE":
             return {
                 ...state,
@@ -243,6 +258,39 @@ export const usePlatesReducer = () => {
         })
     }, [])
 
+    const handleCreateCategory = useCallback(async () => {
+        dispatch({ type: "CATEGORY_CREATE_START" })
+
+        if (!platesState.categoryFormFields.name) {
+            dispatch({
+                type: "CATEGORY_CREATE_FAILURE",
+                payload: "Preencha o nome da categoria."
+            })
+            return
+        }
+
+        const response = await platesServices.createCategory({
+            name: platesState.categoryFormFields.name,
+            description: platesState.categoryFormFields.description
+        })
+
+        if (!response.success) {
+            dispatch({
+                type: "CATEGORY_CREATE_FAILURE",
+                payload: response.body.text ?? "Erro ao criar categoria."
+            })
+            return
+        }
+
+        dispatch({
+            type: "CATEGORY_CREATE_SUCCESS",
+            payload: {
+                category: response.body,
+                message: "Categoria criada com sucesso."
+            }
+        })
+    }, [platesState.categoryFormFields.name, platesState.categoryFormFields.description])
+
     const handleUpdateCategory = useCallback(async (categoryId: string) => {
         dispatch({ type: "CATEGORY_UPDATE_START" })
 
@@ -294,6 +342,7 @@ export const usePlatesReducer = () => {
         handleFetchAvailableCategories,
         handleFetchPlates,
         handleFetchAvailablePlates,
+        handleCreateCategory,
         handleUpdateCategory
     }
 }

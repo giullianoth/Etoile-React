@@ -33,26 +33,6 @@ export interface IOrderFetchSuccessResponse extends ISuccessResponse {
 
 export type IOrderFetchResponse = IOrderFetchSuccessResponse | IErrorResponse
 
-// Plates & Categories
-export interface ICategoriesFetchSuccessResponse extends ISuccessResponse {
-    body: ICategory[]
-}
-
-export type ICategoriesFetchResponse = ICategoriesFetchSuccessResponse | IErrorResponse
-
-export interface ICategoriesUpdateSuccessResponse extends ISuccessResponse {
-    body: ICategory
-}
-
-export type ICategoriesUpdateResponse = ICategoriesUpdateSuccessResponse | IErrorResponse
-
-export interface IPlatesFetchSuccessResponse extends ISuccessResponse {
-    body: IPlate[]
-}
-
-export type IPlatesFetchResponse = IPlatesFetchSuccessResponse | IErrorResponse
-
-// Orders
 export interface IOrdersCreateSuccessResponse extends ISuccessResponse {
     body: IOrder
 }
@@ -76,6 +56,31 @@ export interface IOrdersDeleteSuccessResponse extends ISuccessResponse {
 }
 
 export type IOrdersDeleteResponse = IOrdersDeleteSuccessResponse | IErrorResponse
+
+// Plates & Categories
+export interface ICategoriesFetchSuccessResponse extends ISuccessResponse {
+    body: ICategory[]
+}
+
+export type ICategoriesFetchResponse = ICategoriesFetchSuccessResponse | IErrorResponse
+
+export interface ICategoriesCreateSuccessResponse extends ISuccessResponse {
+    body: ICategory
+}
+
+export type ICategoriesCreateResponse = ICategoriesCreateSuccessResponse | IErrorResponse
+
+export interface ICategoriesUpdateSuccessResponse extends ISuccessResponse {
+    body: ICategory
+}
+
+export type ICategoriesUpdateResponse = ICategoriesUpdateSuccessResponse | IErrorResponse
+
+export interface IPlatesFetchSuccessResponse extends ISuccessResponse {
+    body: IPlate[]
+}
+
+export type IPlatesFetchResponse = IPlatesFetchSuccessResponse | IErrorResponse
 
 // Users
 export interface IUserUpdateSuccessResponse extends ISuccessResponse {

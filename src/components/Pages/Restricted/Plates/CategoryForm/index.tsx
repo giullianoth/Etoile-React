@@ -19,10 +19,18 @@ const CategoryForm = ({ setCategoryFormIsOpen }: Props) => {
         errorMessage,
         handleUpdateCategory,
         success,
-        successMessage
+        successMessage,
+        handleClearCategoryFormFields,
+        handleCreateCategory
     } = useAppContext().plates
 
     const { addMessage } = useAppContext().message
+
+    useEffect(() => {
+        if (!currentCategory) {
+            handleClearCategoryFormFields()
+        }
+    }, [currentCategory, handleClearCategoryFormFields])
 
     useEffect(() => {
         if (success && successMessage) {
@@ -41,8 +49,10 @@ const CategoryForm = ({ setCategoryFormIsOpen }: Props) => {
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault()
 
-        if (currentCategory?._id) {
+        if (currentCategory && currentCategory._id) {
             await handleUpdateCategory(currentCategory._id)
+        } else {
+            await handleCreateCategory()
         }
     }
 
