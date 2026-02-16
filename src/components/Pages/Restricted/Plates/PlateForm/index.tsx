@@ -1,46 +1,104 @@
-import type { ChangeEvent, Dispatch, FormEvent, SetStateAction } from "react"
+import { useEffect, useState, type ChangeEvent, type Dispatch, type FormEvent, type SetStateAction } from "react"
 import Popup from "../../../../Popup"
 import styles from "../../../../Popup/Popup.module.css"
 import Checkbox from "../../../../Form/Checkbox"
 import { PiCamera } from "react-icons/pi"
 import { useAppContext } from "../../../../../context/context"
-import type { IPlate } from "../../../../../types/plate"
+import type { ICategory, IPlate } from "../../../../../types/plate"
 import InputWithLabel from "../../../../Form/InputWithLabel/InputWithLabel"
 import TextareaWithLabel from "../../../../Form/InputWithLabel/TextareaWithLabel"
 import SelectWithLabel from "../../../../Form/InputWithLabel/SelectWithLabel"
 import InputWithIcon from "../../../../Form/InputWithIcon"
+import { uploadsURL } from "../../../../../services/api"
+import Loading from "../../../../Loading"
+import Trigger from "../../../../Trigger"
 
 type Props = {
     setPlateFormIsOpen: Dispatch<SetStateAction<boolean>>
 }
 
 const PlateForm = ({ setPlateFormIsOpen }: Props) => {
+    const [currentCategory, setCurrentCategory] = useState<ICategory | undefined>(undefined)
+    const [previewImage, setPreviewImage] = useState<File | null>(null)
+    const { addMessage } = useAppContext().message
+
     const {
         currentPlate,
         plateFormFields,
-        handleChangePlateFormFields
+        handleChangePlateFormFields,
+        categories,
+        loading,
+        success,
+        successMessage,
+        errorMessage,
+        handleUpdatePlate,
+        handleClearPlateFormFields
     } = useAppContext().plates
+
+    useEffect(() => {
+        if (plateFormFields.categoryId) {
+            setCurrentCategory(
+                categories.find(category => category._id === plateFormFields.categoryId)
+            )
+        }
+    }, [categories, plateFormFields])
+
+    useEffect(() => {
+        if (!currentPlate) {
+            handleClearPlateFormFields()
+        }
+    }, [currentPlate, handleClearPlateFormFields])
+
+    useEffect(() => {
+        if (success && successMessage) {
+            addMessage(successMessage)
+            setPlateFormIsOpen(false)
+        }
+    }, [addMessage, setPlateFormIsOpen, success, successMessage])
+
+    const handleChangeImage = (event: ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0]
+        setPreviewImage(file || null)
+    }
 
     const handleChangeData = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         handleChangePlateFormFields(
             event.target.name as keyof IPlate,
             event.target.name === "available"
-                ? (event as ChangeEvent<HTMLInputElement>).target.checked
+                ? (event.target as HTMLInputElement).checked
                 : event.target.value
         )
     }
 
-    const handleSubmit = (event: FormEvent) => {
+    const handleChangeCategory = (event: ChangeEvent<HTMLSelectElement>) => {
+        const selectedId = event.target.value
+        handleChangePlateFormFields("categoryId", selectedId)
+
+        setCurrentCategory(
+            categories.find(category => category._id === selectedId)
+        )
+    }
+
+    const handleSubmit = async (event: FormEvent) => {
         event.preventDefault()
+
+        if (currentPlate && currentPlate._id) {
+            await handleUpdatePlate(currentPlate._id, previewImage)
+        }
     }
 
     return (
         <Popup divided>
             <div className={styles.popup__half}>
-                <img
-                    src="/images/plates/ravioli-de-ricota-e-espinafre-ao-sugo.png"
-                    alt="Prato"
-                    className={styles.popup__preview} />
+                {currentPlate?.image &&
+                    <img
+                        src={
+                            previewImage
+                                ? URL.createObjectURL(previewImage)
+                                : `${uploadsURL}/plates/${currentPlate.image}`
+                        }
+                        alt={currentPlate.name}
+                        className={styles.popup__preview} />}
 
                 <label
                     htmlFor="plate-image"
@@ -58,7 +116,11 @@ const PlateForm = ({ setPlateFormIsOpen }: Props) => {
                 </div>
 
                 <form className={styles.popup__form} onSubmit={handleSubmit}>
-                    <input type="file" id="plate-image" />
+                    <input
+                        type="file"
+                        name="image"
+                        id="plate-image"
+                        onChange={handleChangeImage} />
 
                     <InputWithLabel
                         type="text"
@@ -95,10 +157,17 @@ const PlateForm = ({ setPlateFormIsOpen }: Props) => {
                     </label>
 
                     <SelectWithLabel
+                        name="categoryId"
                         label="Categoria"
-                        required>
-                        <option value="Entradas">Entradas</option>
-                        <option value="Outra categoria">Outra categoria</option>
+                        required
+                        value={currentCategory?._id}
+                        onChange={handleChangeCategory}>
+                        {categories.map(category => (
+                            <option key={category._id}
+                                value={category._id}>
+                                {category.name}
+                            </option>
+                        ))}
                     </SelectWithLabel>
 
                     <InputWithIcon
@@ -129,10 +198,14 @@ const PlateForm = ({ setPlateFormIsOpen }: Props) => {
 
                         <button
                             type="submit"
-                            className="button primary">
-                            Criar
+                            className="button primary"
+                            disabled={loading}>
+                            {currentPlate ? "Atualizar" : "Criar"}
+                            {loading && <Loading inButton />}
                         </button>
                     </div>
+
+                    {errorMessage && <Trigger type="error">{errorMessage}</Trigger>}
                 </form>
             </div>
         </Popup>

@@ -89,19 +89,19 @@ export interface IPlatesFetchSuccessResponse extends ISuccessResponse {
 export type IPlatesFetchResponse = IPlatesFetchSuccessResponse | IErrorResponse
 
 export interface IPlatesCreateSuccessResponse extends ISuccessResponse {
-    body: ICategory
+    body: IPlate
 }
 
 export type IPlatesCreateResponse = IPlatesCreateSuccessResponse | IErrorResponse
 
 export interface IPlatesUpdateSuccessResponse extends ISuccessResponse {
-    body: ICategory
+    body: IPlate
 }
 
 export type IPlatesUpdateResponse = IPlatesUpdateSuccessResponse | IErrorResponse
 
 export interface IPlatesDeleteSuccessResponse extends ISuccessResponse {
-    body: ICategory
+    body: IPlate
 }
 
 export type IPlatesDeleteResponse = IPlatesDeleteSuccessResponse | IErrorResponse

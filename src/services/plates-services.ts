@@ -175,12 +175,11 @@ const createPlate = async (plateData: Partial<IPlate>) => {
     }
 }
 
-const updatePlate = async (plateData: Partial<IPlate>, plateId: string) => {
+const updatePlate = async (plateData: FormData, plateId: string) => {
     try {
         const response = await fetch(`${platesUrl}/${plateId}`, {
             method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(plateData)
+            body: plateData
         }).then(res => res.json())
 
         return response as IPlatesUpdateResponse

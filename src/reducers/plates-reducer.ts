@@ -24,7 +24,8 @@ const initialState: IPlatesState = {
         ingredients: [],
         available: true,
         price: 0,
-        pairing: ""
+        pairing: "",
+        categoryId: ""
     }
 }
 
@@ -65,7 +66,8 @@ const platesReducerActions = (state: IPlatesState, action: IPlatesActions): IPla
                     ingredients: action.payload ? action.payload.ingredients : [],
                     available: action.payload ? action.payload.available : false,
                     price: action.payload ? action.payload.price : 0,
-                    pairing: action.payload ? action.payload.pairing : ""
+                    pairing: action.payload ? action.payload.pairing : "",
+                    categoryId: action.payload ? action.payload.categoryId : ""
                 }
             }
 
@@ -459,6 +461,99 @@ export const usePlatesReducer = () => {
         })
     }, [platesState.categoryFormFields.name, platesState.categoryFormFields.description])
 
+    const handleUpdatePlate = useCallback(async (plateId: string, image?: File | null) => {
+        dispatch({ type: "PLATE_UPDATE_START" })
+
+        if (!plateId) {
+            dispatch({
+                type: "PLATE_UPDATE_FAILURE",
+                payload: "Erro inesperado ao atualizar prato."
+            })
+            return
+        }
+
+        if (!platesState.plateFormFields.name) {
+            dispatch({
+                type: "PLATE_UPDATE_FAILURE",
+                payload: "Preencha o nome do prato."
+            })
+            return
+        }
+
+        if (!platesState.plateFormFields.ingredients || !platesState.plateFormFields.ingredients.length) {
+            dispatch({
+                type: "PLATE_UPDATE_FAILURE",
+                payload: "Insira pelo menos um ingrediente."
+            })
+            return
+        }
+
+        if (!platesState.plateFormFields.categoryId) {
+            dispatch({
+                type: "PLATE_UPDATE_FAILURE",
+                payload: "Selecione a categoria."
+            })
+            return
+        }
+
+        if (!platesState.plateFormFields.price) {
+            dispatch({
+                type: "PLATE_UPDATE_FAILURE",
+                payload: "Preencha o preço."
+            })
+            return
+        }
+
+        const formData = new FormData()
+
+        Object.keys(platesState.plateFormFields).forEach(key => {
+            formData.append(
+                key,
+                key === "ingredients"
+                    ? JSON.stringify(platesState.plateFormFields[key])
+                    : String(platesState.plateFormFields[key as keyof IPlate])
+            )
+        })
+
+        if (image) {
+            if (!image.type.includes("png") && !image.type.includes("jpeg") && !image.type.includes("jpg")) {
+                dispatch({
+                    type: "PLATE_UPDATE_FAILURE",
+                    payload: "Formato de imagem inválido. Utilize PNG ou JPEG."
+                })
+                return
+            }
+
+            if (image.size > 5 * 1024 * 1024) {
+                dispatch({
+                    type: "PLATE_UPDATE_FAILURE",
+                    payload: "Tamanho da imagem excede o limite de 5MB."
+                })
+                return
+            }
+
+            formData.append("image", image)
+        }
+
+        const response = await platesServices.updatePlate(formData, plateId)
+
+        if (!response.success) {
+            dispatch({
+                type: "PLATE_UPDATE_FAILURE",
+                payload: "Erro ao atualizar prato."
+            })
+            return
+        }
+
+        dispatch({
+            type: "PLATE_UPDATE_SUCCESS",
+            payload: {
+                plate: response.body,
+                message: "Prato atualizado com sucesso."
+            }
+        })
+    }, [platesState.plateFormFields])
+
     const handleDeleteCategory = useCallback(async (categoryId: string) => {
         dispatch({ type: "CATEGORY_DELETE_START" })
 
@@ -504,6 +599,7 @@ export const usePlatesReducer = () => {
         handleFetchAvailablePlates,
         handleCreateCategory,
         handleUpdateCategory,
+        handleUpdatePlate,
         handleDeleteCategory
     }
 }
