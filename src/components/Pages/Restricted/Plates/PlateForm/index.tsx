@@ -8,6 +8,7 @@ import type { IPlate } from "../../../../../types/plate"
 import InputWithLabel from "../../../../Form/InputWithLabel/InputWithLabel"
 import TextareaWithLabel from "../../../../Form/InputWithLabel/TextareaWithLabel"
 import SelectWithLabel from "../../../../Form/InputWithLabel/SelectWithLabel"
+import InputWithIcon from "../../../../Form/InputWithIcon"
 
 type Props = {
     setPlateFormIsOpen: Dispatch<SetStateAction<boolean>>
@@ -62,23 +63,25 @@ const PlateForm = ({ setPlateFormIsOpen }: Props) => {
                     <InputWithLabel
                         type="text"
                         name="name"
-                        label="Prato *"
-                        placeholder="Prato *"
+                        label="Prato"
+                        required
+                        placeholder="Prato"
                         value={plateFormFields.name}
                         onChange={handleChangeData} />
 
                     <TextareaWithLabel
                         name="description"
-                        label="Descrição *"
-                        placeholder="Descrição *"
+                        label="Descrição"
+                        placeholder="Descrição"
                         value={plateFormFields.description}
                         onChange={handleChangeData} />
 
                     <InputWithLabel
                         type="text"
                         name="ingredients"
-                        label="Ingredientes *"
-                        placeholder="Ingredientes *"
+                        label="Ingredientes"
+                        placeholder="Ingredientes"
+                        required
                         value={plateFormFields.ingredients?.join(", ")}
                         onChange={handleChangeData} />
 
@@ -91,18 +94,23 @@ const PlateForm = ({ setPlateFormIsOpen }: Props) => {
                         <span>Disponível</span>
                     </label>
 
-                    <SelectWithLabel label="Categoria *">
+                    <SelectWithLabel
+                        label="Categoria"
+                        required>
                         <option value="Entradas">Entradas</option>
                         <option value="Outra categoria">Outra categoria</option>
                     </SelectWithLabel>
 
-                    <InputWithLabel
-                        type="number"
-                        name="price"
-                        label="Preço *"
-                        placeholder="Preço *"
-                        value={plateFormFields.price}
-                        onChange={handleChangeData} />
+                    <InputWithIcon
+                        icon={<span><strong>R$</strong></span>}>
+                        <InputWithLabel
+                            type="number"
+                            name="price"
+                            label="Preço"
+                            placeholder="Preço"
+                            required
+                            value={plateFormFields.price}
+                            onChange={handleChangeData} /></InputWithIcon>
 
                     <InputWithLabel
                         type="text"
