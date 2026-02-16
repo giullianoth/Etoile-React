@@ -88,6 +88,24 @@ export interface IPlatesFetchSuccessResponse extends ISuccessResponse {
 
 export type IPlatesFetchResponse = IPlatesFetchSuccessResponse | IErrorResponse
 
+export interface IPlatesCreateSuccessResponse extends ISuccessResponse {
+    body: ICategory
+}
+
+export type IPlatesCreateResponse = IPlatesCreateSuccessResponse | IErrorResponse
+
+export interface IPlatesUpdateSuccessResponse extends ISuccessResponse {
+    body: ICategory
+}
+
+export type IPlatesUpdateResponse = IPlatesUpdateSuccessResponse | IErrorResponse
+
+export interface IPlatesDeleteSuccessResponse extends ISuccessResponse {
+    body: ICategory
+}
+
+export type IPlatesDeleteResponse = IPlatesDeleteSuccessResponse | IErrorResponse
+
 // Users
 export interface IUserUpdateSuccessResponse extends ISuccessResponse {
     body: IUser

@@ -9,6 +9,7 @@
     display: flex;
     flex-direction: column;
     row-gap: 20px;
+    position: relative;
 }
 
 .popup__half {
@@ -75,6 +76,7 @@
 .popup__heading h5,
 .popup__heading h6 {
     font-size: 1.2em;
+    margin-bottom: 20px;
 }
 
 .popup__subtitle {

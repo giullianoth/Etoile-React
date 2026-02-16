@@ -1,5 +1,5 @@
-import type { ICategory } from "../types/plate"
-import type { ICategoriesCreateResponse, ICategoriesDeleteResponse, ICategoriesFetchResponse, ICategoriesUpdateResponse, IErrorResponse, IPlatesFetchResponse } from "../types/response"
+import type { ICategory, IPlate } from "../types/plate"
+import type { ICategoriesCreateResponse, ICategoriesDeleteResponse, ICategoriesFetchResponse, ICategoriesUpdateResponse, IErrorResponse, IPlatesCreateResponse, IPlatesDeleteResponse, IPlatesFetchResponse, IPlatesUpdateResponse } from "../types/response"
 import { apiURL } from "./api"
 
 const categoriesUrl = `${apiURL}/categories`
@@ -153,14 +153,81 @@ const fetchAvailablePlates = async () => {
     }
 }
 
+const createPlate = async (plateData: Partial<IPlate>) => {
+    try {
+        const response = await fetch(platesUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(plateData)
+        }).then(res => res.json())
+
+        return response as IPlatesCreateResponse
+    } catch (error) {
+        console.error(error)
+
+        return {
+            success: false,
+            statusCode: 500,
+            body: {
+                text: "Erro de rede ou comunicação com o servidor."
+            }
+        } as IErrorResponse
+    }
+}
+
+const updatePlate = async (plateData: Partial<IPlate>, plateId: string) => {
+    try {
+        const response = await fetch(`${platesUrl}/${plateId}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(plateData)
+        }).then(res => res.json())
+
+        return response as IPlatesUpdateResponse
+    } catch (error) {
+        console.error(error)
+
+        return {
+            success: false,
+            statusCode: 500,
+            body: {
+                text: "Erro de rede ou comunicação com o servidor."
+            }
+        } as IErrorResponse
+    }
+}
+
+const deletePlate = async (plateId: string) => {
+    try {
+        const response = await fetch(`${platesUrl}/${plateId}`, {
+            method: "DELETE"
+        }).then(res => res.json())
+
+        return response as IPlatesDeleteResponse
+    } catch (error) {
+        console.error(error)
+
+        return {
+            success: false,
+            statusCode: 500,
+            body: {
+                text: "Erro de rede ou comunicação com o servidor."
+            }
+        } as IErrorResponse
+    }
+}
+
 const platesServices = {
     fetchCategories,
     fetchAvailableCategories,
     fetchPlates,
     fetchAvailablePlates,
     createCategory,
+    createPlate,
     updateCategory,
-    deleteCategory
+    updatePlate,
+    deleteCategory,
+    deletePlate
 }
 
 export default platesServices

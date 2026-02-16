@@ -71,7 +71,9 @@ export interface IPlatesState extends IReducerStates {
 
 export type IPlatesActions =
     | { type: "SET_CATEGORY_TO_EDIT", payload: ICategory | null }
+    | { type: "SET_PLATE_TO_EDIT", payload: IPlate | null }
     | { type: "CATEGORY_CHANGE_FORM_FIELDS", payload: { name: keyof ICategory, value: string } }
+    | { type: "PLATE_CHANGE_FORM_FIELDS", payload: { name: keyof IPlate, value: string | boolean } }
     | { type: "CATEGORIES_FETCH_START" }
     | { type: "CATEGORIES_FETCH_SUCCESS", payload: ICategory[] }
     | { type: "CATEGORIES_FETCH_FAILURE", payload: string }
@@ -88,6 +90,16 @@ export type IPlatesActions =
     | { type: "PLATES_FETCH_START" }
     | { type: "PLATES_FETCH_SUCCESS", payload: IPlate[] }
     | { type: "PLATES_FETCH_FAILURE", payload: string }
+    | { type: "PLATE_CREATE_START" }
+    | { type: "PLATE_CREATE_SUCCESS", payload: { plate: IPlate, message: string } }
+    | { type: "PLATE_CREATE_FAILURE", payload: string }
+    | { type: "PLATE_UPDATE_START" }
+    | { type: "PLATE_UPDATE_SUCCESS", payload: { plate: IPlate, message: string } }
+    | { type: "PLATE_UPDATE_FAILURE", payload: string }
+    | { type: "PLATE_DELETE_START" }
+    | { type: "PLATE_DELETE_SUCCESS", payload: { plateId: string, message: string } }
+    | { type: "PLATE_DELETE_FAILURE", payload: string }
+    | { type: "PLATES_CLEAR_FORM_FIELDS" }
     | { type: "PLATES_CLEAR_DATA" }
 
 // Users

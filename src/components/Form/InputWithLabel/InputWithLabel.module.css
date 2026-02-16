@@ -1,0 +1,20 @@
+.input {
+    display: inline-block;
+    position: relative;
+}
+
+.input__label {
+    position: absolute;
+    top: 0;
+    left: 6px;
+    transform: translateY(-50%);
+    font-size: 0.8em;
+    background-color: var(--color-white-smoke);
+    padding: 0 6px;
+    color: var(--color-murrey);
+}
+
+.input input, .input select, .input textarea {
+    display: block;
+    width: 100%;
+}

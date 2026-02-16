@@ -48,9 +48,12 @@ interface IOrdersContext extends IOrdersState {
 
 interface IPlatesContext extends IPlatesState {
     handleChangeCategoryFormFields: (name: keyof ICategory, value: string) => void
+    handleChangePlateFormFields: (name: keyof IPlate, value: string | boolean) => void
     handleClearPlatesData: () => void
     handleClearCategoryFormFields: () => void
+    handleClearPlateFormFields: () => void
     handleSetCategoryToEdit: (category: ICategory | null) => void
+    handleSetPlateToEdit: (plate: IPlate | null) => void
     handleFetchCategories: () => Promise<void>
     handleFetchAvailableCategories: () => Promise<void>
     handleFetchPlates: () => Promise<void>

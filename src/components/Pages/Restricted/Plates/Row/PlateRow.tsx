@@ -3,6 +3,7 @@ import type { IPlate } from "../../../../../types/plate"
 import styles from "./Row.module.css"
 import Checkbox from "../../../../Form/Checkbox"
 import { useCurrency } from "../../../../../hooks/currency"
+import { uploadsURL } from "../../../../../services/api"
 
 type Props = {
     plate: IPlate
@@ -29,7 +30,7 @@ const PlateRow = ({ checked, onOpenDelete, onOpenEdit, onSelectPlate, plate, sel
                 <img
                     src={
                         plate.image
-                            ? `/images/plates/${plate.image}`
+                            ? `${uploadsURL}/plates/${plate.image}`
                             : "/images/no-image.jpg"
                     }
                     alt={plate.name} />

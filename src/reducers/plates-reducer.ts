@@ -1,7 +1,7 @@
 import { useCallback, useReducer } from "react";
 import platesServices from "../services/plates-services";
 import type { IPlatesActions, IPlatesState } from "../types/reducer-states";
-import type { ICategory } from "../types/plate";
+import type { ICategory, IPlate } from "../types/plate";
 
 const initialState: IPlatesState = {
     loading: false,
@@ -32,6 +32,9 @@ const platesReducerActions = (state: IPlatesState, action: IPlatesActions): IPla
     let categoriesWithAddedOne: ICategory[]
     let updatedCategories: ICategory[]
     let categoriesWithoutDeleted: ICategory[]
+    let platesWithAddedOne: IPlate[]
+    let updatedPlates: IPlate[]
+    let platesWithoutDeleted: IPlate[]
 
     switch (action.type) {
         case "SET_CATEGORY_TO_EDIT":
@@ -45,6 +48,24 @@ const platesReducerActions = (state: IPlatesState, action: IPlatesActions): IPla
                     ...state.categoryFormFields,
                     name: action.payload ? action.payload.name : "",
                     description: action.payload ? action.payload.description : ""
+                }
+            }
+
+        case "SET_PLATE_TO_EDIT":
+            return {
+                ...state,
+                currentPlate: action.payload,
+                success: action.payload ? state.success : false,
+                successMessage: action.payload ? state.successMessage : null,
+                errorMessage: action.payload ? state.errorMessage : null,
+                plateFormFields: {
+                    ...state.plateFormFields,
+                    name: action.payload ? action.payload.name : "",
+                    description: action.payload ? action.payload.description : "",
+                    ingredients: action.payload ? action.payload.ingredients : [],
+                    available: action.payload ? action.payload.available : false,
+                    price: action.payload ? action.payload.price : 0,
+                    pairing: action.payload ? action.payload.pairing : ""
                 }
             }
 
@@ -135,9 +156,63 @@ const platesReducerActions = (state: IPlatesState, action: IPlatesActions): IPla
                 categories: categoriesWithoutDeleted
             }
 
+        case "PLATE_CREATE_START":
+        case "PLATE_UPDATE_START":
+        case "PLATE_DELETE_START":
+            return {
+                ...state,
+                loading: true,
+                success: false,
+                successMessage: null,
+                errorMessage: null
+            }
+
+        case "PLATE_CREATE_SUCCESS":
+            platesWithAddedOne = [...state.plates, action.payload.plate]
+
+            return {
+                ...state,
+                loading: false,
+                success: true,
+                successMessage: action.payload.message,
+                errorMessage: null,
+                plates: platesWithAddedOne
+            }
+
+        case "PLATE_UPDATE_SUCCESS":
+            updatedPlates = state.plates.map(plate =>
+                plate._id === action.payload.plate._id
+                    ? action.payload.plate : plate)
+
+            return {
+                ...state,
+                loading: false,
+                success: true,
+                successMessage: action.payload.message,
+                errorMessage: null,
+                plates: updatedPlates,
+                currentPlate: action.payload.plate
+            }
+
+        case "PLATE_DELETE_SUCCESS":
+            platesWithoutDeleted = state.plates.filter(plate =>
+                plate._id !== action.payload.plateId)
+
+            return {
+                ...state,
+                loading: false,
+                success: true,
+                successMessage: action.payload.message,
+                errorMessage: null,
+                plates: platesWithoutDeleted
+            }
+
         case "CATEGORY_CREATE_FAILURE":
         case "CATEGORY_UPDATE_FAILURE":
         case "CATEGORY_DELETE_FAILURE":
+        case "PLATE_CREATE_FAILURE":
+        case "PLATE_UPDATE_FAILURE":
+        case "PLATE_DELETE_FAILURE":
             return {
                 ...state,
                 loading: false,
@@ -156,6 +231,18 @@ const platesReducerActions = (state: IPlatesState, action: IPlatesActions): IPla
                 }
             }
 
+        case "PLATE_CHANGE_FORM_FIELDS":
+            return {
+                ...state,
+                errorMessage: null,
+                plateFormFields: {
+                    ...state.plateFormFields,
+                    [action.payload.name]: action.payload.name === "ingredients"
+                        ? (action.payload.value as string).split(",").map(ingredient => ingredient.trim())
+                        : action.payload.value
+                }
+            }
+
         case "CATEGORIES_CLEAR_FORM_FIELDS":
             return {
                 ...state,
@@ -163,6 +250,15 @@ const platesReducerActions = (state: IPlatesState, action: IPlatesActions): IPla
                 successMessage: null,
                 success: false,
                 categoryFormFields: initialState.categoryFormFields
+            }
+
+        case "PLATES_CLEAR_FORM_FIELDS":
+            return {
+                ...state,
+                errorMessage: null,
+                successMessage: null,
+                success: false,
+                plateFormFields: initialState.plateFormFields
             }
 
         case "PLATES_CLEAR_DATA":
@@ -186,6 +282,13 @@ export const usePlatesReducer = () => {
         })
     }, [])
 
+    const handleChangePlateFormFields = useCallback((name: keyof IPlate, value: string | boolean) => {
+        dispatch({
+            type: "PLATE_CHANGE_FORM_FIELDS",
+            payload: { name, value }
+        })
+    }, [])
+
     const handleClearPlatesData = useCallback(() => {
         dispatch({ type: "PLATES_CLEAR_DATA" })
     }, [])
@@ -194,8 +297,16 @@ export const usePlatesReducer = () => {
         dispatch({ type: "CATEGORIES_CLEAR_FORM_FIELDS" })
     }, [])
 
+    const handleClearPlateFormFields = useCallback(() => {
+        dispatch({ type: "PLATES_CLEAR_FORM_FIELDS" })
+    }, [])
+
     const handleSetCategoryToEdit = useCallback((category: ICategory | null) => {
         dispatch({ type: "SET_CATEGORY_TO_EDIT", payload: category })
+    }, [])
+
+    const handleSetPlateToEdit = useCallback((plate: IPlate | null) => {
+        dispatch({ type: "SET_PLATE_TO_EDIT", payload: plate })
     }, [])
 
     const handleFetchCategories = useCallback(async () => {
@@ -381,9 +492,12 @@ export const usePlatesReducer = () => {
     return {
         ...platesState,
         handleChangeCategoryFormFields,
+        handleChangePlateFormFields,
         handleClearPlatesData,
         handleClearCategoryFormFields,
+        handleClearPlateFormFields,
         handleSetCategoryToEdit,
+        handleSetPlateToEdit,
         handleFetchCategories,
         handleFetchAvailableCategories,
         handleFetchPlates,

@@ -9,6 +9,7 @@ import SetAvailability from "../SetAvailability"
 import type { IPlate } from "../../../../../types/plate"
 import Trigger from "../../../../Trigger"
 import PlateRow from "../Row/PlateRow"
+import { useAppContext } from "../../../../../context/context"
 
 type Props = {
     plates: IPlate[]
@@ -21,6 +22,8 @@ const Plates = ({ plates }: Props) => {
     const [selectedPlates, setSelectedPlates] = useState<{ plate: IPlate, selected: boolean }[]>([])
     const [allPlatesSelected, setAllPlatesSelected] = useState<boolean>(false)
     const [deletePlateTitle, setDeletePlateTitle] = useState<string>("")
+
+    const { handleSetPlateToEdit } = useAppContext().plates
 
     const platesToDelete = selectedPlates
         .filter(info => info.selected)
@@ -74,8 +77,7 @@ const Plates = ({ plates }: Props) => {
 
     const handleOpenEdit = (plateToEdit: IPlate) => {
         setPlateFormIsOpen(true)
-        console.log(plateToEdit)
-        // handleSetCategoryToEdit(plateToEdit)
+        handleSetPlateToEdit(plateToEdit)
     }
 
     const handleOpenDelete = (plateToDelete: IPlate) => {
@@ -184,12 +186,11 @@ const Plates = ({ plates }: Props) => {
             <Modal
                 isOpen={plateFormIsOpen}
                 onRequestClose={() => setPlateFormIsOpen(false)}
+                onAfterClose={() => handleSetPlateToEdit(null)}
                 closeTimeoutMS={300}
                 className="modal"
                 overlayClassName="modal-overlay">
-                <PlateForm
-                    title="Novo prato"
-                    setPlateFormIsOpen={setPlateFormIsOpen} />
+                <PlateForm setPlateFormIsOpen={setPlateFormIsOpen} />
             </Modal>
 
             <Modal

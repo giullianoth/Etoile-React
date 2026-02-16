@@ -1,15 +1,34 @@
-import type { Dispatch, FormEvent, SetStateAction } from "react"
+import type { ChangeEvent, Dispatch, FormEvent, SetStateAction } from "react"
 import Popup from "../../../../Popup"
 import styles from "../../../../Popup/Popup.module.css"
 import Checkbox from "../../../../Form/Checkbox"
 import { PiCamera } from "react-icons/pi"
+import { useAppContext } from "../../../../../context/context"
+import type { IPlate } from "../../../../../types/plate"
+import InputWithLabel from "../../../../Form/InputWithLabel/InputWithLabel"
+import TextareaWithLabel from "../../../../Form/InputWithLabel/TextareaWithLabel"
+import SelectWithLabel from "../../../../Form/InputWithLabel/SelectWithLabel"
 
 type Props = {
-    title: string
     setPlateFormIsOpen: Dispatch<SetStateAction<boolean>>
 }
 
-const PlateForm = ({ title, setPlateFormIsOpen }: Props) => {
+const PlateForm = ({ setPlateFormIsOpen }: Props) => {
+    const {
+        currentPlate,
+        plateFormFields,
+        handleChangePlateFormFields
+    } = useAppContext().plates
+
+    const handleChangeData = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        handleChangePlateFormFields(
+            event.target.name as keyof IPlate,
+            event.target.name === "available"
+                ? (event as ChangeEvent<HTMLInputElement>).target.checked
+                : event.target.value
+        )
+    }
+
     const handleSubmit = (event: FormEvent) => {
         event.preventDefault()
     }
@@ -32,27 +51,66 @@ const PlateForm = ({ title, setPlateFormIsOpen }: Props) => {
 
             <div className={styles.popup__half}>
                 <div className={styles.popup__heading}>
-                    <h2>{title}</h2>
+                    <h2>
+                        {currentPlate ? "Editar prato" : "Novo prato"}
+                    </h2>
                 </div>
 
                 <form className={styles.popup__form} onSubmit={handleSubmit}>
                     <input type="file" id="plate-image" />
-                    <input type="text" placeholder="Prato *" />
-                    <textarea placeholder="Descrição *"></textarea>
-                    <input type="text" placeholder="Ingredientes *" />
+
+                    <InputWithLabel
+                        type="text"
+                        name="name"
+                        label="Prato *"
+                        placeholder="Prato *"
+                        value={plateFormFields.name}
+                        onChange={handleChangeData} />
+
+                    <TextareaWithLabel
+                        name="description"
+                        label="Descrição *"
+                        placeholder="Descrição *"
+                        value={plateFormFields.description}
+                        onChange={handleChangeData} />
+
+                    <InputWithLabel
+                        type="text"
+                        name="ingredients"
+                        label="Ingredientes *"
+                        placeholder="Ingredientes *"
+                        value={plateFormFields.ingredients?.join(", ")}
+                        onChange={handleChangeData} />
 
                     <label className={styles.popup__checkField}>
-                        <Checkbox />
+                        <Checkbox
+                            name="available"
+                            checked={plateFormFields.available}
+                            onChange={handleChangeData} />
+
                         <span>Disponível</span>
                     </label>
 
-                    <select>
+                    <SelectWithLabel label="Categoria *">
                         <option value="Entradas">Entradas</option>
                         <option value="Outra categoria">Outra categoria</option>
-                    </select>
+                    </SelectWithLabel>
 
-                    <input type="number" placeholder="Preço *" />
-                    <input type="text" placeholder="Acompanhamento" />
+                    <InputWithLabel
+                        type="number"
+                        name="price"
+                        label="Preço *"
+                        placeholder="Preço *"
+                        value={plateFormFields.price}
+                        onChange={handleChangeData} />
+
+                    <InputWithLabel
+                        type="text"
+                        name="pairing"
+                        label="Acompanhamento"
+                        placeholder="Acompanhamento"
+                        value={plateFormFields.pairing}
+                        onChange={handleChangeData} />
 
                     <div className={`${styles.popup__action} ${styles.popup__stretched}`}>
                         <span
