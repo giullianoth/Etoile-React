@@ -46,13 +46,13 @@ const Categories = ({ categories }: Props) => {
         }
     }, [selectedCategories])
 
-    const categoryCheck = (CategoryId: string) => {
-        const selected = selectedCategories.find(info => info.category._id === CategoryId)?.selected
+    const categoryCheck = (categoryId: string) => {
+        const selected = selectedCategories.find(info => info.category._id === categoryId)?.selected
         return selected ?? false
     }
 
     const handleSelectCategory = (categoryId: string, selected: boolean) => {
-        setSelectedCategories(prevCategorys => prevCategorys.map(prevCategory => {
+        setSelectedCategories(prevCategories => prevCategories.map(prevCategory => {
             if (prevCategory.category._id === categoryId) {
                 return {
                     ...prevCategory,

@@ -1,16 +1,94 @@
-import { PiCheckCircle, PiEmpty, PiNotePencil, PiPlusCircle, PiTrash } from "react-icons/pi"
+import { PiPlusCircle } from "react-icons/pi"
 import styles from "./List.module.css"
-import { useState } from "react"
+import { useEffect, useState, type ChangeEvent } from "react"
 import Checkbox from "../../../../Form/Checkbox"
 import Modal from "react-modal"
 import PlateForm from "../PlateForm"
 import Delete from "../Delete"
 import SetAvailability from "../SetAvailability"
+import type { IPlate } from "../../../../../types/plate"
+import Trigger from "../../../../Trigger"
+import PlateRow from "../Row/PlateRow"
 
-const Plates = () => {
+type Props = {
+    plates: IPlate[]
+}
+
+const Plates = ({ plates }: Props) => {
     const [plateFormIsOpen, setPlateFormIsOpen] = useState<boolean>(false)
     const [deleteIsOpen, setDeleteIsOpen] = useState<boolean>(false)
     const [changeAvailabilityIsOpen, setChangeAvailabilityIsOpen] = useState<boolean>(false)
+    const [selectedPlates, setSelectedPlates] = useState<{ plate: IPlate, selected: boolean }[]>([])
+    const [allPlatesSelected, setAllPlatesSelected] = useState<boolean>(false)
+    const [deletePlateTitle, setDeletePlateTitle] = useState<string>("")
+
+    const platesToDelete = selectedPlates
+        .filter(info => info.selected)
+        .map(info => info.plate)
+
+    useEffect(() => {
+        if (plates.length) {
+            setSelectedPlates(
+                plates.map(plate => ({
+                    plate,
+                    selected: false
+                }))
+            )
+        }
+    }, [plates])
+
+    useEffect(() => {
+        if (selectedPlates.every(info => info.selected)) {
+            setAllPlatesSelected(true)
+        } else {
+            setAllPlatesSelected(false)
+        }
+    }, [selectedPlates])
+
+    const plateCheck = (plateId: string) => {
+        const selected = selectedPlates.find(info => info.plate._id === plateId)?.selected
+        return selected ?? false
+    }
+
+    const handleSelectPlate = (plateId: string, selected: boolean) => {
+        setSelectedPlates(prevPlates => prevPlates.map(prevPlate => {
+            if (prevPlate.plate._id === plateId) {
+                return {
+                    ...prevPlate,
+                    selected
+                }
+            }
+            return prevPlate
+        }))
+    }
+
+    const handleSelectAll = (event: ChangeEvent<HTMLInputElement>) => {
+        const { checked } = event.target
+        setAllPlatesSelected(checked)
+
+        setSelectedPlates(prevPlates => prevPlates.map(info => ({
+            ...info,
+            selected: checked
+        })))
+    }
+
+    const handleOpenEdit = (plateToEdit: IPlate) => {
+        setPlateFormIsOpen(true)
+        console.log(plateToEdit)
+        // handleSetCategoryToEdit(plateToEdit)
+    }
+
+    const handleOpenDelete = (plateToDelete: IPlate) => {
+        setDeletePlateTitle("Excluir prato?")
+        setDeleteIsOpen(true)
+        console.log(plateToDelete)
+        // handleSetCategoryToEdit(plateToDelete)
+    }
+
+    const handleSetListToDelete = () => {
+        setDeletePlateTitle("Excluir pratos selecionados?")
+        setDeleteIsOpen(true)
+    }
 
     return (
         <>
@@ -24,190 +102,83 @@ const Plates = () => {
                     </button>
                 </header>
 
-                <table>
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th></th>
-                            <th>Prato</th>
-                            <th>Disponível</th>
-                            <th>Categoria</th>
-                            <th>Descrição</th>
-                            <th>Preço</th>
-                            <th className="centered">Ações</th>
-                        </tr>
-                    </thead>
+                {plates.length
+                    ? <>
+                        <table>
+                            {selectedPlates.some(info => info.selected)
+                                ? <thead className="not-hidden">
+                                    <tr>
+                                        <th>
+                                            <Checkbox
+                                                id="select-all-plates"
+                                                title="Selecionar todos"
+                                                className={styles.plate__checkbox}
+                                                checked={allPlatesSelected}
+                                                onChange={handleSelectAll} />
+                                        </th>
 
-                    <thead className="not-hidden">
-                        <tr>
-                            <th>
-                                <Checkbox
-                                    id="select-all-plates"
-                                    className={styles.plate__checkbox} />
-                            </th>
+                                        <th colSpan={7}>
+                                            <label htmlFor="select-all-plates">
+                                                Selecionar todos
+                                            </label>
+                                        </th>
+                                    </tr>
+                                </thead>
 
-                            <th>
-                                <label htmlFor="select-all-plates">
-                                    Selecionar todos
-                                </label>
-                            </th>
+                                : <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th>Prato</th>
+                                        <th>Disponível</th>
+                                        <th>Categoria</th>
+                                        <th>Descrição</th>
+                                        <th>Preço</th>
+                                        <th className="centered">Ações</th>
+                                    </tr>
+                                </thead>}
 
-                            <th colSpan={6}>
-                                <button className="button clear">
-                                    Cancelar
+                            <tbody>
+                                {plates.map(plate => (
+                                    <PlateRow
+                                        key={plate._id}
+                                        plate={plate}
+                                        onOpenDelete={handleOpenDelete}
+                                        onOpenEdit={handleOpenEdit}
+                                        checked={plateCheck(plate._id)}
+                                        onSelectPlate={handleSelectPlate}
+                                        selecting={!selectedPlates.some(info => info.selected)} />
+                                ))}
+                            </tbody>
+                        </table>
+
+                        {selectedPlates.some(info => info.selected) &&
+                            <p className={styles.plates__actions}>
+                                <strong>Ações em massa:</strong>
+
+                                <button
+                                    className="button clear small"
+                                    onClick={() => setChangeAvailabilityIsOpen(true)}>
+                                    Marcar como Indisponível
                                 </button>
-                            </th>
-                        </tr>
-                    </thead>
 
-                    <tbody>
-                        <tr>
-                            <td>
-                                <Checkbox className={styles.plate__checkbox} />
-                            </td>
-                            <td className={styles.plate__image}>
-                                <img src="/images/plates/ravioli-de-ricota-e-espinafre-ao-sugo.png" alt="Prato" />
-                            </td>
+                                <button
+                                    className="button clear small"
+                                    onClick={() => setChangeAvailabilityIsOpen(true)}>
+                                    Marcar como Disponível
+                                </button>
 
-                            <td>
-                                <span className="label-on-cell">
-                                    <strong>Prato:</strong>&nbsp;
-                                </span>
-                                Shrimp and Vegetable Salad
-                            </td>
+                                <button
+                                    className="button clear small"
+                                    onClick={handleSetListToDelete}>
+                                    Excluir
+                                </button>
+                            </p>}
+                    </>
 
-                            <td className="centered">
-                                <span className="label-on-cell">
-                                    <strong>Disponível:</strong>&nbsp;
-                                </span>
-                                <PiCheckCircle className={styles.plate__available} />
-                            </td>
-
-                            <td>
-                                <span className="label-on-cell">
-                                    <strong>Categoria:</strong>&nbsp;
-                                </span>
-                                Entradas
-                            </td>
-
-                            <td>
-                                <span className="label-on-cell">
-                                    <strong>Descrição:</strong>&nbsp;
-                                </span>
-                                A fresh mixed seafood salad with cooked...
-                            </td>
-
-                            <td>
-                                <span className="label-on-cell">
-                                    <strong>Preço:</strong>&nbsp;
-                                </span>
-                                $ 10,00
-                            </td>
-
-                            <td className="centered">
-                                <p className={styles.plate__actions}>
-                                    <button
-                                        className="button clear"
-                                        title="Editar prato"
-                                        onClick={() => setPlateFormIsOpen(true)}>
-                                        <PiNotePencil />
-                                    </button>
-
-                                    <button
-                                        className="button clear"
-                                        title="Excluit prato"
-                                        onClick={() => setDeleteIsOpen(true)}>
-                                        <PiTrash />
-                                    </button>
-                                </p>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>
-                                <Checkbox className={styles.plate__checkbox} />
-                            </td>
-                            <td className={styles.plate__image}>
-                                <img src="/images/plates/ravioli-de-ricota-e-espinafre-ao-sugo.png" alt="Prato" />
-                            </td>
-
-                            <td>
-                                <span className="label-on-cell">
-                                    <strong>Prato:</strong>&nbsp;
-                                </span>
-                                Shrimp and Vegetable Salad
-                            </td>
-
-                            <td className="centered">
-                                <span className="label-on-cell">
-                                    <strong>Disponível:</strong>&nbsp;
-                                </span>
-                                <PiEmpty className={styles.plate__notAvailable} />
-                            </td>
-
-                            <td>
-                                <span className="label-on-cell">
-                                    <strong>Categoria:</strong>&nbsp;
-                                </span>
-                                Entradas
-                            </td>
-
-                            <td>
-                                <span className="label-on-cell">
-                                    <strong>Descrição:</strong>&nbsp;
-                                </span>
-                                A fresh mixed seafood salad with cooked...
-                            </td>
-
-                            <td>
-                                <span className="label-on-cell">
-                                    <strong>Preço:</strong>&nbsp;
-                                </span>
-                                $ 10,00
-                            </td>
-
-                            <td className="centered">
-                                <p className={styles.plate__actions}>
-                                    <button
-                                        className="button clear"
-                                        title="Editar prato"
-                                        onClick={() => setPlateFormIsOpen(true)}>
-                                        <PiNotePencil />
-                                    </button>
-
-                                    <button
-                                        className="button clear"
-                                        title="Excluit prato"
-                                        onClick={() => setDeleteIsOpen(true)}>
-                                        <PiTrash />
-                                    </button>
-                                </p>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <p className={styles.plates__actions}>
-                    <strong>Ações em massa:</strong>
-
-                    <button
-                        className="button clear small"
-                        onClick={() => setChangeAvailabilityIsOpen(true)}>
-                        Marcar como Indisponível
-                    </button>
-
-                    <button
-                        className="button clear small"
-                        onClick={() => setChangeAvailabilityIsOpen(true)}>
-                        Marcar como Disponível
-                    </button>
-
-                    <button
-                        className="button clear small"
-                        onClick={() => setDeleteIsOpen(true)}>
-                        Excluir
-                    </button>
-                </p>
+                    : <Trigger type="warning">
+                        Ainda não há pratos cadastrados.
+                    </Trigger>}
             </section>
 
             <Modal
@@ -240,8 +211,9 @@ const Plates = () => {
                 overlayClassName="modal-overlay">
                 <Delete
                     setModalIsOpen={setDeleteIsOpen}
-                    title="Excluir prato?"
-                    itemToDelete="plate" />
+                    title={deletePlateTitle}
+                    itemToDelete="plate"
+                    itemsToDelete={platesToDelete} />
             </Modal>
         </>
     )

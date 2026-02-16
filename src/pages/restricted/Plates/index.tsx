@@ -10,16 +10,19 @@ const Plates = () => {
         fetching,
         fetchErrorMessage,
         handleFetchCategories,
-        categories
+        handleFetchPlates,
+        categories,
+        plates
     } = useAppContext().plates
 
     useEffect(() => {
         const fetchData = async () => {
             await handleFetchCategories()
+            await handleFetchPlates()
         }
 
         fetchData()
-    }, [handleFetchCategories])
+    }, [handleFetchCategories, handleFetchPlates])
 
     if (fetching) {
         return <Loading />
@@ -30,7 +33,7 @@ const Plates = () => {
             ? <Trigger type="error">{fetchErrorMessage}</Trigger>
 
             : <>
-                <PlatesComponent />
+                <PlatesComponent plates={plates} />
                 <Categories categories={categories} />
             </>
     )

@@ -5,6 +5,25 @@
     gap: 12px;
 }
 
+.plateRow__image {
+    display: flex;
+    width: fit-content;
+}
+
+.plateRow__image img {
+    width: 90px;
+    height: 100%;
+    object-fit: cover;
+}
+
+.plateRow__available {
+    color: var(--color-success-text);
+}
+
+.plateRow__notAvailable {
+    color: var(--color-error-text);
+}
+
 span:has(.plateRow__checkbox) {
     display: inline-block;
     width: 20px;

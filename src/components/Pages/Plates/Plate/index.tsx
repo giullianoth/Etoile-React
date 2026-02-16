@@ -13,7 +13,13 @@ const Plate = ({ plate, onClick }: Props) => {
 
     return (
         <article className={styles.plate} onClick={onClick}>
-            <img src={`/images/plates/${plate.image}`} alt={plate.name} />
+            <img
+                src={
+                    plate.image
+                        ? `/images/plates/${plate.image}`
+                        : "/images/no-image.jpg"
+                }
+                alt={plate.name} />
 
             <div className={styles.plate__info}>
                 <header className={styles.plate__name}>

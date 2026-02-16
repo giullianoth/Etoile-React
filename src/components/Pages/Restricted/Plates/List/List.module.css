@@ -15,25 +15,6 @@
     width: 100%;
 }
 
-.plate__image {
-    display: flex;
-    width: fit-content;
-}
-
-.plate__image img {
-    width: 90px;
-    height: 100%;
-    object-fit: center;
-}
-
-.plate__available {
-    color: var(--color-success-text);
-}
-
-.plate__notAvailable {
-    color: var(--color-error-text);
-}
-
 span:has(.plate__checkbox) {
     display: inline-block;
     width: 20px;
