@@ -5,6 +5,8 @@ import { useAppContext } from "../../../../../context/context"
 import Loading from "../../../../Loading"
 import type { ICategory } from "../../../../../types/plate"
 import Trigger from "../../../../Trigger"
+import InputWithLabel from "../../../../Form/InputWithLabel/InputWithLabel"
+import TextareaWithLabel from "../../../../Form/InputWithLabel/TextareaWithLabel"
 
 type Props = {
     setCategoryFormIsOpen: Dispatch<SetStateAction<boolean>>
@@ -65,19 +67,23 @@ const CategoryForm = ({ setCategoryFormIsOpen }: Props) => {
             </div>
 
             <form className={styles.popup__form} onSubmit={handleSubmit}>
-                <input
+                <InputWithLabel
                     type="text"
                     name="name"
-                    placeholder="Categoria *"
+                    label="Categoria"
+                    placeholder="Categoria"
+                    required
                     value={categoryFormFields.name}
                     onChange={handleChangeData} />
 
-                <textarea
+                <TextareaWithLabel
                     rows={5}
                     name="description"
-                    placeholder="Descrição *"
+                    label="Descrição"
+                    placeholder="Descrição"
+                    required
                     value={categoryFormFields.description}
-                    onChange={handleChangeData}></textarea>
+                    onChange={handleChangeData}></TextareaWithLabel>
 
                 <div className={`${styles.popup__action} ${styles.popup__stretched} ${styles.popup__ended}`}>
                     <span

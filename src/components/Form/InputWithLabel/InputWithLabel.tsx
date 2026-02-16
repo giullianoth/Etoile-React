@@ -11,7 +11,10 @@ const InputWithLabel = (props: Props) => {
     return (
         <label className={styles.input}>
             <span className={styles.input__label}>
-                <strong>{label}</strong>
+                <strong>
+                    {label}
+                    {propsRest.required && " *"}
+                </strong>
             </span>
 
             <input {...propsRest} />
