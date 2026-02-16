@@ -54,7 +54,6 @@ export type IOrdersActions =
     | { type: "ORDERS_DELETE_START" }
     | { type: "ORDERS_DELETE_SUCCESS", payload: { orderId: string, message: string } }
     | { type: "ORDERS_DELETE_FAILURE", payload: string }
-    | { type: "ORDERS_DELETE_START" }
     | { type: "ORDERS_CLEAR_FORM_FIELDS" }
     | { type: "ORDERS_CLEAR_DATA" }
 
@@ -82,6 +81,9 @@ export type IPlatesActions =
     | { type: "CATEGORY_UPDATE_START" }
     | { type: "CATEGORY_UPDATE_SUCCESS", payload: { category: ICategory, message: string } }
     | { type: "CATEGORY_UPDATE_FAILURE", payload: string }
+    | { type: "CATEGORY_DELETE_START" }
+    | { type: "CATEGORY_DELETE_SUCCESS", payload: { categoryId: string, message: string } }
+    | { type: "CATEGORY_DELETE_FAILURE", payload: string }
     | { type: "CATEGORIES_CLEAR_FORM_FIELDS" }
     | { type: "PLATES_FETCH_START" }
     | { type: "PLATES_FETCH_SUCCESS", payload: IPlate[] }

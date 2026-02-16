@@ -31,6 +31,7 @@ const initialState: IPlatesState = {
 const platesReducerActions = (state: IPlatesState, action: IPlatesActions): IPlatesState => {
     let categoriesWithAddedOne: ICategory[]
     let updatedCategories: ICategory[]
+    let categoriesWithoutDeleted: ICategory[]
 
     switch (action.type) {
         case "SET_CATEGORY_TO_EDIT":
@@ -85,6 +86,7 @@ const platesReducerActions = (state: IPlatesState, action: IPlatesActions): IPla
 
         case "CATEGORY_CREATE_START":
         case "CATEGORY_UPDATE_START":
+        case "CATEGORY_DELETE_START":
             return {
                 ...state,
                 loading: true,
@@ -120,8 +122,22 @@ const platesReducerActions = (state: IPlatesState, action: IPlatesActions): IPla
                 currentCategory: action.payload.category
             }
 
+        case "CATEGORY_DELETE_SUCCESS":
+            categoriesWithoutDeleted = state.categories.filter(category =>
+                category._id !== action.payload.categoryId)
+
+            return {
+                ...state,
+                loading: false,
+                success: true,
+                successMessage: action.payload.message,
+                errorMessage: null,
+                categories: categoriesWithoutDeleted
+            }
+
         case "CATEGORY_CREATE_FAILURE":
         case "CATEGORY_UPDATE_FAILURE":
+        case "CATEGORY_DELETE_FAILURE":
             return {
                 ...state,
                 loading: false,
@@ -332,6 +348,36 @@ export const usePlatesReducer = () => {
         })
     }, [platesState.categoryFormFields.name, platesState.categoryFormFields.description])
 
+    const handleDeleteCategory = useCallback(async (categoryId: string) => {
+        dispatch({ type: "CATEGORY_DELETE_START" })
+
+        if (!categoryId) {
+            dispatch({
+                type: "CATEGORY_DELETE_FAILURE",
+                payload: "Erro inesperado ao excluir categoria."
+            })
+            return
+        }
+
+        const response = await platesServices.deleteCategory(categoryId)
+
+        if (!response.success) {
+            dispatch({
+                type: "CATEGORY_DELETE_FAILURE",
+                payload: response.body.text ?? "Erro ao excluir categoria."
+            })
+            return
+        }
+
+        dispatch({
+            type: "CATEGORY_DELETE_SUCCESS",
+            payload: {
+                categoryId: response.body._id,
+                message: "Categoria excluída com sucesso."
+            }
+        })
+    }, [])
+
     return {
         ...platesState,
         handleChangeCategoryFormFields,
@@ -343,6 +389,7 @@ export const usePlatesReducer = () => {
         handleFetchPlates,
         handleFetchAvailablePlates,
         handleCreateCategory,
-        handleUpdateCategory
+        handleUpdateCategory,
+        handleDeleteCategory
     }
 }

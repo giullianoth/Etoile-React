@@ -19,6 +19,7 @@ const Categories = ({ categories }: Props) => {
     const [deleteIsOpen, setDeleteIsOpen] = useState<boolean>(false)
     const [selectedCategories, setSelectedCategories] = useState<{ category: ICategory, selected: boolean }[]>([])
     const [allCategoriesSelected, setAllCategoriesSelected] = useState<boolean>(false)
+    const [deleteCategoryTitle, setDeleteCategoryTitle] = useState<string>("")
 
     const { handleSetCategoryToEdit } = useAppContext().plates
 
@@ -73,6 +74,12 @@ const Categories = ({ categories }: Props) => {
         handleSetCategoryToEdit(categoryToEdit)
     }
 
+    const handleOpenDelete = (categoryToDelete: ICategory) => {
+        setDeleteCategoryTitle("Excluir categoria?")
+        setDeleteIsOpen(true)
+        handleSetCategoryToEdit(categoryToDelete)
+    }
+
     return (
         <>
             <section>
@@ -124,7 +131,7 @@ const Categories = ({ categories }: Props) => {
                                     <CategoryRow
                                         key={category._id}
                                         category={category}
-                                        onOpenDelete={() => setDeleteIsOpen(true)}
+                                        onOpenDelete={handleOpenDelete}
                                         onOpenEdit={handleOpenEdit}
                                         checked={categoryCheck(category._id)}
                                         onSelectCategory={handleSelectCategory}
@@ -163,13 +170,13 @@ const Categories = ({ categories }: Props) => {
             <Modal
                 isOpen={deleteIsOpen}
                 onRequestClose={() => setDeleteIsOpen(false)}
+                onAfterClose={() => handleSetCategoryToEdit(null)}
                 closeTimeoutMS={300}
                 className="modal"
                 overlayClassName="modal-overlay">
                 <Delete
                     setModalIsOpen={setDeleteIsOpen}
-                    title="Excluir categoria?"
-                    itemToDelete="category" />
+                    title={deleteCategoryTitle} />
             </Modal>
         </>
     )

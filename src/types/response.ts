@@ -76,6 +76,12 @@ export interface ICategoriesUpdateSuccessResponse extends ISuccessResponse {
 
 export type ICategoriesUpdateResponse = ICategoriesUpdateSuccessResponse | IErrorResponse
 
+export interface ICategoriesDeleteSuccessResponse extends ISuccessResponse {
+    body: ICategory
+}
+
+export type ICategoriesDeleteResponse = ICategoriesDeleteSuccessResponse | IErrorResponse
+
 export interface IPlatesFetchSuccessResponse extends ISuccessResponse {
     body: IPlate[]
 }

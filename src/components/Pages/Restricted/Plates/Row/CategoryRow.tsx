@@ -2,14 +2,13 @@ import { PiNotePencil, PiTrash } from "react-icons/pi"
 import Checkbox from "../../../../Form/Checkbox"
 import styles from "./Row.module.css"
 import type { ICategory } from "../../../../../types/plate"
-import type { MouseEventHandler } from "react"
 
 type Props = {
   category: ICategory
   checked: boolean
   selecting: boolean
   onOpenEdit: (categoryToEdit: ICategory) => void
-  onOpenDelete: MouseEventHandler
+  onOpenDelete: (categoryToDelete: ICategory) => void
   onSelectCategory: (categoryId: string, selected: boolean) => void
 }
 
@@ -52,7 +51,7 @@ const CategoryRow = ({ category, checked, onOpenDelete, onOpenEdit, onSelectCate
             <button
               className="button clear"
               title="Excluit categoria"
-              onClick={onOpenDelete}>
+              onClick={() => onOpenDelete(category)}>
               <PiTrash />
             </button>
           </p>}
