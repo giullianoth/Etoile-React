@@ -23,6 +23,10 @@ const Categories = ({ categories }: Props) => {
 
     const { handleSetCategoryToEdit } = useAppContext().plates
 
+    const categoriesToDelete = selectedCategories
+        .filter(info => info.selected)
+        .map(info => info.category)
+
     useEffect(() => {
         if (categories.length) {
             setSelectedCategories(
@@ -80,6 +84,11 @@ const Categories = ({ categories }: Props) => {
         handleSetCategoryToEdit(categoryToDelete)
     }
 
+    const handleSetListToDelete = () => {
+        setDeleteCategoryTitle("Excluir categorias selecionadas?")
+        setDeleteIsOpen(true)
+    }
+    
     return (
         <>
             <section>
@@ -146,7 +155,7 @@ const Categories = ({ categories }: Props) => {
 
                                 <button
                                     className="button clear small"
-                                    onClick={() => setDeleteIsOpen(true)}>
+                                    onClick={handleSetListToDelete}>
                                     Excluir
                                 </button>
                             </p>}
@@ -176,7 +185,9 @@ const Categories = ({ categories }: Props) => {
                 overlayClassName="modal-overlay">
                 <Delete
                     setModalIsOpen={setDeleteIsOpen}
-                    title={deleteCategoryTitle} />
+                    title={deleteCategoryTitle}
+                    itemToDelete="category"
+                    itemsToDelete={categoriesToDelete} />
             </Modal>
         </>
     )

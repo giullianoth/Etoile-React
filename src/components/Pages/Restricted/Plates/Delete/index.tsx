@@ -3,13 +3,16 @@ import Popup from '../../../../Popup'
 import styles from "../../../../Popup/Popup.module.css"
 import { useAppContext } from '../../../../../context/context'
 import Loading from '../../../../Loading'
+import type { ICategory, IPlate } from '../../../../../types/plate'
 
 type Props = {
     setModalIsOpen: Dispatch<SetStateAction<boolean>>
     title: string
+    itemsToDelete?: ICategory[] | IPlate[]
+    itemToDelete: "category" | "plate"
 }
 
-const Delete = ({ setModalIsOpen, title }: Props) => {
+const Delete = ({ setModalIsOpen, title, itemsToDelete, itemToDelete }: Props) => {
     const {
         currentCategory,
         success,
@@ -36,6 +39,14 @@ const Delete = ({ setModalIsOpen, title }: Props) => {
     const handleDelete = async () => {
         if (currentCategory && currentCategory._id) {
             await handleDeleteCategory(currentCategory._id)
+        }
+
+        if (itemsToDelete && itemsToDelete.length) {
+            await Promise.all(itemsToDelete.map(async item => {
+                if (itemToDelete === "category") {
+                    return await handleDeleteCategory(item._id)
+                }
+            }))
         }
     }
 
