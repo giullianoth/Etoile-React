@@ -1,4 +1,4 @@
-import type { ChangeEvent, Dispatch, FormEvent, SetStateAction } from "react"
+import { useEffect, type ChangeEvent, type Dispatch, type FormEvent, type SetStateAction } from "react"
 import Popup from "../../../../Popup"
 import styles from "../../../../Popup/Popup.module.css"
 import { useAppContext } from "../../../../../context/context"
@@ -16,8 +16,20 @@ const CategoryForm = ({ setCategoryFormIsOpen }: Props) => {
         loading,
         categoryFormFields,
         handleChangeCategoryFormFields,
-        errorMessage
+        errorMessage,
+        handleUpdateCategory,
+        success,
+        successMessage
     } = useAppContext().plates
+
+    const { addMessage } = useAppContext().message
+
+    useEffect(() => {
+        if (success && successMessage) {
+            addMessage(successMessage)
+            setCategoryFormIsOpen(false)
+        }
+    }, [addMessage, setCategoryFormIsOpen, success, successMessage])
 
     const handleChangeData = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         handleChangeCategoryFormFields(
@@ -28,7 +40,10 @@ const CategoryForm = ({ setCategoryFormIsOpen }: Props) => {
 
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault()
-        console.log(categoryFormFields)
+
+        if (currentCategory?._id) {
+            await handleUpdateCategory(currentCategory._id)
+        }
     }
 
     return (

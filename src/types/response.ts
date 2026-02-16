@@ -40,6 +40,12 @@ export interface ICategoriesFetchSuccessResponse extends ISuccessResponse {
 
 export type ICategoriesFetchResponse = ICategoriesFetchSuccessResponse | IErrorResponse
 
+export interface ICategoriesUpdateSuccessResponse extends ISuccessResponse {
+    body: ICategory
+}
+
+export type ICategoriesUpdateResponse = ICategoriesUpdateSuccessResponse | IErrorResponse
+
 export interface IPlatesFetchSuccessResponse extends ISuccessResponse {
     body: IPlate[]
 }

@@ -1,7 +1,7 @@
-import type { ICategoriesFetchResponse, IErrorResponse, IPlatesFetchResponse } from "../types/response"
+import type { ICategory } from "../types/plate"
+import type { ICategoriesFetchResponse, ICategoriesUpdateResponse, IErrorResponse, IPlatesFetchResponse } from "../types/response"
 import { apiURL } from "./api"
 
-// const platesUrl = `${apiURL}/plates`
 const categoriesUrl = `${apiURL}/categories`
 const platesUrl = `${apiURL}/plates`
 
@@ -34,6 +34,28 @@ const fetchAvailableCategories = async () => {
         }).then(res => res.json())
 
         return response as ICategoriesFetchResponse
+    } catch (error) {
+        console.error(error)
+
+        return {
+            success: false,
+            statusCode: 500,
+            body: {
+                text: "Erro de rede ou comunicação com o servidor."
+            }
+        } as IErrorResponse
+    }
+}
+
+const updateCategory = async (categoryData: Partial<ICategory>, categoryId: string) => {
+    try {
+        const response = await fetch(`${categoriesUrl}/${categoryId}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(categoryData)
+        }).then(res => res.json())
+
+        return response as ICategoriesUpdateResponse
     } catch (error) {
         console.error(error)
 
@@ -93,7 +115,8 @@ const platesServices = {
     fetchCategories,
     fetchAvailableCategories,
     fetchPlates,
-    fetchAvailablePlates
+    fetchAvailablePlates,
+    updateCategory
 }
 
 export default platesServices

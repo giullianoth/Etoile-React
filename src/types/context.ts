@@ -55,6 +55,7 @@ interface IPlatesContext extends IPlatesState {
     handleFetchAvailableCategories: () => Promise<void>
     handleFetchPlates: () => Promise<void>
     handleFetchAvailablePlates: () => Promise<void>
+    handleUpdateCategory: (categoryId: string) => Promise<void>
 }
 
 interface IUsersContext extends IUsersState {

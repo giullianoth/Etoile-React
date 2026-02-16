@@ -76,6 +76,9 @@ export type IPlatesActions =
     | { type: "CATEGORIES_FETCH_START" }
     | { type: "CATEGORIES_FETCH_SUCCESS", payload: ICategory[] }
     | { type: "CATEGORIES_FETCH_FAILURE", payload: string }
+    | { type: "CATEGORY_UPDATE_START" }
+    | { type: "CATEGORY_UPDATE_SUCCESS", payload: { category: ICategory, message: string } }
+    | { type: "CATEGORY_UPDATE_FAILURE", payload: string }
     | { type: "CATEGORIES_CLEAR_FORM_FIELDS" }
     | { type: "PLATES_FETCH_START" }
     | { type: "PLATES_FETCH_SUCCESS", payload: IPlate[] }

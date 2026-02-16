@@ -29,11 +29,16 @@ const initialState: IPlatesState = {
 }
 
 const platesReducerActions = (state: IPlatesState, action: IPlatesActions): IPlatesState => {
+    let updatedCategories: ICategory[]
+
     switch (action.type) {
         case "SET_CATEGORY_TO_EDIT":
             return {
                 ...state,
                 currentCategory: action.payload,
+                success: action.payload ? state.success : false,
+                successMessage: action.payload ? state.successMessage : null,
+                errorMessage: action.payload ? state.errorMessage : null,
                 categoryFormFields: {
                     ...state.categoryFormFields,
                     name: action.payload ? action.payload.name : "",
@@ -75,6 +80,39 @@ const platesReducerActions = (state: IPlatesState, action: IPlatesActions): IPla
                 success: false,
                 successMessage: null,
                 fetchErrorMessage: action.payload
+            }
+
+        case "CATEGORY_UPDATE_START":
+            return {
+                ...state,
+                loading: true,
+                success: false,
+                successMessage: null,
+                errorMessage: null
+            }
+
+        case "CATEGORY_UPDATE_SUCCESS":
+            updatedCategories = state.categories.map(category =>
+                category._id === action.payload.category._id
+                    ? action.payload.category : category)
+
+            return {
+                ...state,
+                loading: false,
+                success: true,
+                successMessage: action.payload.message,
+                errorMessage: null,
+                categories: updatedCategories,
+                currentCategory: action.payload.category
+            }
+
+        case "CATEGORY_UPDATE_FAILURE":
+            return {
+                ...state,
+                loading: false,
+                success: false,
+                successMessage: null,
+                errorMessage: action.payload
             }
 
         case "CATEGORY_CHANGE_FORM_FIELDS":
@@ -205,6 +243,47 @@ export const usePlatesReducer = () => {
         })
     }, [])
 
+    const handleUpdateCategory = useCallback(async (categoryId: string) => {
+        dispatch({ type: "CATEGORY_UPDATE_START" })
+
+        if (!categoryId) {
+            dispatch({
+                type: "CATEGORY_UPDATE_FAILURE",
+                payload: "Erro inesperado ao atualizar categoria."
+            })
+            return
+        }
+
+        if (!platesState.categoryFormFields.name) {
+            dispatch({
+                type: "CATEGORY_UPDATE_FAILURE",
+                payload: "Preencha o nome da categoria."
+            })
+            return
+        }
+
+        const response = await platesServices.updateCategory({
+            name: platesState.categoryFormFields.name,
+            description: platesState.categoryFormFields.description
+        }, categoryId)
+
+        if (!response.success) {
+            dispatch({
+                type: "CATEGORY_UPDATE_FAILURE",
+                payload: response.body.text ?? "Erro ao atualizar categoria."
+            })
+            return
+        }
+
+        dispatch({
+            type: "CATEGORY_UPDATE_SUCCESS",
+            payload: {
+                category: response.body,
+                message: "Categoria atualizada com sucesso."
+            }
+        })
+    }, [platesState.categoryFormFields.name, platesState.categoryFormFields.description])
+
     return {
         ...platesState,
         handleChangeCategoryFormFields,
@@ -214,6 +293,7 @@ export const usePlatesReducer = () => {
         handleFetchCategories,
         handleFetchAvailableCategories,
         handleFetchPlates,
-        handleFetchAvailablePlates
+        handleFetchAvailablePlates,
+        handleUpdateCategory
     }
 }
