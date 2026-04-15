@@ -1,58 +1,41 @@
 import { PiBeerBottle, PiShoppingCartSimple } from "react-icons/pi"
 import { useCurrency } from "../../../../hooks/currency"
-import type { IPlate } from "../../../../types/plate"
 import Popup from "../../../Popup"
 import styles from "../../../Popup/Popup.module.css"
-import type { Dispatch, SetStateAction } from "react"
-import { useAppContext } from "../../../../context/context"
 
-type Props = {
-    plate: IPlate
-    setModalIsOpen: Dispatch<SetStateAction<boolean>>
-}
-
-const SelectedPlate = ({ plate, setModalIsOpen }: Props) => {
+const SelectedPlate = () => {
     const currency = useCurrency()
-    const { addToCart } = useAppContext().cart
-    const { addMessage } = useAppContext().message
-
-    const handleAddPlateToCart = () => {
-        addToCart(plate)
-        addMessage("Prato adicionado ao carrinho.")
-        setModalIsOpen(false)
-    }
 
     return (
         <Popup>
             <div className={styles.popup__image}>
-                <img src={`/images/plates/${plate.image}`} alt="" />
+                <img src={`/images/no-image.jpg`} alt="" />
             </div>
 
             <header className={styles.popup__heading}>
-                <h2>{plate.name}</h2>
+                <h2>Nome do prato</h2>
             </header>
 
-            <p className={styles.popup__subtitle}>{plate.category}</p>
+            <p className={styles.popup__subtitle}>Categoria</p>
 
             <p className={styles.popup__supportText}>
-                {plate.ingredients.join(", ")}
+                Ingredientes
             </p>
 
-            <p className={styles.popup__regularText}>{plate.description}</p>
+            <p className={styles.popup__regularText}>Descrição do prato</p>
 
             <p className={styles.popup__regularText}>
                 <PiBeerBottle className={styles.popup__iconClaret} />
-                Acompanha muito bem um <strong>{plate.pairing}</strong>
+                Acompanha muito bem um <strong>acompanhamento</strong>
             </p>
 
             <div className={`${styles.popup__action} ${styles.popup__spaced}`}>
                 <p className={styles.popup__detachedText}>
-                    {currency(plate.price)}
+                    {currency(0)}
                 </p>
 
                 <button
-                    className="button primary"
-                    onClick={handleAddPlateToCart}>
+                    className="button primary">
                     <PiShoppingCartSimple />
                     Adicionar
                 </button>
