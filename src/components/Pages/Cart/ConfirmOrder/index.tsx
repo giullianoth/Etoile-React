@@ -1,97 +1,23 @@
 import styles from "../../../Popup/Popup.module.css"
 import Popup from "../../../Popup"
-import { useEffect, useState, type ChangeEvent, type Dispatch, type FormEvent, type SetStateAction } from "react"
-import { useAppContext } from "../../../../context/context"
-import type { IOrderCreate } from "../../../../types/order"
-import { useDateFormats } from "../../../../hooks/date-formats"
-import { useNavigate } from "react-router-dom"
-import Loading from "../../../Loading"
-import Trigger from "../../../Trigger"
-import { usePendingOrder } from "../../../../hooks/pending-order"
+import { useEffect, useState, type FormEvent } from "react"
 
 type Props = {
-    setModalIsOpen: Dispatch<SetStateAction<boolean>>
+    onCancelConfirmOrder: () => void
 }
 
-const ConfirmOrder = ({ setModalIsOpen }: Props) => {
-    const [date, setDate] = useState<Date | null>(null)
-    const [localErrorMessage, setLocalErrorMessage] = useState<string | null>(null)
-
-    const {
-        orderFormFields,
-        handleChangeOrderFormFields,
-        handleCreateOrder,
-        loading,
-        errorMessage,
-        success,
-        successMessage,
-        handleClearOrderFormFields
-    } = useAppContext().orders
-
-    const { user } = useAppContext().auth
-    const { cart, clearCart } = useAppContext().cart
-    const { combineDateAndTime, isPastDate } = useDateFormats()
-    const { addMessage } = useAppContext().message
-    const { addPendingOrder } = usePendingOrder()
-    const navigate = useNavigate()
+const ConfirmOrder = ({ onCancelConfirmOrder }: Props) => {
+    const [date, setDate] = useState<string>("")
+    const [time, setTime] = useState<string>("")
 
     useEffect(() => {
-        setDate(new Date())
-        handleClearOrderFormFields()
-
-        if (user?._id) {
-            handleChangeOrderFormFields("userId", user._id)
-        }
-    }, [handleChangeOrderFormFields, handleClearOrderFormFields, user?._id])
-
-    useEffect(() => {
-        if (success && successMessage) {
-            addMessage(successMessage)
-            navigate("/perfil")
-        }
-    }, [handleCreateOrder, success, successMessage, addMessage, navigate])
-
-    const handleChangeFormData = (event: ChangeEvent<HTMLInputElement>) => {
-        handleChangeOrderFormFields(
-            event.target.name as keyof IOrderCreate,
-            event.target.value
-        )
-    }
+        setDate(new Date().toLocaleDateString())
+    }, [])
 
     const handleConfirmOrder = async (event: FormEvent) => {
         event.preventDefault()
-
-        const combinedDateValue = orderFormFields.time
-            ? combineDateAndTime(date, orderFormFields.time)
-            : null
-
-        const orderItems: IOrderCreate["items"] = cart.map(item => ({
-            plateId: item.plate._id,
-            quantity: item.quantity
-        }))
-
-        if (!orderFormFields.userId) {
-            if (!orderFormFields.time || !combinedDateValue) {
-                setLocalErrorMessage("Preencha o horário de comparecimento.")
-                return
-            }
-
-            if (combinedDateValue && isPastDate(combinedDateValue)) {
-                setLocalErrorMessage("Hora inválida.")
-                return
-            }
-
-            addPendingOrder({
-                items: orderItems,
-                time: combinedDateValue
-            })
-
-            navigate("/autenticacao")
-            return
-        }
-
-        await handleCreateOrder(orderItems, combinedDateValue!)
-        clearCart()
+        onCancelConfirmOrder()
+        console.log({ date, time })
     }
 
     return (
@@ -101,7 +27,7 @@ const ConfirmOrder = ({ setModalIsOpen }: Props) => {
             </header>
 
             <p className={styles.popup__regularText}>
-                Confirme seu pedido para esta data: <strong>{date?.toLocaleDateString()}</strong>.{" "}
+                Confirme seu pedido para esta data: <strong>{date}</strong>.{" "}
                 A que horas você comparecerá?
             </p>
 
@@ -111,25 +37,22 @@ const ConfirmOrder = ({ setModalIsOpen }: Props) => {
                 <input
                     type="time"
                     name="time"
-                    value={orderFormFields.time as string}
-                    onChange={handleChangeFormData} />
+                    value={time}
+                    onChange={event => setTime(event.target.value)} />
 
                 <div className={`${styles.popup__action} ${styles.popup__stretched}`}>
-                    <span
+                    <button
+                        type="button"
                         className="button primary outline"
-                        onClick={() => setModalIsOpen(false)}>
+                        onClick={onCancelConfirmOrder}>
                         Cancelar
-                    </span>
+                    </button>
 
-                    <button type="submit" className="button primary" disabled={loading}>
+                    <button type="submit" className="button primary">
                         Confirmar
-                        {loading && <Loading inButton />}
                     </button>
                 </div>
             </form>
-
-            {errorMessage || localErrorMessage &&
-                <Trigger type="error">{errorMessage ?? localErrorMessage}</Trigger>}
         </Popup>
     )
 }

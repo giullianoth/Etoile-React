@@ -1,60 +1,49 @@
 import { useState } from "react"
-import type { ICartItem } from "../../../../types/cart"
 import styles from "./CartItem.module.css"
 import { PiBeerBottle, PiMinus, PiMinusCircle, PiPlus } from "react-icons/pi"
-import { useAppContext } from "../../../../context/context"
 import Modal from "react-modal"
 import ConfirmRemove from "../ConfirmRemove"
 
-type Props = {
-    cartItem: ICartItem
-}
-
-const CartItem = ({ cartItem }: Props) => {
-    const [quantity, setQuantity] = useState<number>(cartItem.quantity)
+const CartItem = () => {
+    const [quantity, setQuantity] = useState<number>(1)
     const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
-    const { updateQuantity, removeFromCart } = useAppContext().cart
-    const { addMessage } = useAppContext().message
 
     const handleChangeQuantity = (mode: "minus" | "plus") => {
         const newQuantity = mode === "plus" ? quantity + 1 : quantity - 1
 
         if (newQuantity >= 1) {
             setQuantity(newQuantity)
-            updateQuantity(cartItem.plate._id, newQuantity)
         }
     }
 
     const handleRemoveItem = () => {
-        removeFromCart(cartItem.plate)
         setModalIsOpen(false)
-        addMessage("Prato removido do carrinho.")
     }
 
     return (
         <>
             <article className={styles.item}>
                 <div className={styles.item__image}>
-                    <img src={`/images/plates/${cartItem.plate.image}`} alt={cartItem.plate.name} />
+                    <img src={"/images/no-image.jpg"} alt={"Nome do prato"} />
                 </div>
 
                 <div className={styles.item__info}>
                     <div className={styles.item__text}>
                         <header className={styles.item__name}>
-                            <h3>{cartItem.plate.name}</h3>
+                            <h3>Nome do prato</h3>
                         </header>
 
-                        <p className={styles.item__category}>{cartItem.plate.category}</p>
+                        <p className={styles.item__category}>Categoria</p>
 
                         <p className={styles.item__ingredients}>
-                            {cartItem.plate.ingredients.join(", ")}
+                            Ingredientes
                         </p>
 
-                        <p className={styles.item__description}>{cartItem.plate.description}</p>
+                        <p className={styles.item__description}>Descrição - Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ipsum nihil officia quis rem perferendis corrupti?</p>
                         <p className={styles.item__pairing}>
                             <PiBeerBottle />{" "}
                             <span>
-                                Acompanha bem um <strong>{cartItem.plate.pairing}</strong>
+                                Acompanha bem um <strong>acompanhamento</strong>
                             </span>
                         </p>
                     </div>
@@ -93,8 +82,8 @@ const CartItem = ({ cartItem }: Props) => {
                 closeTimeoutMS={300}
                 onRequestClose={() => setModalIsOpen(false)}>
                 <ConfirmRemove
-                    setModalIsOpen={setModalIsOpen}
-                    onConfirmRemove={handleRemoveItem} />
+                    onCancelRemove={() => setModalIsOpen(false)}
+                    onRemoveItem={handleRemoveItem} />
             </Modal>
         </>
     )

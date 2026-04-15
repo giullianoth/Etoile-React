@@ -1,13 +1,12 @@
-import type { Dispatch, SetStateAction } from "react"
 import Popup from "../../../Popup"
 import styles from "../../../Popup/Popup.module.css"
 
 type Props = {
-    setModalIsOpen: Dispatch<SetStateAction<boolean>>
-    onConfirmRemove: () => void
+    onCancelRemove: () => void
+    onRemoveItem: () => void
 }
 
-const ConfirmRemove = ({ onConfirmRemove, setModalIsOpen }: Props) => {
+const ConfirmRemove = ({ onCancelRemove, onRemoveItem }: Props) => {
     return (
         <Popup>
             <header className={styles.popup__header}>
@@ -17,11 +16,11 @@ const ConfirmRemove = ({ onConfirmRemove, setModalIsOpen }: Props) => {
             <div className={`${styles.popup__action} ${styles.popup__centered}`}>
                 <button
                     className="button primary outline"
-                    onClick={() => setModalIsOpen(false)}>Não</button>
+                    onClick={onCancelRemove}>Não</button>
 
                 <button
                     className="button primary"
-                    onClick={onConfirmRemove}>Sim</button>
+                    onClick={onRemoveItem}>Sim</button>
             </div>
         </Popup>
     )
