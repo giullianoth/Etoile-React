@@ -5,10 +5,14 @@ import PageHeading from "../../components/PageHeading"
 const Auth = () => {
     const [title, setTitle] = useState<string>("")
 
+    const handleChangeTitle = (titleValue: string) => {
+        setTitle(titleValue)
+    }
+
     return (
         <>
             <PageHeading title={title} />
-            <AuthComponent setTitle={setTitle} />
+            <AuthComponent onChangeTitle={handleChangeTitle} />
         </>
     )
 }

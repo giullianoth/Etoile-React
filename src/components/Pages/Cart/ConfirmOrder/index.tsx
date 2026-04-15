@@ -7,8 +7,8 @@ type Props = {
 }
 
 const ConfirmOrder = ({ onCancelConfirmOrder }: Props) => {
-    const [date, setDate] = useState<string>("")
     const [time, setTime] = useState<string>("")
+    const [date, setDate] = useState<string>("")
 
     useEffect(() => {
         setDate(new Date().toLocaleDateString())

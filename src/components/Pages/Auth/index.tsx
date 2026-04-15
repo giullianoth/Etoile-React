@@ -1,120 +1,38 @@
-import { useEffect, useState, type ChangeEvent, type Dispatch, type FormEvent, type SetStateAction } from "react"
 import styles from "./Auth.module.css"
 import Container from "../../Container"
 import SectionHeading from "../../SectionHeading"
 import Password from "../../Form/Password"
 import { PiSignIn } from "react-icons/pi"
-import { useAppContext } from "../../../context/context"
 import type { IUserRegister } from "../../../types/user"
-import Loading from "../../Loading"
-import Trigger from "../../Trigger"
-import { useNavigate } from "react-router-dom"
-import { usePendingOrder } from "../../../hooks/pending-order"
+import { useEffect, useState, type ChangeEvent, type FormEvent } from "react"
 
 type Props = {
-    setTitle: Dispatch<SetStateAction<string>>
+    onChangeTitle: (titleValue: string) => void
 }
 
-const Auth = ({ setTitle }: Props) => {
+const Auth = ({ onChangeTitle }: Props) => {
     const [formType, setFormType] = useState<"login" | "register">("login")
-    const navigate = useNavigate()
-    const { addMessage } = useAppContext().message
-    const { pendingOrder, removePendingOrder } = usePendingOrder()
-    const {
-        handleCreateOrder,
-        loading: loadingOrders,
-        successMessage: ordersSuccessMessage
-    } = useAppContext().orders
-
-    const { clearCart } = useAppContext().cart
-
-    const {
-        handleClearAuthForm,
-        handleChangeAuthForm,
-        authFormFields,
-        handleLogin,
-        handleRegister,
-        errorMessage,
-        loading,
-        success,
-        successMessage,
-        user
-    } = useAppContext().auth
+    const [formData, setFormData] = useState<Partial<IUserRegister>>({})
 
     useEffect(() => {
-        handleClearAuthForm()
-    }, [handleClearAuthForm])
-
-    useEffect(() => {
-        if (formType === "login") {
-            setTitle("Login")
-        }
-
-        if (formType === "register") {
-            setTitle("Cadastro")
-        }
-    }, [formType, setTitle])
-
-    useEffect(() => {
-        const authenticate = async () => {
-            if (success) {
-                if (pendingOrder) {
-                    await handleCreateOrder(
-                        pendingOrder.items!,
-                        new Date(pendingOrder.time!),
-                        user?._id
-                    )
-
-                    removePendingOrder()
-                    clearCart()
-                }
-
-                if (successMessage) {
-                    addMessage(ordersSuccessMessage ?? successMessage)
-                }
-
-                navigate("/perfil")
-            }
-        }
-
-        authenticate()
-    }, [
-        success,
-        handleLogin,
-        handleRegister,
-        addMessage,
-        clearCart,
-        handleCreateOrder,
-        navigate,
-        ordersSuccessMessage,
-        pendingOrder,
-        removePendingOrder,
-        successMessage,
-        user?._id
-    ])
+        onChangeTitle(formType === "login" ? "Login" : "Cadastro")
+        setFormData({})
+    }, [formType, onChangeTitle])
 
     const handleChangeFormType = () => {
         setFormType(formType === "login" ? "register" : "login")
-        handleClearAuthForm()
     }
 
     const handleChangeFormData = (event: ChangeEvent<HTMLInputElement>) => {
-        handleChangeAuthForm(
-            event.target.name as keyof IUserRegister,
-            event.target.value
-        )
+        setFormData(prevData => ({
+            ...prevData,
+            [event.target.name]: event.target.value
+        }))
     }
 
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault()
-
-        if (formType === "login") {
-            await handleLogin()
-        }
-
-        if (formType === "register") {
-            await handleRegister()
-        }
+        console.log(formData)
     }
 
     return (
@@ -128,6 +46,7 @@ const Auth = ({ setTitle }: Props) => {
                     {formType === "register" && "Já possui uma conta? "}
 
                     <button
+                        type="button"
                         className="button clear"
                         onClick={handleChangeFormType}>
                         {formType === "login" && "Cadastre-se"}
@@ -143,14 +62,14 @@ const Auth = ({ setTitle }: Props) => {
                                 type="text"
                                 name="email"
                                 placeholder="E-mail *"
-                                value={authFormFields.email}
+                                value={formData.email || ""}
                                 onChange={handleChangeFormData} />
 
                             <Password
                                 required
                                 name="password"
                                 placeholder="Senha *"
-                                value={authFormFields.password}
+                                value={formData.password || ""}
                                 onChange={handleChangeFormData} />
                         </>}
 
@@ -161,7 +80,7 @@ const Auth = ({ setTitle }: Props) => {
                                 type="text"
                                 name="fullname"
                                 placeholder="Nome completo *"
-                                value={authFormFields.fullname}
+                                value={formData.fullname || ""}
                                 onChange={handleChangeFormData} />
 
                             <input
@@ -169,25 +88,25 @@ const Auth = ({ setTitle }: Props) => {
                                 type="email"
                                 name="email"
                                 placeholder="E-mail *"
-                                value={authFormFields.email}
+                                value={formData.email || ""}
                                 onChange={handleChangeFormData} />
 
                             <Password
                                 required
                                 name="password"
                                 placeholder="Senha *"
-                                value={authFormFields.password}
+                                value={formData.password || ""}
                                 onChange={handleChangeFormData} />
 
                             <Password
                                 required
                                 name="confirmPassword"
                                 placeholder="Confirmar senha *"
-                                value={authFormFields.confirmPassword}
+                                value={formData.confirmPassword || ""}
                                 onChange={handleChangeFormData} />
                         </>}
 
-                    <button type="submit" className="button primary" disabled={loading || loadingOrders}>
+                    <button type="submit" className="button primary">
                         {formType === "login" &&
                             <>
                                 <PiSignIn />
@@ -195,11 +114,7 @@ const Auth = ({ setTitle }: Props) => {
                             </>}
 
                         {formType === "register" && "Cadastrar"}
-                        {loading || loadingOrders && <Loading inButton />}
                     </button>
-
-                    {errorMessage &&
-                        <Trigger type="error">{errorMessage}</Trigger>}
                 </form>
             </Container>
         </section>
