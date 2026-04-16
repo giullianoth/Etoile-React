@@ -1,14 +1,14 @@
 import { PiMinus, PiPlus, PiTrash } from "react-icons/pi"
 import Popup from "../../../../Popup"
 import styles from "../../../../Popup/Popup.module.css"
-import { useState, type Dispatch, type FormEvent, type SetStateAction } from "react"
+import { useState, type FormEvent } from "react"
 import Checkbox from "../../../../Form/Checkbox"
 
 type Props = {
-    setModalIsOpen: Dispatch<SetStateAction<boolean>>
+    onCloseCreate: () => void
 }
 
-const CreateOrder = ({ setModalIsOpen }: Props) => {
+const CreateOrder = ({ onCloseCreate }: Props) => {
     const [step, setStep] = useState<1 | 2>(1)
 
     const handleSubmit = (event: FormEvent) => {
@@ -126,7 +126,7 @@ const CreateOrder = ({ setModalIsOpen }: Props) => {
                     <div className={`${styles.popup__action} ${styles.popup__ended} ${styles.popup__stretched}`}>
                         <button
                             className="button primary outline"
-                            onClick={() => setModalIsOpen(false)}>Voltar</button>
+                            onClick={onCloseCreate}>Voltar</button>
 
                         <button
                             className="button primary"

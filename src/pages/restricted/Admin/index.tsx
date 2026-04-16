@@ -6,7 +6,7 @@ import { useAppContext } from "../../../context/context"
 import Trigger from "../../../components/Trigger"
 
 const Admin = () => {
-    const [isAdmin] = useState<boolean>(false)
+    const [isAdmin] = useState<boolean>(true)
     const { message, messageType, showMessage, messageIsVisible, fading } = useAppContext().message
 
     useEffect(() => {

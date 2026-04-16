@@ -1,16 +1,16 @@
 import { PiTrash } from "react-icons/pi"
 import Popup from "../../../../Popup"
 import styles from "../../../../Popup/Popup.module.css"
-import { useEffect, useState, type ChangeEvent, type Dispatch, type FormEvent, type SetStateAction } from "react"
+import { useEffect, useState, type ChangeEvent, type FormEvent } from "react"
 import { useAppContext } from "../../../../../context/context"
 import { useDateFormats } from "../../../../../hooks/date-formats"
 import type { IOrderCreate } from "../../../../../types/order"
 
 type Props = {
-    setModalIsOpen: Dispatch<SetStateAction<boolean>>
+    onCloseEdit: () => void
 }
 
-const EditOrder = ({ setModalIsOpen }: Props) => {
+const EditOrder = ({ onCloseEdit }: Props) => {
     const [date, setDate] = useState<string>("")
     const [time, setTime] = useState<string>("")
     const { dateTimeFormat, defaultDateFormat } = useDateFormats()
@@ -149,7 +149,7 @@ const EditOrder = ({ setModalIsOpen }: Props) => {
                 <div className={`${styles.popup__action} ${styles.popup__stretched} ${styles.popup__ended}`}>
                     <span
                         className="button primary outline"
-                        onClick={() => setModalIsOpen(false)}>
+                        onClick={onCloseEdit}>
                         Voltar
                     </span>
 

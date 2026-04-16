@@ -1,20 +1,14 @@
 import styles from "./OrderRow.module.css"
-import type { IOrder } from '../../../../../types/order'
 import Checkbox from "../../../../Form/Checkbox"
-import { useDateFormats } from "../../../../../hooks/date-formats"
 import type { MouseEventHandler } from "react"
 import { PiTrash } from "react-icons/pi"
 
 type Props = {
-    order: IOrder
-    checked: boolean
-    onOpenEdit: (orderToEdit: IOrder) => void
+    onOpenEdit: () => void
     onOpenDelete: MouseEventHandler
-    onSelectOrder: (orderId: string, selected: boolean) => void
 }
 
-const OrderRow = ({ order, checked, onOpenEdit, onOpenDelete, onSelectOrder }: Props) => {
-    const { dateFormat, dateTimeFormat } = useDateFormats()
+const OrderRow = ({ onOpenEdit, onOpenDelete }: Props) => {
 
     const statusClassName = {
         Pendente: "order__pending",
@@ -24,53 +18,48 @@ const OrderRow = ({ order, checked, onOpenEdit, onOpenDelete, onSelectOrder }: P
 
     return (
         <tr
-            onClick={() => onOpenEdit(order)}
-            className={`${styles.orderRow} ${styles[statusClassName[order.status]]}`
-                + (checked ? ` ${styles.selected}` : "")}>
+            onClick={() => onOpenEdit()}
+            className={`${styles.orderRow} ${styles[statusClassName["Pendente"]]}`}>
             <td>
                 <Checkbox
                     title="Selecionar pedido"
                     className={styles.orderRow__checkbox}
-                    onClick={event => event.stopPropagation()}
-                    checked={checked}
-                    onChange={event => onSelectOrder(order._id, event.target.checked)} />
+                    onClick={event => event.stopPropagation()} />
             </td>
 
             <td>
                 <span className="label-on-cell">
                     <strong>Status:</strong>&nbsp;
                 </span>
-                {order.status}
+                Status
             </td>
 
             <td>
                 <span className="label-on-cell">
                     <strong>Data de comparecimento:</strong>&nbsp;
                 </span>
-                {dateFormat(order.time)}
+                {new Date().toLocaleDateString()}
             </td>
 
             <td>
                 <span className="label-on-cell">
                     <strong>Horário de comparecimento:</strong>&nbsp;
                 </span>
-                {dateTimeFormat(order.time)}
+                {new Date().toLocaleTimeString()}
             </td>
 
             <td>
                 <span className="label-on-cell">
                     <strong>Cliente:</strong>&nbsp;
                 </span>
-                {order.userDetails[0].fullname}
+                "Cliente"
             </td>
 
             <td>
                 <span className="label-on-cell">
                     <strong>Itens:</strong>&nbsp;
                 </span>
-                {order.orderItems
-                    .map(item => item.itemDetails.name)
-                    .join(", ")}
+                Itens
             </td>
 
             <td className="centered">
