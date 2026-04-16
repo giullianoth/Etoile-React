@@ -3,52 +3,34 @@ import Container from "../../../Container"
 import styles from "./Orders.module.css"
 import Trigger from "../../../Trigger"
 import { PiEmpty } from "react-icons/pi"
-import type { IOrder } from "../../../../types/order"
-import Loading from "../../../Loading"
 import Order from "../Order"
 import Grid from "../../../Grid"
 import Modal from "react-modal"
 import { useState } from "react"
-import { useAppContext } from "../../../../context/context"
 import UpdateOrder from "../UpdateOrder"
 import ConfirmCancelOrder from "../ConfirmCancelOrder"
 import Reorder from "../Reorder"
 import DeleteOrder from "../DeleteOrder"
 
-type Props = {
-    orders: IOrder[]
-    loading: boolean
-    errorMessage: string | null
-}
-
-const Orders = ({ orders, errorMessage, loading }: Props) => {
+const Orders = () => {
     const [updateIsOpen, setUpdateIsOpen] = useState<boolean>(false)
     const [cancelIsOpen, setCancelIsOpen] = useState<boolean>(false)
     const [reorderIsOpen, setReorderIsOpen] = useState<boolean>(false)
     const [deleteOrderIsOpen, setDeleteOrderIsOpen] = useState<boolean>(false)
-    const { handleSetOrderToEdit, currentOrder, handleClearOrderFormFields } = useAppContext().orders
 
-    const handleOpenUpdate = (order: IOrder) => {
-        handleClearOrderFormFields()
-        handleSetOrderToEdit(order)
+    const handleOpenUpdate = () => {
         setUpdateIsOpen(true)
     }
 
-    const handleOpenCancel = (order: IOrder) => {
-        handleClearOrderFormFields()
-        handleSetOrderToEdit(order)
+    const handleOpenCancel = () => {
         setCancelIsOpen(true)
     }
 
-    const handleOpenReorder = (order: IOrder) => {
-        handleClearOrderFormFields()
-        handleSetOrderToEdit(order)
+    const handleOpenReorder = () => {
         setReorderIsOpen(true)
     }
 
-    const handleOpenDeleteOrder = (order: IOrder) => {
-        handleClearOrderFormFields()
-        handleSetOrderToEdit(order)
+    const handleOpenDeleteOrder = () => {
         setDeleteOrderIsOpen(true)
     }
 
@@ -60,75 +42,57 @@ const Orders = ({ orders, errorMessage, loading }: Props) => {
                         <h2>Meus pedidos</h2>
                     </header>
 
-                    {loading
-                        ? <Loading />
-                        : (errorMessage
-                            ? <Trigger type="error">{errorMessage}</Trigger>
+                    <Grid columns={3} gap={20}>
+                            <Order
+                                onOpenUpdate={handleOpenUpdate}
+                                onOpenCancel={handleOpenCancel}
+                                onOpenReorder={handleOpenReorder}
+                                onOpenDeleteOrder={handleOpenDeleteOrder} />
+                    </Grid>
 
-                            : (orders && orders.length
-                                ? <Grid columns={3} gap={20}>
-                                    {orders.map(order => (
-                                        <Order
-                                            key={order._id}
-                                            order={order}
-                                            onOpenUpdate={() => handleOpenUpdate(order)}
-                                            onOpenCancel={() => handleOpenCancel(order)}
-                                            onOpenReorder={() => handleOpenReorder(order)}
-                                            onOpenDeleteOrder={() => handleOpenDeleteOrder(order)} />
-                                    ))}
-                                </Grid>
-
-                                : <Trigger type="warning" icon={<PiEmpty />}>
-                                    <span>
-                                        Você ainda não tem pedidos.{" "}
-                                        <Link to="/pratos">Clique aqui e veja nossas espeialidades</Link>!
-                                    </span>
-                                </Trigger>))}
+                    <Trigger type="warning" icon={<PiEmpty />}>
+                        <span>
+                            Você ainda não tem pedidos.{" "}
+                            <Link to="/pratos">Clique aqui e veja nossas espeialidades</Link>!
+                        </span>
+                    </Trigger>
                 </Container>
             </section>
 
             <Modal
                 isOpen={updateIsOpen}
                 onRequestClose={() => setUpdateIsOpen(false)}
-                onAfterClose={() => handleSetOrderToEdit(null)}
                 closeTimeoutMS={300}
                 className="modal"
                 overlayClassName="modal-overlay">
-                {currentOrder && currentOrder.status === "Pendente" &&
-                    <UpdateOrder setUpdateIsOpen={setUpdateIsOpen} />}
+                    <UpdateOrder onCloseUpdate={() => setUpdateIsOpen(false)} />
             </Modal>
 
             <Modal
                 isOpen={cancelIsOpen}
                 onRequestClose={() => setCancelIsOpen(false)}
-                onAfterClose={() => handleSetOrderToEdit(null)}
                 closeTimeoutMS={300}
                 className="modal"
                 overlayClassName="modal-overlay">
-                {currentOrder && currentOrder.status === "Pendente" &&
-                    <ConfirmCancelOrder setCancelIsOpen={setCancelIsOpen} />}
+                    <ConfirmCancelOrder onCloseCancel={() => setCancelIsOpen(false)} />
             </Modal>
 
             <Modal
                 isOpen={reorderIsOpen}
                 onRequestClose={() => setReorderIsOpen(false)}
-                onAfterClose={() => handleSetOrderToEdit(null)}
                 closeTimeoutMS={300}
                 className="modal"
                 overlayClassName="modal-overlay">
-                {currentOrder && currentOrder.status !== "Pendente" &&
-                    <Reorder setReorderIsOpen={setReorderIsOpen} />}
+                    <Reorder onCloseReorder={() => setReorderIsOpen(false)} />
             </Modal>
 
             <Modal
                 isOpen={deleteOrderIsOpen}
                 onRequestClose={() => setDeleteOrderIsOpen(false)}
-                onAfterClose={() => handleSetOrderToEdit(null)}
                 closeTimeoutMS={300}
                 className="modal"
                 overlayClassName="modal-overlay">
-                {currentOrder && currentOrder.status !== "Pendente" &&
-                    <DeleteOrder setDeleteOrderIsOpen={setDeleteOrderIsOpen} />}
+                    <DeleteOrder onCloseDelete={() => setDeleteOrderIsOpen(false)} />
             </Modal>
         </>
     )

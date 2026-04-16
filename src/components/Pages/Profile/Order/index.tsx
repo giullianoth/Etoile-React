@@ -1,14 +1,10 @@
-import type { IOrder } from "../../../../types/order"
 import styles from "./Order.module.css"
 import type { IMessageType } from "../../../../types/message"
-import { PiArrowsClockwise, PiCheckCircle, PiClock, PiNotePencil, PiTrash, PiWarningCircle, PiX } from "react-icons/pi"
+import { PiArrowsClockwise, PiCheckCircle, PiClock, PiTrash, PiWarningCircle } from "react-icons/pi"
 import Trigger from "../../../Trigger"
-import { useDateFormats } from "../../../../hooks/date-formats"
 import { useEffect, useState } from "react"
-import { useAppContext } from "../../../../context/context"
 
 type Props = {
-    order: IOrder
     onOpenUpdate: () => void
     onOpenCancel: () => void
     onOpenReorder: () => void
@@ -30,57 +26,35 @@ const statusConfig = {
     }
 }
 
-const Order = ({ order, onOpenUpdate, onOpenCancel, onOpenReorder, onOpenDeleteOrder }: Props) => {
-    const { dateFormat, dateTimeFormat, isPastDate } = useDateFormats()
-    const currentStatus = statusConfig[order.status as keyof typeof statusConfig] || statusConfig.Pendente
+const Order = ({ onOpenUpdate, onOpenCancel, onOpenReorder, onOpenDeleteOrder }: Props) => {
+    const currentStatus = statusConfig.Pendente
     const [cancelledMessage, setCancelledMessage] = useState<boolean>(false)
-    const [cancelledConfirm, setCancelledConfirm] = useState<boolean>(false)
-
-    const { handleCancelOrder, loading, success } = useAppContext().orders
+    const [cancelledConfirm] = useState<boolean>(false)
 
     const actionButton = {
-        label: order.status === "Pendente" ? "Editar" : "Pedir de novo",
-        icon: order.status === "Pendente" ? <PiNotePencil /> : <PiArrowsClockwise />
+        label: "Pedir de novo",
+        icon: <PiArrowsClockwise />
     }
 
     const deleteButton = {
-        label: order.status === "Pendente" ? "Cancelar pedido" : "Excluir",
-        icon: order.status === "Pendente" ? <PiX /> : <PiTrash />
+        label: "Excluir",
+        icon: <PiTrash />
     }
 
     useEffect(() => {
-        const verifyPendingOrder = async () => {
-            const currentDate = new Date()
-
-            if (order.status === "Pendente" && isPastDate(order.time, currentDate)) {
-                await handleCancelOrder(order._id)
-                setCancelledConfirm(true)
-            }
-        }
-
-        verifyPendingOrder()
-    }, [handleCancelOrder, isPastDate, order._id, order.status, order.time])
-
-    useEffect(() => {
-        if (cancelledConfirm && success) {
+        if (cancelledConfirm) {
             setCancelledMessage(true)
         }
-    }, [cancelledConfirm, success, handleCancelOrder])
+    }, [cancelledConfirm])
 
     const handleActionClick = () => {
-        if (order.status === "Pendente") {
-            onOpenUpdate()
-            return
-        }
+        onOpenUpdate()
 
         onOpenReorder()
     }
 
     const handleDeleteClick = () => {
-        if (order.status === "Pendente") {
-            onOpenCancel()
-            return
-        }
+        onOpenCancel()
 
         onOpenDeleteOrder()
     }
@@ -89,45 +63,43 @@ const Order = ({ order, onOpenUpdate, onOpenCancel, onOpenReorder, onOpenDeleteO
         <article className={styles.order}>
             <div className={styles.order__status}>
                 <Trigger type={currentStatus.type} icon={currentStatus.icon} bullet>
-                    {order.status}
+                    Status
                 </Trigger>
             </div>
 
             <div className={styles.order__date}>
                 <p>
-                    <strong>{dateFormat(order.time)}</strong>
+                    <strong>{new Date().toLocaleTimeString()}</strong>
                 </p>
 
                 <p>
                     Presença confirmada às{" "}
-                    <strong>{dateTimeFormat(order.time)}</strong>
+                    <strong>{new Date().toLocaleDateString()}</strong>
                 </p>
             </div>
 
-            {order.orderItems.map(item => (
-                <article key={item._id} className={styles.order__item}>
+                <article className={styles.order__item}>
                     <div className={styles.order__itemImage}>
                         <img
-                            src={`/images/plates/${item.itemDetails.image}`}
-                            alt={item.itemDetails.name} />
+                            src={`/images/no-image.jpg`}
+                            alt={"Nome do prato"} />
                     </div>
 
                     <div className={styles.order__itemInfo}>
                         <header className={styles.order__itemName}>
-                            <h3>{item.itemDetails.name}</h3>
+                            <h3>{"Nome do prato"}</h3>
                         </header>
 
                         <p className={styles.order__itemPortions}>
-                            <strong>Porções: {item.quantity}</strong>
+                            <strong>Porções: 2</strong>
                         </p>
                     </div>
                 </article>
-            ))}
 
             <div className={styles.order__actions}>
                 <div
                     className={styles.order__button}
-                    onClick={() => !loading && handleActionClick()}>
+                    onClick={handleActionClick}>
                     <Trigger
                         bullet
                         type="info"
@@ -138,7 +110,7 @@ const Order = ({ order, onOpenUpdate, onOpenCancel, onOpenReorder, onOpenDeleteO
 
                 <div
                     className={styles.order__button}
-                    onClick={() => !loading && handleDeleteClick()}>
+                    onClick={handleDeleteClick}>
                     <Trigger
                         bullet
                         type="error"

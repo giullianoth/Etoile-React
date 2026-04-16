@@ -1,67 +1,29 @@
-import { useEffect, useState, type ChangeEvent, type Dispatch, type FormEvent, type SetStateAction } from "react"
 import styles from "../../../Popup/Popup.module.css"
 import Popup from "../../../Popup"
 import AnimateHeight from "react-animate-height"
 import Password from "../../../Form/Password"
-import { useAppContext } from "../../../../context/context"
 import Checkbox from "../../../Form/Checkbox"
-import type { IUser, IUserUpdate } from "../../../../types/user"
-import Loading from "../../../Loading"
-import Trigger from "../../../Trigger"
+import type { IUserUpdate } from "../../../../types/user"
+import { useState, type ChangeEvent, type FormEvent } from "react"
 
 type Props = {
-    user: IUser
-    setModalIsOpen: Dispatch<SetStateAction<boolean>>
+    onCloseUpdateUser: () => void
 }
 
-const UpdateProfile = ({ user, setModalIsOpen }: Props) => {
-    const [collapsed, setCollapsed] = useState<boolean>(false)
-    const { addMessage } = useAppContext().message
-
-    const {
-        userUpdateFormFields,
-        handleChangeUsersUpdateFormFields,
-        handleClearUsersFormFields,
-        handleSetUserToEdit,
-        loading,
-        successMessage,
-        errorMessage,
-        success,
-        handleUpdateUser
-    } = useAppContext().users
-
-    useEffect(() => {
-        handleClearUsersFormFields()
-        handleSetUserToEdit(user)
-    }, [handleClearUsersFormFields, handleSetUserToEdit, user])
-
-    useEffect(() => {
-        if (success && successMessage) {
-            addMessage(successMessage)
-            setModalIsOpen(false)
-        }
-    }, [success, successMessage, handleUpdateUser, addMessage, setModalIsOpen])
+const UpdateProfile = ({ onCloseUpdateUser }: Props) => {
+    const [formData, setFormData] = useState<Partial<IUserUpdate>>({})
+    const [changePassword, setChangePassword] = useState<boolean>(false)
 
     const handleChangeFormData = (event: ChangeEvent<HTMLInputElement>) => {
-        if (event.target.name === "changePassword") {
-            handleChangeUsersUpdateFormFields(
-                event.target.name as keyof IUserUpdate,
-                event.target.checked
-            )
-
-            setCollapsed(event.target.checked)
-            return
-        }
-
-        handleChangeUsersUpdateFormFields(
-            event.target.name as keyof IUserUpdate,
-            event.target.value
-        )
+        setFormData(prevData => ({
+            ...prevData,
+            [event.target.name]: event.target.value
+        }))
     }
 
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault()
-        await handleUpdateUser()
+        console.log(formData)
     }
 
     return (
@@ -76,63 +38,60 @@ const UpdateProfile = ({ user, setModalIsOpen }: Props) => {
                     type="text"
                     name="fullname"
                     placeholder="Nome completo"
-                    value={userUpdateFormFields.fullname}
+                    value={formData.fullname}
                     onChange={handleChangeFormData} />
 
                 <input
                     type="text"
                     name="phone"
                     placeholder="Telefone"
-                    value={userUpdateFormFields.phone}
+                    value={formData.phone}
                     onChange={handleChangeFormData} />
 
                 <label className={styles.popup__checkField}>
                     <Checkbox
                         name="changePassword"
-                        checked={userUpdateFormFields.changePassword}
-                        onChange={handleChangeFormData} />
+                        checked={changePassword}
+                        onChange={event => setChangePassword(event.target.checked)} />
 
                     <span>Redefinir a senha</span>
                 </label>
 
                 <AnimateHeight
                     duration={300}
-                    height={collapsed ? "auto" : 0}
+                    height={changePassword ? "auto" : 0}
                     contentClassName={styles.popup__form}>
                     <Password
                         name="password"
                         placeholder="Senha atual"
-                        value={userUpdateFormFields.password}
+                        value={formData.password}
                         onChange={handleChangeFormData} />
 
                     <Password
                         name="newPassword"
                         placeholder="Nova senha"
-                        value={userUpdateFormFields.newPassword}
+                        value={formData.newPassword}
                         onChange={handleChangeFormData} />
 
                     <Password
                         name="confirmPassword"
                         placeholder="Confirmar senha"
-                        value={userUpdateFormFields.confirmPassword}
+                        value={formData.confirmPassword}
                         onChange={handleChangeFormData} />
                 </AnimateHeight>
 
                 <div className={`${styles.popup__action} ${styles.popup__stretched} ${styles.popup__ended}`}>
-                    <span
+                    <button
+                        type="button"
                         className="button primary outline"
-                        onClick={() => setModalIsOpen(false)}>
+                        onClick={onCloseUpdateUser}>
                         Cancelar
-                    </span>
+                    </button>
 
-                    <button type="submit" className="button primary" disabled={loading}>
+                    <button type="submit" className="button primary">
                         Atualizar
-                        {loading && <Loading inButton />}
                     </button>
                 </div>
-
-                {errorMessage &&
-                    <Trigger type="error">{errorMessage}</Trigger>}
             </form>
         </Popup>
     )

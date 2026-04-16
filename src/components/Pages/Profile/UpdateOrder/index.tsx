@@ -1,104 +1,39 @@
 import { PiCheckBold, PiTrash, PiX } from "react-icons/pi"
-import type { IOrderItem, IOrderUpdate } from "../../../../types/order"
 import Checkbox from "../../../Form/Checkbox"
 import Popup from "../../../Popup"
 import styles from "../../../Popup/Popup.module.css"
-import { useEffect, useState, type ChangeEvent, type Dispatch, type FormEvent, type SetStateAction } from "react"
-import { useAppContext } from "../../../../context/context"
+import { useState, type FormEvent } from "react"
 import Trigger from "../../../Trigger"
-import { useDateFormats } from "../../../../hooks/date-formats"
-import Loading from "../../../Loading"
 
 type Props = {
-  setUpdateIsOpen: Dispatch<SetStateAction<boolean>>
+  onCloseUpdate: () => void
 }
 
-const UpdateOrder = ({ setUpdateIsOpen }: Props) => {
-  const [itemToCancel, setItemToCancel] = useState<IOrderItem | null>(null)
+const UpdateOrder = ({ onCloseUpdate }: Props) => {
   const [cancelItemIsOpen, setCancelItemIsOpen] = useState<boolean>(false)
   const [cancelOrderIsOpen, setCancelOrderIsOpen] = useState<boolean>(false)
-  const { dateTimeFormat, combineDateAndTime } = useDateFormats()
-  const { addMessage } = useAppContext().message
-
-  const {
-    currentOrder,
-    orderFormFields,
-    handleChangeOrderFormFields,
-    handleCancelOrderItem,
-    errorMessage,
-    loading,
-    handleUpdateOrder,
-    cancellingOrderItem,
-    successMessage,
-    success,
-    handleCancelOrder
-  } = useAppContext().orders
-
-  useEffect(() => {
-    if (success && successMessage) {
-      addMessage(successMessage)
-      setUpdateIsOpen(false)
-    }
-  }, [success, successMessage, handleUpdateOrder, addMessage, setUpdateIsOpen])
-
-  useEffect(() => {
-    if (currentOrder?.time) {
-      handleChangeOrderFormFields(
-        "time",
-        dateTimeFormat(currentOrder?.time)
-      )
-    }
-  }, [currentOrder, dateTimeFormat, handleChangeOrderFormFields])
+  const [time, setTime] = useState<string>("")
+  const [orderReceived, setOrderReceived] = useState<boolean>(false)
 
   const handleCloseCancel = () => {
     setCancelItemIsOpen(false)
-    setItemToCancel(null)
   }
 
-  const handleSetItemToCancel = (orderItem: IOrderItem) => {
+  const handleSetItemToCancel = () => {
     setCancelItemIsOpen(true)
-    setItemToCancel(orderItem)
   }
 
   const handleCancelItem = async () => {
-    if (!itemToCancel?._id) {
-      return
-    }
-
-    await handleCancelOrderItem(itemToCancel?._id)
-
     setCancelItemIsOpen(false)
-    setItemToCancel(null)
-  }
-
-  const handleChangeOrderData = (event: ChangeEvent<HTMLInputElement>) => {
-    handleChangeOrderFormFields(
-      event.target.name as keyof IOrderUpdate,
-      event.target.name === "orderReceived" ? event.target.checked : event.target.value
-    )
   }
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault()
-
-    const combinedDateValue = currentOrder?.time
-      ? combineDateAndTime(new Date(currentOrder?.time), orderFormFields.time!)
-      : null
-
-    if (!combineDateAndTime) {
-      return
-    }
-
-    await handleUpdateOrder(combinedDateValue)
+    console.log({ time, orderReceived })
   }
 
   const handleCancelCurrentOrder = async () => {
-    if (!currentOrder?._id) {
-      return
-    }
-
-    await handleCancelOrder(currentOrder._id)
-    setUpdateIsOpen(false)
+    onCloseUpdate()
   }
 
   return (
@@ -107,138 +42,128 @@ const UpdateOrder = ({ setUpdateIsOpen }: Props) => {
         <h2>Editar pedido</h2>
       </div>
 
-      {currentOrder
-        ? <>
-          <div className={styles.popup_list}>
-            {currentOrder.orderItems.map(item => (
-              <div
-                key={item._id}
-                className={styles.popup__listItem}>
-                <div className={styles.popup__listImage}>
-                  <img src={`/images/plates/${item.itemDetails.image}`} alt={item.itemDetails.name} />
-                </div>
-
-                <div className={styles.popup__listInfo}>
-                  <p className={styles.popup__listName}>
-                    <strong>{item.itemDetails.name}</strong>
-                  </p>
-
-                  <p className={styles.popup__listDetails}>
-                    <strong>Porções:</strong>{" "}
-                    {item.quantity}
-                  </p>
-                </div>
-
-                {currentOrder.orderItems.length > 1 &&
-                  <div className={styles.popup__listAction}>
-                    {cancelItemIsOpen && itemToCancel?._id === item._id
-                      ? <span className={styles.popup__action}>
-                        <span
-                          className="button clear"
-                          title="Voltar"
-                          onClick={handleCloseCancel}>
-                          <PiX />
-                        </span>
-
-                        <span
-                          className="button clear"
-                          title="Cancelar este item"
-                          onClick={handleCancelItem}>
-                          <PiCheckBold />
-                        </span>
-
-                        {cancellingOrderItem &&
-                          <Loading className={styles.popup__listLoading} small />}
-                      </span>
-
-                      : <span
-                        className="button primary clear"
-                        title="Cancelar este item"
-                        onClick={() => handleSetItemToCancel(item)}>
-                        <PiTrash />
-                      </span>}
-                  </div>}
-              </div>
-            ))}
+      <div className={styles.popup_list}>
+        <div
+          className={styles.popup__listItem}>
+          <div className={styles.popup__listImage}>
+            <img src={`/images/no-image.jpg`} alt={"Nome do prato"} />
           </div>
 
-          <form className={styles.popup__form} onSubmit={handleSubmit}>
-            <div className={`${styles.popup__action} ${styles.popup__stretched}`}>
-              <input
-                type="time"
-                name="time"
-                value={orderFormFields.time as string}
-                onChange={handleChangeOrderData}
-                disabled={cancelOrderIsOpen} />
+          <div className={styles.popup__listInfo}>
+            <p className={styles.popup__listName}>
+              <strong>{"Nome do prato"}</strong>
+            </p>
 
-              <p>
-                <strong className={styles.popup__strongDetached}>Atenção:</strong>{" "}
-                Não é possível selecionar horário anterior ao já selecionado.
-              </p>
-            </div>
+            <p className={styles.popup__listDetails}>
+              <strong>Porções:</strong>{" "}
+              2
+            </p>
+          </div>
 
-            <label className={styles.popup__checkField}>
-              <Checkbox
-                name="orderReceived"
-                checked={orderFormFields.orderReceived}
-                onChange={handleChangeOrderData}
-                disabled={cancelOrderIsOpen} />
-
-              <span>Recebi meu pedido</span>
-            </label>
-
-            <div
-              className={`${styles.popup__action} ${styles.popup__spaced} ${styles.popup__stretched} ${styles.popup__reverse}`}>
-              <div className={`${styles.popup__action} ${styles.popup__stretched}`}>
-                <span
-                  className="button primary outline"
-                  onClick={() => setUpdateIsOpen(false)}>
-                  Voltar
-                </span>
+          <div className={styles.popup__listAction}>
+            {cancelItemIsOpen
+              ? <div className={styles.popup__action}>
+                <button
+                  type="button"
+                  className="button clear"
+                  title="Voltar"
+                  onClick={handleCloseCancel}>
+                  <PiX />
+                </button>
 
                 <button
-                  type="submit"
-                  className="button primary"
-                  disabled={loading || cancelOrderIsOpen}>
-                  Atualizar
-                  {loading && <Loading inButton />}
+                  type="button"
+                  className="button clear"
+                  title="Cancelar este item"
+                  onClick={handleCancelItem}>
+                  <PiCheckBold />
                 </button>
               </div>
 
-              <div className={styles.popup__action}>
-                {cancelOrderIsOpen
-                  ? <>
-                    <span className={styles.popup__subtitle}>Tem certeza?</span>
+              : <button
+                type="button"
+                className="button primary clear"
+                title="Cancelar este item"
+                onClick={handleSetItemToCancel}>
+                <PiTrash />
+              </button>}
+          </div>
+        </div>
+      </div>
 
-                    <span
-                      className="button clear"
-                      title="Voltar"
-                      onClick={() => setCancelOrderIsOpen(false)}>
-                      <PiX />
-                    </span>
+      <form className={styles.popup__form} onSubmit={handleSubmit}>
+        <div className={`${styles.popup__action} ${styles.popup__stretched}`}>
+          <input
+            type="time"
+            name="time"
+            value={time}
+            onChange={event => setTime(event.target.value)}
+            disabled={cancelOrderIsOpen} />
 
-                    <span
-                      className="button clear"
-                      title="Cancelar pedido"
-                      onClick={handleCancelCurrentOrder}>
-                      <PiCheckBold />
-                    </span>
-                  </>
+          <p>
+            <strong className={styles.popup__strongDetached}>Atenção:</strong>{" "}
+            Não é possível selecionar horário anterior ao já selecionado.
+          </p>
+        </div>
 
-                  : <span
-                    className="button primary clear"
-                    onClick={() => setCancelOrderIsOpen(true)}>
-                    <PiTrash />
-                    Cancelar pedido
-                  </span>}
-              </div>
-            </div>
-          </form>
+        <label className={styles.popup__checkField}>
+          <Checkbox
+            name="orderReceived"
+            checked={orderReceived}
+            onChange={event => setOrderReceived(event.target.checked)}
+            disabled={cancelOrderIsOpen} />
 
-          {errorMessage && <Trigger type="error">{errorMessage}</Trigger>}
-        </>
+          <span>Recebi meu pedido</span>
+        </label>
 
-        : <Trigger type="error">Erro ao carregar pedido.</Trigger>}
+        <div
+          className={`${styles.popup__action} ${styles.popup__spaced} ${styles.popup__stretched} ${styles.popup__reverse}`}>
+          <div className={`${styles.popup__action} ${styles.popup__stretched}`}>
+            <span
+              className="button primary outline"
+              onClick={onCloseUpdate}>
+              Voltar
+            </span>
+
+            <button
+              type="submit"
+              className="button primary"
+              disabled={cancelOrderIsOpen}>
+              Atualizar
+            </button>
+          </div>
+
+          <div className={styles.popup__action}>
+            {cancelOrderIsOpen
+              ? <>
+                <span className={styles.popup__subtitle}>Tem certeza?</span>
+
+                <span
+                  className="button clear"
+                  title="Voltar"
+                  onClick={() => setCancelOrderIsOpen(false)}>
+                  <PiX />
+                </span>
+
+                <span
+                  className="button clear"
+                  title="Cancelar pedido"
+                  onClick={handleCancelCurrentOrder}>
+                  <PiCheckBold />
+                </span>
+              </>
+
+              : <span
+                className="button primary clear"
+                onClick={() => setCancelOrderIsOpen(true)}>
+                <PiTrash />
+                Cancelar pedido
+              </span>}
+          </div>
+        </div>
+      </form>
+
+      <Trigger type="error">Erro ao carregar pedido.</Trigger>
     </Popup>
   )
 }
