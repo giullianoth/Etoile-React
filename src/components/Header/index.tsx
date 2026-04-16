@@ -6,28 +6,22 @@ import logoAlt from "/images/logo-alt.svg"
 import { PiList, PiShoppingCartSimple, PiSignOut, PiUserCircle, PiX } from "react-icons/pi"
 import { useEffect, useRef, useState } from "react"
 import { useWindowBehavior } from "../../hooks/window-behavior"
-import { useAppContext } from "../../context/context"
-import { useFirstName } from "../../hooks/first-name"
 
 const Header = () => {
     const [menuIsOpen, setMenuIsOpen] = useState<boolean>(false)
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
     const overlayRef = useRef<HTMLDivElement | null>(null)
     const { scrolling } = useWindowBehavior()
-    const { success: authenticated, user, handleLogout } = useAppContext().auth
-    const { cart } = useAppContext().cart
     const { pathname } = useLocation()
-    const firstName = useFirstName()
     const navigate = useNavigate()
 
     useEffect(() => {
         setIsAuthenticated(
-            authenticated && pathname.includes("perfil")
+            pathname.includes("perfil")
         )
-    }, [authenticated, user, pathname])
+    }, [pathname])
 
     const handleLogoutAccount = () => {
-        handleLogout()
         navigate("/autenticacao")
     }
 
@@ -61,9 +55,7 @@ const Header = () => {
                         <div className={styles.header__navigationProfile}>
                             <Link
                                 to="/perfil"
-                                title={user
-                                    ? `Perfil de ${firstName(user.fullname)}`
-                                    : "Meu Perfil"}>
+                                title="Meu Perfil">
                                 <PiUserCircle />
                             </Link>
                         </div>
@@ -71,17 +63,15 @@ const Header = () => {
                         <div className={styles.header__navigationCart}>
                             <Link to="/carrinho" title="Carrinho">
                                 <PiShoppingCartSimple />
-
-                                {cart && cart.length > 0 &&
-                                    <span className={styles.header__navigationCartQt}>
-                                        {cart.length}
-                                    </span>}
+                                <span className={styles.header__navigationCartQt}>
+                                    2
+                                </span>
                             </Link>
                         </div>
 
-                        {isAuthenticated && user?.fullname &&
+                        {isAuthenticated &&
                             <p className={styles.header__welcome}>
-                                Bem-vindo, <strong>{firstName(user?.fullname)}</strong>!
+                                Bem-vindo, <strong>Usuário</strong>!
                             </p>}
 
                         {!isAuthenticated &&
