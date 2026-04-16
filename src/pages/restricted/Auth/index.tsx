@@ -1,54 +1,30 @@
 import { Link, useNavigate } from "react-router-dom"
 import styles from "./Auth.module.css"
 import logo from "/images/logo-alt.svg"
-import { useEffect, useState, type ChangeEvent, type FormEvent } from "react"
+import { useState, type ChangeEvent, type FormEvent } from "react"
 import Password from "../../../components/Form/Password"
-import { useAppContext } from "../../../context/context"
-import type { IUserRegister } from "../../../types/user"
-import Loading from "../../../components/Loading"
+import type { IUser } from "../../../types/user"
 import Trigger from "../../../components/Trigger"
 
 const Auth = () => {
-    const [isCommonUser, setIsCommonUser] = useState<boolean>(false)
+    const [formData, setFormData] = useState<Partial<IUser>>({})
+    const [isCommonUser, setIsCommonUser] = useState<boolean>(true)
     const navigate = useNavigate()
 
-    const {
-        authFormFields,
-        handleChangeAuthForm,
-        loading,
-        errorMessage,
-        handleLogin,
-        success,
-        user,
-        handleLogout,
-        handleClearAuthForm
-    } = useAppContext().auth
-
-    useEffect(() => {
-        handleClearAuthForm()
-    }, [handleClearAuthForm])
-
-    useEffect(() => {
-        if (success && user && user.role !== "admin") {
-            setIsCommonUser(true)
-        }
-    }, [success, user])
-
     const handleChangeAccount = () => {
-        handleLogout()
         setIsCommonUser(false)
     }
 
-    const handleChangeAuthData = (event: ChangeEvent<HTMLInputElement>) => {
-        handleChangeAuthForm(
-            event.target.name as keyof IUserRegister,
-            event.target.value
-        )
+    const handleChangeFormData = (event: ChangeEvent<HTMLInputElement>) => {
+        setFormData(prevData => ({
+            ...prevData,
+            [event.target.name]: event.target.value
+        }))
     }
 
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault()
-        await handleLogin(true)
+        console.log(formData)
     }
 
     return (
@@ -63,7 +39,7 @@ const Auth = () => {
                 {isCommonUser
                     ? <div className={styles.auth__denied}>
                         <Trigger type="warning">
-                            Atenção:  perfil não tem permissão para acessar esta área.
+                            Atenção: Você não tem permissão para acessar esta área.
                         </Trigger>
 
                         <button
@@ -81,27 +57,25 @@ const Auth = () => {
 
                     : <form onSubmit={handleSubmit}>
                         <input
+                            required
                             type="email"
                             name="email"
                             placeholder="Digite o e-mail"
-                            value={authFormFields.email}
-                            onChange={handleChangeAuthData} />
+                            value={formData.email || ""}
+                            onChange={handleChangeFormData} />
 
                         <Password
+                            required
                             name="password"
                             placeholder="Digite a senha"
-                            value={authFormFields.password}
-                            onChange={handleChangeAuthData} />
+                            value={formData.password || ""}
+                            onChange={handleChangeFormData} />
 
                         <button
                             type="submit"
-                            className="button primary"
-                            disabled={loading}>
+                            className="button primary">
                             Entrar
-                            {loading && <Loading inButton />}
                         </button>
-
-                        {errorMessage && <Trigger type="error">{errorMessage}</Trigger>}
                     </form>}
             </div>
         </section>
