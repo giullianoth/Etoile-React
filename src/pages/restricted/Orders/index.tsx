@@ -96,7 +96,6 @@ const Orders = () => {
                             </tr>
 
                             : <tr>
-
                                 <th></th>
                                 <th>Status</th>
                                 <th>Data de comparecimento</th>

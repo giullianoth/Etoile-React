@@ -9,13 +9,8 @@ import SetAvailability from "../SetAvailability"
 import type { IPlate } from "../../../../../types/plate"
 import Trigger from "../../../../Trigger"
 import PlateRow from "../Row/PlateRow"
-import { useAppContext } from "../../../../../context/context"
 
-type Props = {
-    plates: IPlate[]
-}
-
-const Plates = ({ plates }: Props) => {
+const Plates = () => {
     const [plateFormIsOpen, setPlateFormIsOpen] = useState<boolean>(false)
     const [deleteIsOpen, setDeleteIsOpen] = useState<boolean>(false)
     const [changeAvailabilityIsOpen, setChangeAvailabilityIsOpen] = useState<boolean>(false)
@@ -23,22 +18,9 @@ const Plates = ({ plates }: Props) => {
     const [allPlatesSelected, setAllPlatesSelected] = useState<boolean>(false)
     const [deletePlateTitle, setDeletePlateTitle] = useState<string>("")
 
-    const { handleSetPlateToEdit } = useAppContext().plates
-
     const platesToDelete = selectedPlates
         .filter(info => info.selected)
         .map(info => info.plate)
-
-    useEffect(() => {
-        if (plates.length) {
-            setSelectedPlates(
-                plates.map(plate => ({
-                    plate,
-                    selected: false
-                }))
-            )
-        }
-    }, [plates])
 
     useEffect(() => {
         if (selectedPlates.every(info => info.selected)) {
@@ -48,22 +30,22 @@ const Plates = ({ plates }: Props) => {
         }
     }, [selectedPlates])
 
-    const plateCheck = (plateId: string) => {
-        const selected = selectedPlates.find(info => info.plate._id === plateId)?.selected
-        return selected ?? false
-    }
+    // const plateCheck = (plateId: string) => {
+    //     const selected = selectedPlates.find(info => info.plate._id === plateId)?.selected
+    //     return selected ?? false
+    // }
 
-    const handleSelectPlate = (plateId: string, selected: boolean) => {
-        setSelectedPlates(prevPlates => prevPlates.map(prevPlate => {
-            if (prevPlate.plate._id === plateId) {
-                return {
-                    ...prevPlate,
-                    selected
-                }
-            }
-            return prevPlate
-        }))
-    }
+    // const handleSelectPlate = (plateId: string, selected: boolean) => {
+    //     setSelectedPlates(prevPlates => prevPlates.map(prevPlate => {
+    //         if (prevPlate.plate._id === plateId) {
+    //             return {
+    //                 ...prevPlate,
+    //                 selected
+    //             }
+    //         }
+    //         return prevPlate
+    //     }))
+    // }
 
     const handleSelectAll = (event: ChangeEvent<HTMLInputElement>) => {
         const { checked } = event.target
@@ -75,16 +57,13 @@ const Plates = ({ plates }: Props) => {
         })))
     }
 
-    const handleOpenEdit = (plateToEdit: IPlate) => {
+    const handleOpenEdit = () => {
         setPlateFormIsOpen(true)
-        handleSetPlateToEdit(plateToEdit)
     }
 
-    const handleOpenDelete = (plateToDelete: IPlate) => {
+    const handleOpenDelete = () => {
         setDeletePlateTitle("Excluir prato?")
         setDeleteIsOpen(true)
-        console.log(plateToDelete)
-        // handleSetCategoryToEdit(plateToDelete)
     }
 
     const handleSetListToDelete = () => {
@@ -104,89 +83,79 @@ const Plates = ({ plates }: Props) => {
                     </button>
                 </header>
 
-                {plates.length
-                    ? <>
-                        <table>
-                            {selectedPlates.some(info => info.selected)
-                                ? <thead className="not-hidden">
-                                    <tr>
-                                        <th>
-                                            <Checkbox
-                                                id="select-all-plates"
-                                                title="Selecionar todos"
-                                                className={styles.plate__checkbox}
-                                                checked={allPlatesSelected}
-                                                onChange={handleSelectAll} />
-                                        </th>
+                <table>
+                    {selectedPlates.some(info => info.selected)
+                        ? <thead className="not-hidden">
+                            <tr>
+                                <th>
+                                    <Checkbox
+                                        id="select-all-plates"
+                                        title="Selecionar todos"
+                                        className={styles.plate__checkbox}
+                                        checked={allPlatesSelected}
+                                        onChange={handleSelectAll} />
+                                </th>
 
-                                        <th colSpan={7}>
-                                            <label htmlFor="select-all-plates">
-                                                Selecionar todos
-                                            </label>
-                                        </th>
-                                    </tr>
-                                </thead>
+                                <th colSpan={7}>
+                                    <label htmlFor="select-all-plates">
+                                        Selecionar todos
+                                    </label>
+                                </th>
+                            </tr>
+                        </thead>
 
-                                : <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th></th>
-                                        <th>Prato</th>
-                                        <th>Disponível</th>
-                                        <th>Categoria</th>
-                                        <th>Descrição</th>
-                                        <th>Preço</th>
-                                        <th className="centered">Ações</th>
-                                    </tr>
-                                </thead>}
+                        : <thead>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th>Prato</th>
+                                <th>Disponível</th>
+                                <th>Categoria</th>
+                                <th>Descrição</th>
+                                <th>Preço</th>
+                                <th className="centered">Ações</th>
+                            </tr>
+                        </thead>}
 
-                            <tbody>
-                                {plates.map(plate => (
-                                    <PlateRow
-                                        key={plate._id}
-                                        plate={plate}
-                                        onOpenDelete={handleOpenDelete}
-                                        onOpenEdit={handleOpenEdit}
-                                        checked={plateCheck(plate._id)}
-                                        onSelectPlate={handleSelectPlate}
-                                        selecting={!selectedPlates.some(info => info.selected)} />
-                                ))}
-                            </tbody>
-                        </table>
+                    <tbody>
+                        <PlateRow
+                            onOpenDelete={handleOpenDelete}
+                            onOpenEdit={handleOpenEdit}
+                            selecting={!selectedPlates.some(info => info.selected)} />
+                    </tbody>
+                </table>
 
-                        {selectedPlates.some(info => info.selected) &&
-                            <p className={styles.plates__actions}>
-                                <strong>Ações em massa:</strong>
+                {selectedPlates.some(info => info.selected) &&
+                    <p className={styles.plates__actions}>
+                        <strong>Ações em massa:</strong>
 
-                                <button
-                                    className="button clear small"
-                                    onClick={() => setChangeAvailabilityIsOpen(true)}>
-                                    Marcar como Indisponível
-                                </button>
+                        <button
+                            className="button clear small"
+                            onClick={() => setChangeAvailabilityIsOpen(true)}>
+                            Marcar como Indisponível
+                        </button>
 
-                                <button
-                                    className="button clear small"
-                                    onClick={() => setChangeAvailabilityIsOpen(true)}>
-                                    Marcar como Disponível
-                                </button>
+                        <button
+                            className="button clear small"
+                            onClick={() => setChangeAvailabilityIsOpen(true)}>
+                            Marcar como Disponível
+                        </button>
 
-                                <button
-                                    className="button clear small"
-                                    onClick={handleSetListToDelete}>
-                                    Excluir
-                                </button>
-                            </p>}
-                    </>
+                        <button
+                            className="button clear small"
+                            onClick={handleSetListToDelete}>
+                            Excluir
+                        </button>
+                    </p>}
 
-                    : <Trigger type="warning">
-                        Ainda não há pratos cadastrados.
-                    </Trigger>}
+                <Trigger type="warning">
+                    Ainda não há pratos cadastrados.
+                </Trigger>
             </section>
 
             <Modal
                 isOpen={plateFormIsOpen}
                 onRequestClose={() => setPlateFormIsOpen(false)}
-                onAfterClose={() => handleSetPlateToEdit(null)}
                 closeTimeoutMS={300}
                 className="modal"
                 overlayClassName="modal-overlay">
