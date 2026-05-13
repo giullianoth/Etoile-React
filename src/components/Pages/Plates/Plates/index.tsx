@@ -2,18 +2,22 @@ import { useState } from "react"
 import Container from "../../../Container"
 import Divider from "../../../Divider"
 import styles from "./Plates.module.css"
-import Trigger from "../../../Trigger"
-import { PiEmpty } from "react-icons/pi"
+// import Trigger from "../../../Trigger"
+// import { PiEmpty } from "react-icons/pi"
 import Plate from "../Plate"
 import Carousel, { type ResponsiveType } from "react-multi-carousel"
 import { useWindowBehavior } from "../../../../hooks/window-behavior"
 import "react-multi-carousel/lib/styles.css"
-import Modal from "react-modal"
 import SelectedPlate from "../SelectedPlate"
+import Modal from "../../../Modal"
 
 const Plates = () => {
     const { breakpointLarge, breakpointSmall } = useWindowBehavior()
     const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
+
+    const handleAddPlate = () => {
+        setModalIsOpen(false)
+    }
 
     const carouselBreakpoints: ResponsiveType = {
         desktop: {
@@ -76,20 +80,17 @@ const Plates = () => {
                             </Carousel>
                         </article>
 
-                        <Trigger type="warning" icon={<PiEmpty />}>
-                            <span>Ainda não há pratos.</span>
-                        </Trigger>
+                        {/* <Trigger type="warning" icon={<PiEmpty />}>
+                            Ainda não há pratos.
+                        </Trigger> */}
                     </div>
                 </Container>
             </section>
 
             <Modal
                 isOpen={modalIsOpen}
-                closeTimeoutMS={300}
-                className="modal"
-                overlayClassName="modal-overlay"
                 onRequestClose={() => setModalIsOpen(false)}>
-                <SelectedPlate />
+                <SelectedPlate onAddPlate={handleAddPlate} />
             </Modal>
         </>
     )

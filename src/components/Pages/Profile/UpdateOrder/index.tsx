@@ -3,7 +3,7 @@ import Checkbox from "../../../Form/Checkbox"
 import Popup from "../../../Popup"
 import styles from "../../../Popup/Popup.module.css"
 import { useState, type FormEvent } from "react"
-import Trigger from "../../../Trigger"
+// import Trigger from "../../../Trigger"
 
 type Props = {
   onCloseUpdate: () => void
@@ -29,6 +29,7 @@ const UpdateOrder = ({ onCloseUpdate }: Props) => {
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault()
+    onCloseUpdate()
     console.log({ time, orderReceived })
   }
 
@@ -96,7 +97,7 @@ const UpdateOrder = ({ onCloseUpdate }: Props) => {
           <input
             type="time"
             name="time"
-            value={time}
+            value={time || ""}
             onChange={event => setTime(event.target.value)}
             disabled={cancelOrderIsOpen} />
 
@@ -119,11 +120,12 @@ const UpdateOrder = ({ onCloseUpdate }: Props) => {
         <div
           className={`${styles.popup__action} ${styles.popup__spaced} ${styles.popup__stretched} ${styles.popup__reverse}`}>
           <div className={`${styles.popup__action} ${styles.popup__stretched}`}>
-            <span
+            <button
+              type="button"
               className="button primary outline"
               onClick={onCloseUpdate}>
               Voltar
-            </span>
+            </button>
 
             <button
               type="submit"
@@ -138,32 +140,35 @@ const UpdateOrder = ({ onCloseUpdate }: Props) => {
               ? <>
                 <span className={styles.popup__subtitle}>Tem certeza?</span>
 
-                <span
+                <button
+                  type="button"
                   className="button clear"
                   title="Voltar"
                   onClick={() => setCancelOrderIsOpen(false)}>
                   <PiX />
-                </span>
+                </button>
 
-                <span
+                <button
+                  type="button"
                   className="button clear"
                   title="Cancelar pedido"
                   onClick={handleCancelCurrentOrder}>
                   <PiCheckBold />
-                </span>
+                </button>
               </>
 
-              : <span
+              : <button
+                type="button"
                 className="button primary clear"
                 onClick={() => setCancelOrderIsOpen(true)}>
                 <PiTrash />
                 Cancelar pedido
-              </span>}
+              </button>}
           </div>
         </div>
       </form>
 
-      <Trigger type="error">Erro ao carregar pedido.</Trigger>
+      {/* <Trigger type="error">Erro ao carregar pedido.</Trigger> */}
     </Popup>
   )
 }

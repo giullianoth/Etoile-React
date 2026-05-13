@@ -1,13 +1,13 @@
-import { PiCheck, PiEmpty } from "react-icons/pi"
+import { PiCheck } from "react-icons/pi"
 import Container from "../../../Container"
 import SectionHeading from "../../../SectionHeading"
-import Trigger from "../../../Trigger"
 import styles from "./Cart.module.css"
-import { Link } from "react-router-dom"
+// import Trigger from "../../../Trigger"
+// import { Link } from "react-router-dom"
 import CartItem from "../CartItem"
 import { useState } from "react"
-import Modal from "react-modal"
 import ConfirmOrder from "../ConfirmOrder"
+import Modal from "../../../Modal"
 
 const Cart = () => {
     const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
@@ -16,8 +16,7 @@ const Cart = () => {
         <>
             <section className={styles.cart}>
                 <Container>
-                    <SectionHeading
-                        title={`Meus itens (0)`} />
+                    <SectionHeading title={`Meus itens (0)`} />
 
                     <div className={styles.cart__list}>
                         <CartItem />
@@ -32,19 +31,16 @@ const Cart = () => {
                         </button>
                     </div>
 
-                    <Trigger type="warning" icon={<PiEmpty />}>
+                    {/* <Trigger type="warning" icon={<PiEmpty />}>
                         <span>
                             Você ainda não adicionou itens ao carrinho.{" "}
                             <Link to="/pratos">Clique aqui e veja nossas espeialidades</Link>!
                         </span>
-                    </Trigger>
+                    </Trigger> */}
                 </Container>
             </section>
 
             <Modal
-                className="modal"
-                overlayClassName="modal-overlay"
-                closeTimeoutMS={300}
                 isOpen={modalIsOpen}
                 onRequestClose={() => setModalIsOpen(false)}>
                 <ConfirmOrder onCancelConfirmOrder={() => setModalIsOpen(false)} />

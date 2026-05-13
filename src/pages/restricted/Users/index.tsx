@@ -2,9 +2,9 @@ import { PiPlusCircle, PiTrash } from "react-icons/pi"
 import styles from "./Users.module.css"
 import Checkbox from "../../../components/Form/Checkbox"
 import { useState, type MouseEvent } from "react"
-import Modal from "react-modal"
 import UserForm from "../../../components/Pages/Restricted/Users/UserForm"
 import DeleteUser from "../../../components/Pages/Restricted/Users/DeleteUser"
+import Modal from "../../../components/Modal"
 
 const Users = () => {
     const [userFormIsOpen, setUserFormIsOpen] = useState<boolean>(false)
@@ -21,7 +21,9 @@ const Users = () => {
                 <header className={styles.users__title}>
                     <h2>Lista de usuários</h2>
 
-                    <button className="button primary small">
+                    <button
+                        className="button primary small"
+                        onClick={() => setUserFormIsOpen(true)}>
                         <PiPlusCircle />
                         Novo perfil
                     </button>
@@ -183,22 +185,16 @@ const Users = () => {
 
             <Modal
                 isOpen={userFormIsOpen}
-                onRequestClose={() => setUserFormIsOpen(false)}
-                closeTimeoutMS={300}
-                className="modal"
-                overlayClassName="modal-overlay">
+                onRequestClose={() => setUserFormIsOpen(false)}>
                 <UserForm
-                    setModalIsOpen={setUserFormIsOpen}
+                    onCloseUserForm={() => setUserFormIsOpen(false)}
                     title="Novo usuário" />
             </Modal>
 
             <Modal
                 isOpen={deleteIsOpen}
-                onRequestClose={() => setDeleteIsOpen(false)}
-                closeTimeoutMS={300}
-                className="modal"
-                overlayClassName="modal-overlay">
-                <DeleteUser setModalIsOpen={setDeleteIsOpen} />
+                onRequestClose={() => setDeleteIsOpen(false)}>
+                <DeleteUser onCloseDelete={() => setDeleteIsOpen(false)} />
             </Modal>
         </>
     )

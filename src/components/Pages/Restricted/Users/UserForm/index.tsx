@@ -1,4 +1,4 @@
-import { useState, type Dispatch, type FormEvent, type SetStateAction } from "react"
+import { useState, type FormEvent } from "react"
 import styles from "../../../../Popup/Popup.module.css"
 import Popup from "../../../../Popup"
 import { PiCamera } from "react-icons/pi"
@@ -7,15 +7,16 @@ import Checkbox from "../../../../Form/Checkbox"
 import Password from "../../../../Form/Password"
 
 type Props = {
-    setModalIsOpen: Dispatch<SetStateAction<boolean>>
+    onCloseUserForm: () => void
     title: string
 }
 
-const UserForm = ({ title, setModalIsOpen }: Props) => {
+const UserForm = ({ title, onCloseUserForm }: Props) => {
     const [collapsed] = useState<boolean>(true)
 
     const handleSubmit = (event: FormEvent) => {
         event.preventDefault()
+        onCloseUserForm()
     }
 
     return (
@@ -61,7 +62,7 @@ const UserForm = ({ title, setModalIsOpen }: Props) => {
                 <div className={`${styles.popup__action} ${styles.popup__stretched} ${styles.popup__ended}`}>
                     <span
                         className="button primary outline"
-                        onClick={() => setModalIsOpen(false)}>
+                        onClick={onCloseUserForm}>
                         Voltar
                     </span>
 

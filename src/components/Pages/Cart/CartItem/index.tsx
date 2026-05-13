@@ -1,8 +1,8 @@
 import { useState } from "react"
 import styles from "./CartItem.module.css"
 import { PiBeerBottle, PiMinus, PiMinusCircle, PiPlus } from "react-icons/pi"
-import Modal from "react-modal"
 import ConfirmRemove from "../ConfirmRemove"
+import Modal from "../../../Modal"
 
 const CartItem = () => {
     const [quantity, setQuantity] = useState<number>(1)
@@ -76,10 +76,7 @@ const CartItem = () => {
             </article>
 
             <Modal
-                className="modal"
-                overlayClassName="modal-overlay"
                 isOpen={modalIsOpen}
-                closeTimeoutMS={300}
                 onRequestClose={() => setModalIsOpen(false)}>
                 <ConfirmRemove
                     onCancelRemove={() => setModalIsOpen(false)}

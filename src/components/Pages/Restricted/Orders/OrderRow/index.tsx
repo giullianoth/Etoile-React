@@ -2,6 +2,7 @@ import styles from "./OrderRow.module.css"
 import Checkbox from "../../../../Form/Checkbox"
 import type { MouseEventHandler } from "react"
 import { PiTrash } from "react-icons/pi"
+import { useDateFormats } from "../../../../../hooks/date-formats"
 
 type Props = {
     onOpenEdit: () => void
@@ -9,6 +10,7 @@ type Props = {
 }
 
 const OrderRow = ({ onOpenEdit, onOpenDelete }: Props) => {
+    const { dateFormat, timeFormat } = useDateFormats()
 
     const statusClassName = {
         Pendente: "order__pending",
@@ -18,11 +20,12 @@ const OrderRow = ({ onOpenEdit, onOpenDelete }: Props) => {
 
     return (
         <tr
+            role="button"
             onClick={() => onOpenEdit()}
             className={`${styles.orderRow} ${styles[statusClassName["Pendente"]]}`}>
             <td>
                 <Checkbox
-                    title="Selecionar pedido"
+                    title="Selecionar este pedido"
                     className={styles.orderRow__checkbox}
                     onClick={event => event.stopPropagation()} />
             </td>
@@ -38,14 +41,14 @@ const OrderRow = ({ onOpenEdit, onOpenDelete }: Props) => {
                 <span className="label-on-cell">
                     <strong>Data de comparecimento:</strong>&nbsp;
                 </span>
-                {new Date().toLocaleDateString()}
+                {dateFormat(new Date())}
             </td>
 
             <td>
                 <span className="label-on-cell">
                     <strong>Horário de comparecimento:</strong>&nbsp;
                 </span>
-                {new Date().toLocaleTimeString()}
+                {timeFormat(new Date())}
             </td>
 
             <td>

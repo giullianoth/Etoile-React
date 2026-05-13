@@ -1,26 +1,25 @@
-import { PiNotePencil, PiTrash } from "react-icons/pi"
+import { PiTrash } from "react-icons/pi"
 import Checkbox from "../../../../Form/Checkbox"
 import styles from "./Row.module.css"
-import type { ICategory } from "../../../../../types/plate"
+import type { MouseEventHandler } from "react"
 
 type Props = {
-  category: ICategory
-  checked: boolean
   selecting: boolean
-  onOpenEdit: (categoryToEdit: ICategory) => void
-  onOpenDelete: (categoryToDelete: ICategory) => void
-  onSelectCategory: (categoryId: string, selected: boolean) => void
+  onOpenEdit: () => void
+  onOpenDelete: MouseEventHandler
 }
 
-const CategoryRow = ({ category, checked, onOpenDelete, onOpenEdit, onSelectCategory, selecting }: Props) => {
+const CategoryRow = ({ onOpenDelete, onOpenEdit, selecting }: Props) => {
   return (
-    <tr>
+    <tr
+      role="button"
+      className={styles.plateRow}
+      onClick={() => onOpenEdit()}>
       <td>
         <Checkbox
           className={styles.plateRow__checkbox}
           title="Selecionar categoria"
-          checked={checked}
-          onChange={event => onSelectCategory(category._id, event.target.checked)} />
+          onClick={event => event.stopPropagation()} />
       </td>
 
       <td>
@@ -28,33 +27,27 @@ const CategoryRow = ({ category, checked, onOpenDelete, onOpenEdit, onSelectCate
           <strong>Categoria:</strong>&nbsp;
         </span>
 
-        <strong>{category.name}</strong>
+        <strong>Categoria</strong>
       </td>
 
       <td>
         <span className="label-on-cell">
           <strong>Descrição:</strong>&nbsp;
         </span>
-        {category.description}
+        Descrição: Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eveniet, repellendus ea numquam deleniti aliquam adipisci excepturi.
       </td>
 
       <td className="centered">
         {selecting &&
-          <p className={styles.plateRow__actions}>
-            <button
-              className="button clear"
-              title="Editar categoria"
-              onClick={() => onOpenEdit(category)}>
-              <PiNotePencil />
-            </button>
+        <p className={styles.plateRow__actions}>
 
-            <button
-              className="button clear"
-              title="Excluit categoria"
-              onClick={() => onOpenDelete(category)}>
-              <PiTrash />
-            </button>
-          </p>}
+          <button
+            className="button clear"
+            title="Excluit categoria"
+            onClick={onOpenDelete}>
+            <PiTrash />
+          </button>
+        </p>}
       </td>
     </tr>
   )

@@ -1,103 +1,56 @@
-import { useEffect, useState, type ChangeEvent, type Dispatch, type FormEvent, type SetStateAction } from "react"
+import { useState, type ChangeEvent, type FormEvent } from "react"
 import Popup from "../../../../Popup"
 import styles from "../../../../Popup/Popup.module.css"
 import Checkbox from "../../../../Form/Checkbox"
 import { PiCamera } from "react-icons/pi"
-import { useAppContext } from "../../../../../context/context"
-import type { ICategory, IPlate } from "../../../../../types/plate"
+import type { IPlate } from "../../../../../types/plate"
 import InputWithLabel from "../../../../Form/InputWithLabel/InputWithLabel"
 import TextareaWithLabel from "../../../../Form/InputWithLabel/TextareaWithLabel"
 import SelectWithLabel from "../../../../Form/InputWithLabel/SelectWithLabel"
 import InputWithIcon from "../../../../Form/InputWithIcon"
-import { uploadsURL } from "../../../../../services/api"
-import Loading from "../../../../Loading"
-import Trigger from "../../../../Trigger"
 
 type Props = {
-    setPlateFormIsOpen: Dispatch<SetStateAction<boolean>>
+    onClosePlateForm: () => void
 }
 
-const PlateForm = ({ setPlateFormIsOpen }: Props) => {
-    const [currentCategory, setCurrentCategory] = useState<ICategory | undefined>(undefined)
+const PlateForm = ({ onClosePlateForm }: Props) => {
+    const [currentCategory, setCurrentCategory] = useState<string>("")
     const [previewImage, setPreviewImage] = useState<File | null>(null)
-    const { addMessage } = useAppContext().message
-
-    const {
-        currentPlate,
-        plateFormFields,
-        handleChangePlateFormFields,
-        categories,
-        loading,
-        success,
-        successMessage,
-        errorMessage,
-        handleUpdatePlate,
-        handleClearPlateFormFields
-    } = useAppContext().plates
-
-    useEffect(() => {
-        if (plateFormFields.categoryId) {
-            setCurrentCategory(
-                categories.find(category => category._id === plateFormFields.categoryId)
-            )
-        }
-    }, [categories, plateFormFields])
-
-    useEffect(() => {
-        if (!currentPlate) {
-            handleClearPlateFormFields()
-        }
-    }, [currentPlate, handleClearPlateFormFields])
-
-    useEffect(() => {
-        if (success && successMessage) {
-            addMessage(successMessage)
-            setPlateFormIsOpen(false)
-        }
-    }, [addMessage, setPlateFormIsOpen, success, successMessage])
+    const [formData, setFormData] = useState<Partial<IPlate>>({})
+    const [available, setAvailable] = useState<boolean>(false)
 
     const handleChangeImage = (event: ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0]
         setPreviewImage(file || null)
     }
 
-    const handleChangeData = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        handleChangePlateFormFields(
-            event.target.name as keyof IPlate,
-            event.target.name === "available"
-                ? (event.target as HTMLInputElement).checked
-                : event.target.value
-        )
+    const handleChangeFormData = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setFormData(prevData => ({
+            ...prevData,
+            [event.target.name]: event.target.value
+        }))
     }
 
     const handleChangeCategory = (event: ChangeEvent<HTMLSelectElement>) => {
-        const selectedId = event.target.value
-        handleChangePlateFormFields("categoryId", selectedId)
-
-        setCurrentCategory(
-            categories.find(category => category._id === selectedId)
-        )
+        setCurrentCategory(event.target.value)
     }
 
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault()
-
-        if (currentPlate && currentPlate._id) {
-            await handleUpdatePlate(currentPlate._id, previewImage)
-        }
+        console.log({ ...formData, previewImage, currentCategory, available })
     }
 
     return (
         <Popup divided>
             <div className={styles.popup__half}>
-                {currentPlate?.image &&
+                {previewImage &&
                     <img
                         src={
                             previewImage
                                 ? URL.createObjectURL(previewImage)
-                                : `${uploadsURL}/plates/${currentPlate.image}`
+                                : ""
                         }
-                        alt={currentPlate.name}
+                        alt={"Prato"}
                         className={styles.popup__preview} />}
 
                 <label
@@ -111,7 +64,7 @@ const PlateForm = ({ setPlateFormIsOpen }: Props) => {
             <div className={styles.popup__half}>
                 <div className={styles.popup__heading}>
                     <h2>
-                        {currentPlate ? "Editar prato" : "Novo prato"}
+                        Novo prato
                     </h2>
                 </div>
 
@@ -126,32 +79,32 @@ const PlateForm = ({ setPlateFormIsOpen }: Props) => {
                         type="text"
                         name="name"
                         label="Prato"
-                        required
+                        // required
                         placeholder="Prato"
-                        value={plateFormFields.name}
-                        onChange={handleChangeData} />
+                        value={formData.name || ""}
+                        onChange={handleChangeFormData} />
 
                     <TextareaWithLabel
                         name="description"
                         label="Descrição"
                         placeholder="Descrição"
-                        value={plateFormFields.description}
-                        onChange={handleChangeData} />
+                        value={formData.description || ""}
+                        onChange={handleChangeFormData} />
 
                     <InputWithLabel
                         type="text"
                         name="ingredients"
                         label="Ingredientes"
                         placeholder="Ingredientes"
-                        required
-                        value={plateFormFields.ingredients?.join(", ")}
-                        onChange={handleChangeData} />
+                        // required
+                        value={formData.ingredients || ""}
+                        onChange={handleChangeFormData} />
 
                     <label className={styles.popup__checkField}>
                         <Checkbox
                             name="available"
-                            checked={plateFormFields.available}
-                            onChange={handleChangeData} />
+                            checked={available}
+                            onChange={event => setAvailable(event.target.checked)} />
 
                         <span>Disponível</span>
                     </label>
@@ -159,15 +112,12 @@ const PlateForm = ({ setPlateFormIsOpen }: Props) => {
                     <SelectWithLabel
                         name="categoryId"
                         label="Categoria"
-                        required
-                        value={currentCategory?._id}
+                        // required
+                        value={currentCategory || ""}
                         onChange={handleChangeCategory}>
-                        {categories.map(category => (
-                            <option key={category._id}
-                                value={category._id}>
-                                {category.name}
-                            </option>
-                        ))}
+                        <option value={"1"}>
+                            Categoria
+                        </option>
                     </SelectWithLabel>
 
                     <InputWithIcon
@@ -177,35 +127,32 @@ const PlateForm = ({ setPlateFormIsOpen }: Props) => {
                             name="price"
                             label="Preço"
                             placeholder="Preço"
-                            required
-                            value={plateFormFields.price}
-                            onChange={handleChangeData} /></InputWithIcon>
+                            // required
+                            value={formData.price || ""}
+                            onChange={handleChangeFormData} /></InputWithIcon>
 
                     <InputWithLabel
                         type="text"
                         name="pairing"
                         label="Acompanhamento"
                         placeholder="Acompanhamento"
-                        value={plateFormFields.pairing}
-                        onChange={handleChangeData} />
+                        value={formData.pairing}
+                        onChange={handleChangeFormData} />
 
                     <div className={`${styles.popup__action} ${styles.popup__stretched}`}>
-                        <span
+                        <button
+                            type="button"
                             className="button primary outline"
-                            onClick={() => setPlateFormIsOpen(false)}>
+                            onClick={onClosePlateForm}>
                             Cancelar
-                        </span>
+                        </button>
 
                         <button
                             type="submit"
-                            className="button primary"
-                            disabled={loading}>
-                            {currentPlate ? "Atualizar" : "Criar"}
-                            {loading && <Loading inButton />}
+                            className="button primary">
+                            Criar
                         </button>
                     </div>
-
-                    {errorMessage && <Trigger type="error">{errorMessage}</Trigger>}
                 </form>
             </div>
         </Popup>

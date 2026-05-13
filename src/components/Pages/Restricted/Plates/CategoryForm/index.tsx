@@ -1,68 +1,35 @@
-import { useEffect, type ChangeEvent, type Dispatch, type FormEvent, type SetStateAction } from "react"
+import { useState, type ChangeEvent, type FormEvent } from "react"
 import Popup from "../../../../Popup"
 import styles from "../../../../Popup/Popup.module.css"
-import { useAppContext } from "../../../../../context/context"
-import Loading from "../../../../Loading"
 import type { ICategory } from "../../../../../types/plate"
-import Trigger from "../../../../Trigger"
 import InputWithLabel from "../../../../Form/InputWithLabel/InputWithLabel"
 import TextareaWithLabel from "../../../../Form/InputWithLabel/TextareaWithLabel"
 
 type Props = {
-    setCategoryFormIsOpen: Dispatch<SetStateAction<boolean>>
+    onCloseCategoryForm: () => void
 }
 
-const CategoryForm = ({ setCategoryFormIsOpen }: Props) => {
-    const {
-        currentCategory,
-        loading,
-        categoryFormFields,
-        handleChangeCategoryFormFields,
-        errorMessage,
-        handleUpdateCategory,
-        success,
-        successMessage,
-        handleClearCategoryFormFields,
-        handleCreateCategory
-    } = useAppContext().plates
+const CategoryForm = ({ onCloseCategoryForm }: Props) => {
+    const [formData, setFormData] = useState<Partial<ICategory>>({})
 
-    const { addMessage } = useAppContext().message
-
-    useEffect(() => {
-        if (!currentCategory) {
-            handleClearCategoryFormFields()
-        }
-    }, [currentCategory, handleClearCategoryFormFields])
-
-    useEffect(() => {
-        if (success && successMessage) {
-            addMessage(successMessage)
-            setCategoryFormIsOpen(false)
-        }
-    }, [addMessage, setCategoryFormIsOpen, success, successMessage])
-
-    const handleChangeData = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        handleChangeCategoryFormFields(
-            event.target.name as keyof ICategory,
-            event.target.value
-        )
+    const handleChangeFormData = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setFormData(prevData => ({
+            ...prevData,
+            [event.target.name]: event.target.value
+        }))
     }
 
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault()
-
-        if (currentCategory && currentCategory._id) {
-            await handleUpdateCategory(currentCategory._id)
-        } else {
-            await handleCreateCategory()
-        }
+        onCloseCategoryForm()
+        console.log(formData)
     }
 
     return (
         <Popup>
             <div className={styles.popup__heading}>
                 <h2>
-                    {currentCategory ? "Editar categoria" : "Nova categoria"}
+                    Nova categoria
                 </h2>
             </div>
 
@@ -73,8 +40,8 @@ const CategoryForm = ({ setCategoryFormIsOpen }: Props) => {
                     label="Categoria"
                     placeholder="Categoria"
                     required
-                    value={categoryFormFields.name}
-                    onChange={handleChangeData} />
+                    value={formData.name || ""}
+                    onChange={handleChangeFormData} />
 
                 <TextareaWithLabel
                     rows={5}
@@ -82,27 +49,23 @@ const CategoryForm = ({ setCategoryFormIsOpen }: Props) => {
                     label="Descrição"
                     placeholder="Descrição"
                     required
-                    value={categoryFormFields.description}
-                    onChange={handleChangeData}></TextareaWithLabel>
+                    value={formData.description || ""}
+                    onChange={handleChangeFormData}></TextareaWithLabel>
 
                 <div className={`${styles.popup__action} ${styles.popup__stretched} ${styles.popup__ended}`}>
                     <span
                         className="button primary outline"
-                        onClick={() => setCategoryFormIsOpen(false)}>
+                        onClick={onCloseCategoryForm}>
                         Cancelar
                     </span>
 
                     <button
                         type="submit"
-                        className="button primary"
-                        disabled={loading}>
-                        {currentCategory ? "Atualizar" : "Criar"}
-                        {loading && <Loading inButton />}
+                        className="button primary">
+                        Criar
                     </button>
                 </div>
             </form>
-
-            {errorMessage && <Trigger type="error">{errorMessage}</Trigger>}
         </Popup>
     )
 }

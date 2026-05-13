@@ -5,17 +5,13 @@ import { useState, type FormEvent } from "react"
 import Checkbox from "../../../components/Form/Checkbox"
 import AnimateHeight from "react-animate-height"
 import Password from "../../../components/Form/Password"
-import { useAppContext } from "../../../context/context"
 import { useNavigate } from "react-router-dom"
 
 const Profile = () => {
     const [collapsed] = useState<boolean>(true)
     const navigate = useNavigate()
 
-    const { handleLogout } = useAppContext().auth
-
     const handleLogoutAccount = () => {
-        handleLogout()
         navigate("/admin")
     }
 

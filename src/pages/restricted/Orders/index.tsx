@@ -1,15 +1,15 @@
 import { useEffect, useState, type ChangeEvent, type MouseEvent } from "react"
 import Checkbox from "../../../components/Form/Checkbox"
 import styles from "./Orders.module.css"
-import Modal from "react-modal"
 import EditOrder from "../../../components/Pages/Restricted/Orders/EditOrder"
 import { PiPlusCircle } from "react-icons/pi"
 import DeleteOrder from "../../../components/Pages/Restricted/Orders/DeleteOrder"
 import SetAsCancelled from "../../../components/Pages/Restricted/Orders/SetAsCancelled"
 import CreateOrder from "../../../components/Pages/Restricted/Orders/CreateOrder"
-import Trigger from "../../../components/Trigger"
+// import Trigger from "../../../components/Trigger"
 import type { IOrder } from "../../../types/order"
 import OrderRow from "../../../components/Pages/Restricted/Orders/OrderRow"
+import Modal from "../../../components/Modal"
 
 const Orders = () => {
     const [createIsOpen, setCreateIsOpen] = useState<boolean>(false)
@@ -114,7 +114,7 @@ const Orders = () => {
                     </tbody>
                 </table>
 
-                {selectedOrders.some(info => info.selected) &&
+                {/* {selectedOrders.some(info => info.selected) && */}
                     <p className={styles.orders__actions}>
                         <strong>Ações em massa:</strong>
 
@@ -129,49 +129,38 @@ const Orders = () => {
                             onClick={handleOpenDelete}>
                             Excluir
                         </button>
-                    </p>}
+                    </p>
+                {/* } */}
 
-                <Trigger type="warning">
+                {/* <Trigger type="warning">
                     Ainda não há pedidos cadastrados.
-                </Trigger>
+                </Trigger> */}
             </section>
 
             <Modal
                 isOpen={createIsOpen}
-                onRequestClose={() => setCreateIsOpen(false)}
-                closeTimeoutMS={300}
-                className="modal"
-                overlayClassName="modal-overlay">
+                onRequestClose={() => setCreateIsOpen(false)}>
                 <CreateOrder onCloseCreate={() => setCreateIsOpen(false)} />
             </Modal>
 
             <Modal
                 isOpen={editIsOpen}
-                onRequestClose={() => setEditIsOpen(false)}
-                closeTimeoutMS={300}
-                className="modal"
-                overlayClassName="modal-overlay">
+                onRequestClose={() => setEditIsOpen(false)}>
                 <EditOrder onCloseEdit={() => setEditIsOpen(false)} />
             </Modal>
 
             <Modal
                 isOpen={cancelIsOpen}
-                onRequestClose={() => setCancelIsOpen(false)}
-                closeTimeoutMS={300}
-                className="modal"
-                overlayClassName="modal-overlay">
-                <SetAsCancelled setModalIsOpen={setCancelIsOpen} />
+                onRequestClose={() => setCancelIsOpen(false)}>
+                <SetAsCancelled onCloseSetAsCancelled={() => setCancelIsOpen(false)} />
             </Modal>
 
             <Modal
                 isOpen={deleteIsOpen}
-                onRequestClose={() => setDeleteIsOpen(false)}
-                closeTimeoutMS={300}
-                className="modal"
-                overlayClassName="modal-overlay">
+                onRequestClose={() => setDeleteIsOpen(false)}>
                 <DeleteOrder
                     title="Excluir pedido?"
-                    setModalIsOpen={setDeleteIsOpen} />
+                    onCloseDelete={() => setDeleteIsOpen(false)} />
             </Modal>
         </>
     )

@@ -1,14 +1,14 @@
 import { PiPlusCircle } from "react-icons/pi"
 import styles from "./List.module.css"
-import { useEffect, useState, type ChangeEvent } from "react"
+import { useEffect, useState, type ChangeEvent, type MouseEvent } from "react"
 import Checkbox from "../../../../Form/Checkbox"
-import Modal from "react-modal"
 import PlateForm from "../PlateForm"
 import Delete from "../Delete"
 import SetAvailability from "../SetAvailability"
 import type { IPlate } from "../../../../../types/plate"
-import Trigger from "../../../../Trigger"
+// import Trigger from "../../../../Trigger"
 import PlateRow from "../Row/PlateRow"
+import Modal from "../../../../Modal"
 
 const Plates = () => {
     const [plateFormIsOpen, setPlateFormIsOpen] = useState<boolean>(false)
@@ -18,9 +18,9 @@ const Plates = () => {
     const [allPlatesSelected, setAllPlatesSelected] = useState<boolean>(false)
     const [deletePlateTitle, setDeletePlateTitle] = useState<string>("")
 
-    const platesToDelete = selectedPlates
-        .filter(info => info.selected)
-        .map(info => info.plate)
+    // const platesToDelete = selectedPlates
+    //     .filter(info => info.selected)
+    //     .map(info => info.plate)
 
     useEffect(() => {
         if (selectedPlates.every(info => info.selected)) {
@@ -38,10 +38,7 @@ const Plates = () => {
     // const handleSelectPlate = (plateId: string, selected: boolean) => {
     //     setSelectedPlates(prevPlates => prevPlates.map(prevPlate => {
     //         if (prevPlate.plate._id === plateId) {
-    //             return {
-    //                 ...prevPlate,
-    //                 selected
-    //             }
+    //             return { ...prevPlate, selected }
     //         }
     //         return prevPlate
     //     }))
@@ -61,7 +58,8 @@ const Plates = () => {
         setPlateFormIsOpen(true)
     }
 
-    const handleOpenDelete = () => {
+    const handleOpenDelete = (event: MouseEvent) => {
+        event.stopPropagation()
         setDeletePlateTitle("Excluir prato?")
         setDeleteIsOpen(true)
     }
@@ -121,69 +119,59 @@ const Plates = () => {
                         <PlateRow
                             onOpenDelete={handleOpenDelete}
                             onOpenEdit={handleOpenEdit}
-                            selecting={!selectedPlates.some(info => info.selected)} />
+                            selecting={selectedPlates.every(info => !info.selected)} />
                     </tbody>
                 </table>
 
-                {selectedPlates.some(info => info.selected) &&
-                    <p className={styles.plates__actions}>
-                        <strong>Ações em massa:</strong>
+                {/* {selectedPlates.some(info => info.selected) && */}
+                <p className={styles.plates__actions}>
+                    <strong>Ações em massa:</strong>
 
-                        <button
-                            className="button clear small"
-                            onClick={() => setChangeAvailabilityIsOpen(true)}>
-                            Marcar como Indisponível
-                        </button>
+                    <button
+                        className="button clear small"
+                        onClick={() => setChangeAvailabilityIsOpen(true)}>
+                        Marcar como Indisponível
+                    </button>
 
-                        <button
-                            className="button clear small"
-                            onClick={() => setChangeAvailabilityIsOpen(true)}>
-                            Marcar como Disponível
-                        </button>
+                    <button
+                        className="button clear small"
+                        onClick={() => setChangeAvailabilityIsOpen(true)}>
+                        Marcar como Disponível
+                    </button>
 
-                        <button
-                            className="button clear small"
-                            onClick={handleSetListToDelete}>
-                            Excluir
-                        </button>
-                    </p>}
+                    <button
+                        className="button clear small"
+                        onClick={handleSetListToDelete}>
+                        Excluir
+                    </button>
+                </p>
+                {/* } */}
 
-                <Trigger type="warning">
+                {/* <Trigger type="warning">
                     Ainda não há pratos cadastrados.
-                </Trigger>
+                </Trigger> */}
             </section>
 
             <Modal
                 isOpen={plateFormIsOpen}
-                onRequestClose={() => setPlateFormIsOpen(false)}
-                closeTimeoutMS={300}
-                className="modal"
-                overlayClassName="modal-overlay">
-                <PlateForm setPlateFormIsOpen={setPlateFormIsOpen} />
+                onRequestClose={() => setPlateFormIsOpen(false)}>
+                <PlateForm onClosePlateForm={() => setPlateFormIsOpen(false)} />
             </Modal>
 
             <Modal
                 isOpen={changeAvailabilityIsOpen}
-                onRequestClose={() => setChangeAvailabilityIsOpen(false)}
-                closeTimeoutMS={300}
-                className="modal"
-                overlayClassName="modal-overlay">
+                onRequestClose={() => setChangeAvailabilityIsOpen(false)}>
                 <SetAvailability
-                    setModalIsOpen={setChangeAvailabilityIsOpen}
+                    onCloseSetAvailability={() => setChangeAvailabilityIsOpen(false)}
                     availability="available" />
             </Modal>
 
             <Modal
                 isOpen={deleteIsOpen}
-                onRequestClose={() => setDeleteIsOpen(false)}
-                closeTimeoutMS={300}
-                className="modal"
-                overlayClassName="modal-overlay">
+                onRequestClose={() => setDeleteIsOpen(false)}>
                 <Delete
-                    setModalIsOpen={setDeleteIsOpen}
-                    title={deletePlateTitle}
-                    itemToDelete="plate"
-                    itemsToDelete={platesToDelete} />
+                    onCloseDelete={() => setDeleteIsOpen(false)}
+                    title={deletePlateTitle} />
             </Modal>
         </>
     )

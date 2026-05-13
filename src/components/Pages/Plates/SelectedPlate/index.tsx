@@ -3,7 +3,11 @@ import { useCurrency } from "../../../../hooks/currency"
 import Popup from "../../../Popup"
 import styles from "../../../Popup/Popup.module.css"
 
-const SelectedPlate = () => {
+type Props = {
+    onAddPlate: () => void
+}
+
+const SelectedPlate = ({ onAddPlate }: Props) => {
     const currency = useCurrency()
 
     return (
@@ -19,7 +23,7 @@ const SelectedPlate = () => {
             <p className={styles.popup__subtitle}>Categoria</p>
 
             <p className={styles.popup__supportText}>
-                Ingredientes
+                Ingrediente, Ingrediente, Ingrediente
             </p>
 
             <p className={styles.popup__regularText}>Descrição do prato</p>
@@ -35,7 +39,8 @@ const SelectedPlate = () => {
                 </p>
 
                 <button
-                    className="button primary">
+                    className="button primary"
+                    onClick={onAddPlate}>
                     <PiShoppingCartSimple />
                     Adicionar
                 </button>

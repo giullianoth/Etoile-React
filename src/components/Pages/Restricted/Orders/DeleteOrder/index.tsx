@@ -1,13 +1,12 @@
-import type { Dispatch, SetStateAction } from "react"
 import Popup from "../../../../Popup"
 import styles from "../../../../Popup/Popup.module.css"
 
 type Props = {
-    setModalIsOpen: Dispatch<SetStateAction<boolean>>
+    onCloseDelete: () => void
     title: string
 }
 
-const DeleteOrder = ({ setModalIsOpen, title }: Props) => {
+const DeleteOrder = ({ onCloseDelete, title }: Props) => {
     return (
         <Popup>
             <div className={styles.popup__heading}>
@@ -17,7 +16,7 @@ const DeleteOrder = ({ setModalIsOpen, title }: Props) => {
             <div className={`${styles.popup__action} ${styles.popup__centered} ${styles.popup__stretched}`}>
                 <button
                     className="button primary outline"
-                    onClick={() => setModalIsOpen(false)}>Não</button>
+                    onClick={onCloseDelete}>Não</button>
 
                 <button
                     className="button primary">

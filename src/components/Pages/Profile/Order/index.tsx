@@ -3,6 +3,7 @@ import type { IMessageType } from "../../../../types/message"
 import { PiArrowsClockwise, PiCheckCircle, PiClock, PiTrash, PiWarningCircle } from "react-icons/pi"
 import Trigger from "../../../Trigger"
 import { useEffect, useState } from "react"
+import { useDateFormats } from "../../../../hooks/date-formats"
 
 type Props = {
     onOpenUpdate: () => void
@@ -10,6 +11,10 @@ type Props = {
     onOpenReorder: () => void
     onOpenDeleteOrder: () => void
 }
+
+type UpdateAction = "update" | "reorder"
+
+type DeleteAction = "cancel" | "delete"
 
 const statusConfig = {
     Pendente: {
@@ -30,15 +35,18 @@ const Order = ({ onOpenUpdate, onOpenCancel, onOpenReorder, onOpenDeleteOrder }:
     const currentStatus = statusConfig.Pendente
     const [cancelledMessage, setCancelledMessage] = useState<boolean>(false)
     const [cancelledConfirm] = useState<boolean>(false)
+    const { timeFormat, dateFormat } = useDateFormats()
 
     const actionButton = {
         label: "Pedir de novo",
-        icon: <PiArrowsClockwise />
+        icon: <PiArrowsClockwise />,
+        action: "update" as UpdateAction
     }
 
     const deleteButton = {
         label: "Excluir",
-        icon: <PiTrash />
+        icon: <PiTrash />,
+        action: "cancel" as DeleteAction
     }
 
     useEffect(() => {
@@ -47,16 +55,24 @@ const Order = ({ onOpenUpdate, onOpenCancel, onOpenReorder, onOpenDeleteOrder }:
         }
     }, [cancelledConfirm])
 
-    const handleActionClick = () => {
-        onOpenUpdate()
+    const handleActionClick = (action: UpdateAction) => {
+        if (action === "update") {
+            onOpenUpdate()
+        }
 
-        onOpenReorder()
+        if (action === "reorder") {
+            onOpenReorder()
+        }
     }
 
-    const handleDeleteClick = () => {
-        onOpenCancel()
+    const handleDeleteClick = (action: DeleteAction) => {
+        if (action === "cancel") {
+            onOpenCancel()
+        }
 
-        onOpenDeleteOrder()
+        if (action === "delete") {
+            onOpenDeleteOrder()
+        }
     }
 
     return (
@@ -69,37 +85,38 @@ const Order = ({ onOpenUpdate, onOpenCancel, onOpenReorder, onOpenDeleteOrder }:
 
             <div className={styles.order__date}>
                 <p>
-                    <strong>{new Date().toLocaleTimeString()}</strong>
+                    <strong>{timeFormat(new Date())}</strong>
                 </p>
 
                 <p>
                     Presença confirmada às{" "}
-                    <strong>{new Date().toLocaleDateString()}</strong>
+                    <strong>{dateFormat(new Date())}</strong>
                 </p>
             </div>
 
-                <article className={styles.order__item}>
-                    <div className={styles.order__itemImage}>
-                        <img
-                            src={`/images/no-image.jpg`}
-                            alt={"Nome do prato"} />
-                    </div>
+            <article className={styles.order__item}>
+                <div className={styles.order__itemImage}>
+                    <img
+                        src={`/images/no-image.jpg`}
+                        alt={"Nome do prato"} />
+                </div>
 
-                    <div className={styles.order__itemInfo}>
-                        <header className={styles.order__itemName}>
-                            <h3>{"Nome do prato"}</h3>
-                        </header>
+                <div className={styles.order__itemInfo}>
+                    <header className={styles.order__itemName}>
+                        <h3>{"Nome do prato"}</h3>
+                    </header>
 
-                        <p className={styles.order__itemPortions}>
-                            <strong>Porções: 2</strong>
-                        </p>
-                    </div>
-                </article>
+                    <p className={styles.order__itemPortions}>
+                        <strong>Porções: 2</strong>
+                    </p>
+                </div>
+            </article>
 
             <div className={styles.order__actions}>
                 <div
+                    role="button"
                     className={styles.order__button}
-                    onClick={handleActionClick}>
+                    onClick={() => handleActionClick(actionButton.action)}>
                     <Trigger
                         bullet
                         type="info"
@@ -109,8 +126,9 @@ const Order = ({ onOpenUpdate, onOpenCancel, onOpenReorder, onOpenDeleteOrder }:
                 </div>
 
                 <div
+                    role="button"
                     className={styles.order__button}
-                    onClick={handleDeleteClick}>
+                    onClick={() => handleDeleteClick(deleteButton.action)}>
                     <Trigger
                         bullet
                         type="error"

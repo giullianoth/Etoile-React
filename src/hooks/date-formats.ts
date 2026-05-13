@@ -10,7 +10,7 @@ export const useDateFormats = () => {
         return date.toLocaleDateString()
     }, [])
 
-    const dateTimeFormat = useCallback((date: Date | string) => {
+    const timeFormat = useCallback((date: Date | string) => {
         if (typeof date === "string") {
             date = new Date(date)
         }
@@ -72,5 +72,5 @@ export const useDateFormats = () => {
         return date.getTime() < (referenceDate ? (referenceDate as Date).getTime() : currentDate.getTime())
     }, [])
 
-    return { dateFormat, dateTimeFormat, combineDateAndTime, isPastDate, defaultDateFormat }
+    return { dateFormat, timeFormat, combineDateAndTime, isPastDate, defaultDateFormat }
 }

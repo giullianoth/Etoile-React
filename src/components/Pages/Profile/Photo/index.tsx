@@ -19,6 +19,7 @@ const Photo = ({ className }: Props) => {
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault()
         console.log(previewImage)
+        setPreviewImage(null)
     }
 
     return (
@@ -43,13 +44,15 @@ const Photo = ({ className }: Props) => {
 
             {previewImage &&
                 <div className={styles.photo__confirm}>
-                    <span
+                    <button
+                        type="button"
+                        className="button clear"
                         title="Cancelar"
                         onClick={() => setPreviewImage(null)}>
                         <Trigger type="error" icon={<PiX />}>
                             {""}
                         </Trigger>
-                    </span>
+                    </button>
 
                     <button
                         type="submit"

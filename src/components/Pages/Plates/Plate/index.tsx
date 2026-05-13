@@ -10,6 +10,7 @@ const Plate = ({ onOpen }: Props) => {
 
     return (
         <article
+            role="button"
             className={styles.plate}
             onClick={onOpen}>
             <img

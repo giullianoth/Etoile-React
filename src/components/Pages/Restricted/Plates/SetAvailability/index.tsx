@@ -1,13 +1,12 @@
-import type { Dispatch, SetStateAction } from "react"
 import Popup from "../../../../Popup"
 import styles from "../../../../Popup/Popup.module.css"
 
 type Props = {
-    setModalIsOpen: Dispatch<SetStateAction<boolean>>
+    onCloseSetAvailability: () => void
     availability: "available" | "unavailable"
 }
 
-const SetAvailability = ({ setModalIsOpen, availability }: Props) => {
+const SetAvailability = ({ onCloseSetAvailability, availability }: Props) => {
     return (
         <Popup>
             <div className={styles.popup__heading}>
@@ -17,7 +16,7 @@ const SetAvailability = ({ setModalIsOpen, availability }: Props) => {
             <div className={`${styles.popup__action} ${styles.popup__centered} ${styles.popup__stretched}`}>
                 <button
                     className="button primary outline"
-                    onClick={() => setModalIsOpen(false)}>Não</button>
+                    onClick={onCloseSetAvailability}>Não</button>
 
                 <button
                     className="button primary">

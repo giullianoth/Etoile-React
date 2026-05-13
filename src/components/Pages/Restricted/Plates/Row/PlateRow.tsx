@@ -1,23 +1,28 @@
-import { PiCheckCircle, PiEmpty, PiNotePencil, PiTrash } from "react-icons/pi"
+import { PiCheckCircle, PiTrash } from "react-icons/pi"
 import styles from "./Row.module.css"
 import Checkbox from "../../../../Form/Checkbox"
 import { useCurrency } from "../../../../../hooks/currency"
+import type { MouseEventHandler } from "react"
 
 type Props = {
     selecting: boolean
     onOpenEdit: () => void
-    onOpenDelete: () => void
+    onOpenDelete: MouseEventHandler
 }
 
 const PlateRow = ({ onOpenDelete, onOpenEdit, selecting }: Props) => {
     const currency = useCurrency()
 
     return (
-        <tr>
+        <tr
+            role="button"
+            className={styles.plateRow}
+            onClick={() => onOpenEdit()}>
             <td>
                 <Checkbox
                     className={styles.plateRow__checkbox}
-                    title="Selecionar prato" />
+                    title="Selecionar este prato"
+                    onClick={event => event.stopPropagation()} />
             </td>
             <td className={styles.plateRow__image}>
                 <img
@@ -37,7 +42,7 @@ const PlateRow = ({ onOpenDelete, onOpenEdit, selecting }: Props) => {
                     <strong>Disponível:</strong>&nbsp;
                 </span>
                 <PiCheckCircle className={styles.plateRow__available} />
-                <PiEmpty className={styles.plateRow__notAvailable} />
+                {/* <PiEmpty className={styles.plateRow__notAvailable} /> */}
             </td>
 
             <td>
@@ -64,13 +69,6 @@ const PlateRow = ({ onOpenDelete, onOpenEdit, selecting }: Props) => {
             <td className="centered">
                 {selecting &&
                     <p className={styles.plateRow__actions}>
-                        <button
-                            className="button clear"
-                            title="Editar prato"
-                            onClick={onOpenEdit}>
-                            <PiNotePencil />
-                        </button>
-
                         <button
                             className="button clear"
                             title="Excluit prato"

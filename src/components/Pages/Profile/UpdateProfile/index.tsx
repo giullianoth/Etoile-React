@@ -23,7 +23,8 @@ const UpdateProfile = ({ onCloseUpdateUser }: Props) => {
 
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault()
-        console.log(formData)
+        onCloseUpdateUser()
+        console.log({ ...formData, changePassword })
     }
 
     return (
@@ -38,14 +39,14 @@ const UpdateProfile = ({ onCloseUpdateUser }: Props) => {
                     type="text"
                     name="fullname"
                     placeholder="Nome completo"
-                    value={formData.fullname}
+                    value={formData.fullname || ""}
                     onChange={handleChangeFormData} />
 
                 <input
                     type="text"
                     name="phone"
                     placeholder="Telefone"
-                    value={formData.phone}
+                    value={formData.phone || ""}
                     onChange={handleChangeFormData} />
 
                 <label className={styles.popup__checkField}>
@@ -64,19 +65,19 @@ const UpdateProfile = ({ onCloseUpdateUser }: Props) => {
                     <Password
                         name="password"
                         placeholder="Senha atual"
-                        value={formData.password}
+                        value={formData.password || ""}
                         onChange={handleChangeFormData} />
 
                     <Password
                         name="newPassword"
                         placeholder="Nova senha"
-                        value={formData.newPassword}
+                        value={formData.newPassword || ""}
                         onChange={handleChangeFormData} />
 
                     <Password
                         name="confirmPassword"
                         placeholder="Confirmar senha"
-                        value={formData.confirmPassword}
+                        value={formData.confirmPassword || ""}
                         onChange={handleChangeFormData} />
                 </AnimateHeight>
 

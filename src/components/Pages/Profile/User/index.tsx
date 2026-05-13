@@ -3,8 +3,8 @@ import Container from "../../../Container"
 import Photo from "../Photo"
 import styles from "./User.module.css"
 import { useState } from "react"
-import Modal from "react-modal"
 import UpdateProfile from "../UpdateProfile"
+import Modal from "../../../Modal"
 
 const User = () => {
     const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
@@ -36,10 +36,7 @@ const User = () => {
 
             <Modal
                 isOpen={modalIsOpen}
-                onRequestClose={() => setModalIsOpen(false)}
-                closeTimeoutMS={300}
-                className="modal"
-                overlayClassName="modal-overlay">
+                onRequestClose={() => setModalIsOpen(false)}>
                 <UpdateProfile onCloseUpdateUser={() => setModalIsOpen(false)} />
             </Modal>
         </>

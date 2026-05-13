@@ -1,11 +1,11 @@
 import PlatesComponent from "../../../components/Pages/Restricted/Plates/List/Plates"
-// import Categories from "../../../components/Pages/Restricted/Plates/List/Categories"
+import Categories from "../../../components/Pages/Restricted/Plates/List/Categories"
 
 const Plates = () => {
     return (
         <>
             <PlatesComponent />
-            {/* <Categories /> */}
+            <Categories />
         </>
     )
 }
