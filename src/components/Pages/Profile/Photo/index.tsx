@@ -5,7 +5,7 @@ import { useState, type ChangeEvent, type FormEvent } from "react"
 import Trigger from "../../../Trigger"
 
 type Props = {
-    className: string
+    className?: string
 }
 
 const Photo = ({ className }: Props) => {
@@ -22,7 +22,9 @@ const Photo = ({ className }: Props) => {
     }
 
     return (
-        <form className={`${styles.photo} ${className}`} onSubmit={handleSubmit}>
+        <form
+            className={styles.photo + (className ? ` ${className}` : "")}
+            onSubmit={handleSubmit}>
             <img
                 src={
                     previewImage

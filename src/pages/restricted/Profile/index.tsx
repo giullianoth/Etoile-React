@@ -39,8 +39,7 @@ const Profile = () => {
 
             <div className={styles.profile__container}>
                 <div className={styles.profile__photo}>
-                    <Photo
-                        userName="Giulliano Guimarães" />
+                    <Photo />
                 </div>
 
                 <div className={styles.profile__form}>
