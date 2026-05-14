@@ -79,7 +79,7 @@ const PlateForm = ({ onClosePlateForm }: Props) => {
                         type="text"
                         name="name"
                         label="Prato"
-                        // required
+                        required
                         placeholder="Prato"
                         value={formData.name || ""}
                         onChange={handleChangeFormData} />
@@ -96,7 +96,7 @@ const PlateForm = ({ onClosePlateForm }: Props) => {
                         name="ingredients"
                         label="Ingredientes"
                         placeholder="Ingredientes"
-                        // required
+                        required
                         value={formData.ingredients || ""}
                         onChange={handleChangeFormData} />
 
@@ -112,7 +112,7 @@ const PlateForm = ({ onClosePlateForm }: Props) => {
                     <SelectWithLabel
                         name="categoryId"
                         label="Categoria"
-                        // required
+                        required
                         value={currentCategory || ""}
                         onChange={handleChangeCategory}>
                         <option value={"1"}>
@@ -127,7 +127,7 @@ const PlateForm = ({ onClosePlateForm }: Props) => {
                             name="price"
                             label="Preço"
                             placeholder="Preço"
-                            // required
+                            required
                             value={formData.price || ""}
                             onChange={handleChangeFormData} /></InputWithIcon>
 

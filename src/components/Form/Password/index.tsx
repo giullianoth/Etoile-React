@@ -19,6 +19,7 @@ const Password = (props: ComponentProps<"input">) => {
             <input ref={inputRef} type={inputType} {...props} />
 
             <span
+                role="button"
                 className={styles.password__icon}
                 onClick={handleChangeInputType}>
                 {inputType === "password" && <PiEye />}

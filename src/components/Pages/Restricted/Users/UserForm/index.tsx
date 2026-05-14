@@ -1,10 +1,14 @@
-import { useState, type FormEvent } from "react"
+import { useState, type ChangeEvent, type FormEvent } from "react"
 import styles from "../../../../Popup/Popup.module.css"
 import Popup from "../../../../Popup"
 import { PiCamera } from "react-icons/pi"
 import AnimateHeight from "react-animate-height"
 import Checkbox from "../../../../Form/Checkbox"
-import Password from "../../../../Form/Password"
+import type { IUserUpdate } from "../../../../../types/user"
+import InputWithLabel from "../../../../Form/InputWithLabel/InputWithLabel"
+import SelectWithLabel from "../../../../Form/InputWithLabel/SelectWithLabel"
+import PasswordWithLabel from "../../../../Form/InputWithLabel/PasswordWithLabel"
+import avatar from "/images/user.png"
 
 type Props = {
     onCloseUserForm: () => void
@@ -12,10 +16,25 @@ type Props = {
 }
 
 const UserForm = ({ title, onCloseUserForm }: Props) => {
-    const [collapsed] = useState<boolean>(true)
+    const [changePassword, setChangePassword] = useState<boolean>(false)
+    const [formData, setFormData] = useState<Partial<IUserUpdate>>({ role: "user" })
+    const [photoPreview, setPhotoPreview] = useState<File | null>(null)
+
+    const handleChangeFormData = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        setFormData(prevData => ({
+            ...prevData,
+            [event.target.name]: event.target.value
+        }))
+    }
+
+    const handleChangePhoto = (event: ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0]
+        setPhotoPreview(file || null)
+    }
 
     const handleSubmit = (event: FormEvent) => {
         event.preventDefault()
+        console.log(formData, changePassword, photoPreview)
         onCloseUserForm()
     }
 
@@ -27,36 +46,78 @@ const UserForm = ({ title, onCloseUserForm }: Props) => {
 
             <form className={styles.popup__form} onSubmit={handleSubmit}>
                 <div className={styles.popup__file}>
-                    <img src="/images/users/avatar.jpg" alt="Foto" />
+                    <img
+                        src={
+                            photoPreview
+                                ? URL.createObjectURL(photoPreview)
+                                : avatar
+                        }
+                        alt={"Nome"} />
 
                     <label title="Adicionar foto">
                         <PiCamera />
-                        <input type="file" />
+                        <input type="file" name="photo" onChange={handleChangePhoto} />
                     </label>
                 </div>
 
-                <input type="text" placeholder="Nome completo *" />
-                <input type="email" placeholder="E-mail *" />
+                <InputWithLabel
+                    label="Nome completo"
+                    type="text"
+                    // required
+                    name="fullname"
+                    value={formData.fullname || ""}
+                    onChange={handleChangeFormData} />
 
-                <select>
-                    <option value="Administrador">Administrador</option>
-                    <option value="Cliente">Cliente</option>
-                </select>
+                <InputWithLabel
+                    label="E-mail"
+                    type="email"
+                    // required
+                    name="email"
+                    value={formData.email || ""}
+                    onChange={handleChangeFormData} />
 
-                <input type="text" placeholder="Telefone *" />
+                <SelectWithLabel
+                    label="Perfil"
+                    required
+                    name="role"
+                    value={formData.role}
+                    onChange={handleChangeFormData}>
+                    <option value="user">Cliente</option>
+                    <option value="admin">Administrador</option>
+                </SelectWithLabel>
+
+                <InputWithLabel
+                    label="Telefone"
+                    type="text"
+                    name="phone"
+                    value={formData.phone || ""}
+                    onChange={handleChangeFormData} />
 
                 <label className={styles.popup__checkField}>
-                    <Checkbox />
+                    <Checkbox
+                        checked={changePassword}
+                        onChange={event => setChangePassword(event.target.checked)} />
 
                     <span>Redefinir a senha</span>
                 </label>
 
                 <AnimateHeight
                     duration={300}
-                    height={collapsed ? "auto" : 0}
+                    height={changePassword ? "auto" : 0}
                     contentClassName={styles.popup__form}>
-                    <Password placeholder="Senha *" />
-                    <Password placeholder="Confirmar senha *" />
+                    <PasswordWithLabel
+                        label="Senha"
+                        // required
+                        name="password"
+                        value={formData.password || ""}
+                        onChange={handleChangeFormData} />
+
+                    <PasswordWithLabel
+                        label="Confirmar senha"
+                        // required
+                        name="confirmPassword"
+                        value={formData.confirmPassword || ""}
+                        onChange={handleChangeFormData} />
                 </AnimateHeight>
 
                 <div className={`${styles.popup__action} ${styles.popup__stretched} ${styles.popup__ended}`}>

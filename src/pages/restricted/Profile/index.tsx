@@ -1,22 +1,33 @@
 import { PiSignOut } from "react-icons/pi"
 import styles from "./Profile.module.css"
 import Photo from "../../../components/Pages/Profile/Photo"
-import { useState, type FormEvent } from "react"
+import { useState, type ChangeEvent, type FormEvent } from "react"
 import Checkbox from "../../../components/Form/Checkbox"
 import AnimateHeight from "react-animate-height"
-import Password from "../../../components/Form/Password"
 import { useNavigate } from "react-router-dom"
+import type { IUserUpdate } from "../../../types/user"
+import InputWithLabel from "../../../components/Form/InputWithLabel/InputWithLabel"
+import PasswordWithLabel from "../../../components/Form/InputWithLabel/PasswordWithLabel"
 
 const Profile = () => {
-    const [collapsed] = useState<boolean>(true)
     const navigate = useNavigate()
+    const [changePassword, setChangePassword] = useState<boolean>(false)
+    const [formData, setFormData] = useState<Partial<IUserUpdate>>({})
 
     const handleLogoutAccount = () => {
         navigate("/admin")
     }
 
+    const handleChangeFormData = (event: ChangeEvent<HTMLInputElement>) => {
+        setFormData(prevData => ({
+            ...prevData,
+            [event.target.name]: event.target.value
+        }))
+    }
+
     const handleSubmit = (event: FormEvent) => {
         event.preventDefault()
+        console.log(formData, changePassword)
     }
 
     return (
@@ -41,23 +52,51 @@ const Profile = () => {
                 <div className={styles.profile__form}>
                     <form onSubmit={handleSubmit}>
                         <div className={styles.profile__formRow}>
-                            <input type="text" placeholder="Nome completo *" />
-                            <input type="text" placeholder="Telefone" />
+                            <InputWithLabel
+                                label="Nome completo"
+                                required
+                                type="text"
+                                name="fullname"
+                                value={formData.fullname || ""}
+                                onChange={handleChangeFormData} />
+
+                            <InputWithLabel
+                                label="Telefone"
+                                type="text"
+                                name="phone"
+                                value={formData.phone || ""}
+                                onChange={handleChangeFormData} />
                         </div>
 
                         <label className={styles.profile__checkField}>
-                            <Checkbox />
+                            <Checkbox
+                                checked={changePassword}
+                                onChange={event => setChangePassword(event.target.checked)} />
 
                             <span>Redefinir a senha</span>
                         </label>
 
                         <AnimateHeight
                             duration={300}
-                            height={collapsed ? "auto" : 0}
+                            height={changePassword ? "auto" : 0}
                             contentClassName={styles.profile__formRow}>
-                            <Password placeholder="Senha *" />
-                            <Password placeholder="Nova senha *" />
-                            <Password placeholder="Confirmar senha *" />
+                            <PasswordWithLabel
+                                label="Senha atual"
+                                name="password"
+                                value={formData.password || ""}
+                                onChange={handleChangeFormData} />
+
+                            <PasswordWithLabel
+                                label="Nova senha"
+                                name="newPassword"
+                                value={formData.newPassword || ""}
+                                onChange={handleChangeFormData} />
+
+                            <PasswordWithLabel
+                                label="Confirmar senha"
+                                name="confirmPassword"
+                                value={formData.confirmPassword || ""}
+                                onChange={handleChangeFormData} />
                         </AnimateHeight>
 
                         <button type="submit" className="button primary">

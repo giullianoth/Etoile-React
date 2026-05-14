@@ -12,9 +12,13 @@
     background-color: var(--color-white-smoke);
     padding: 0 6px;
     color: var(--color-murrey);
+    z-index: 3;
 }
 
-.input input, .input select, .input textarea {
+.input span:has(input),
+.input input,
+.input select,
+.input textarea {
     display: block;
     width: 100%;
 }

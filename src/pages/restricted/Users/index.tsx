@@ -117,58 +117,6 @@ const Users = () => {
                                 </p>
                             </td>
                         </tr>
-
-                        <tr
-                            className={styles.user__row}>
-                            <td>
-                                <Checkbox
-                                    className={styles.user__checkbox}
-                                    onClick={event => event.stopPropagation()} />
-                            </td>
-
-                            <td className={`centered ${styles.user__image}`}>
-                                <img src="/images/users/avatar.jpg" alt="Prato" />
-                            </td>
-
-                            <td>
-                                <span className="label-on-cell">
-                                    <strong>Cliente:</strong>&nbsp;
-                                </span>
-                                Giulliano Guimarães
-                            </td>
-
-                            <td>
-                                <span className="label-on-cell">
-                                    <strong>Papel:</strong>&nbsp;
-                                </span>
-                                Admin
-                            </td>
-
-                            <td>
-                                <span className="label-on-cell">
-                                    <strong>E-mail:</strong>&nbsp;
-                                </span>
-                                giulliano@email.com
-                            </td>
-
-                            <td>
-                                <span className="label-on-cell">
-                                    <strong>Telefone:</strong>&nbsp;
-                                </span>
-                                900000000
-                            </td>
-
-                            <td className="centered">
-                                <p className={styles.user__actions}>
-                                    <button
-                                        className="button clear"
-                                        title="Excluit usuário"
-                                        onClick={handleOpenDelete}>
-                                        <PiTrash />
-                                    </button>
-                                </p>
-                            </td>
-                        </tr>
                     </tbody>
                 </table>
 
