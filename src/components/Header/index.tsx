@@ -6,6 +6,7 @@ import logoAlt from "/images/logo-alt.svg"
 import { PiList, PiShoppingCartSimple, PiSignOut, PiUserCircle, PiX } from "react-icons/pi"
 import { useEffect, useRef, useState } from "react"
 import { useWindowBehavior } from "../../hooks/window-behavior"
+import { useAppContext } from "../../context/context"
 
 const Header = () => {
     const [menuIsOpen, setMenuIsOpen] = useState<boolean>(false)
@@ -14,6 +15,7 @@ const Header = () => {
     const { scrolling } = useWindowBehavior()
     const { pathname } = useLocation()
     const navigate = useNavigate()
+    const { cart } = useAppContext().cart
 
     useEffect(() => {
         setIsAuthenticated(
@@ -63,9 +65,10 @@ const Header = () => {
                         <div className={styles.header__navigationCart}>
                             <Link to="/carrinho" title="Carrinho">
                                 <PiShoppingCartSimple />
-                                <span className={styles.header__navigationCartQt}>
-                                    2
-                                </span>
+                                {cart.length > 0
+                                    && <span className={styles.header__navigationCartQt}>
+                                        {cart.length}
+                                    </span>}
                             </Link>
                         </div>
 
