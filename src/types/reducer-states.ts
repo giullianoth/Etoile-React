@@ -61,19 +61,12 @@ export type IOrdersActions =
 export interface IPlatesState extends IReducerStates {
     categories: ICategory[]
     plates: IPlate[]
-    currentCategory: ICategory | null
-    currentPlate: IPlate | null
     fetching: boolean
     fetchErrorMessage: string | null
-    categoryFormFields: Partial<ICategory>
-    plateFormFields: Partial<IPlate>
 }
 
 export type IPlatesActions =
-    | { type: "SET_CATEGORY_TO_EDIT", payload: ICategory | null }
     | { type: "SET_PLATE_TO_EDIT", payload: IPlate | null }
-    | { type: "CATEGORY_CHANGE_FORM_FIELDS", payload: { name: keyof ICategory, value: string } }
-    | { type: "PLATE_CHANGE_FORM_FIELDS", payload: { name: keyof IPlate, value: string | boolean } }
     | { type: "CATEGORIES_FETCH_START" }
     | { type: "CATEGORIES_FETCH_SUCCESS", payload: ICategory[] }
     | { type: "CATEGORIES_FETCH_FAILURE", payload: string }
@@ -86,7 +79,6 @@ export type IPlatesActions =
     | { type: "CATEGORY_DELETE_START" }
     | { type: "CATEGORY_DELETE_SUCCESS", payload: { categoryId: string, message: string } }
     | { type: "CATEGORY_DELETE_FAILURE", payload: string }
-    | { type: "CATEGORIES_CLEAR_FORM_FIELDS" }
     | { type: "PLATES_FETCH_START" }
     | { type: "PLATES_FETCH_SUCCESS", payload: IPlate[] }
     | { type: "PLATES_FETCH_FAILURE", payload: string }
@@ -99,8 +91,6 @@ export type IPlatesActions =
     | { type: "PLATE_DELETE_START" }
     | { type: "PLATE_DELETE_SUCCESS", payload: { plateId: string, message: string } }
     | { type: "PLATE_DELETE_FAILURE", payload: string }
-    | { type: "PLATES_CLEAR_FORM_FIELDS" }
-    | { type: "PLATES_CLEAR_DATA" }
 
 // Users
 export interface IUsersState extends IReducerStates {

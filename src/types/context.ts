@@ -1,11 +1,11 @@
 import type { ICartItem } from "./cart";
 import type { IMessageType } from "./message";
 import type { IOrder, IOrderCreate, IOrderUpdate } from "./order";
-import type { ICategory, IPlate } from "./plate";
+import type { IPlate } from "./plate";
 import type { IAuthState, IOrdersState, IPlatesState, IUsersState } from "./reducer-states";
 import type { IUser, IUserRegister, IUserUpdate } from "./user";
 
-interface IMessageContext {
+export interface IMessageContext {
     message: string | null
     messageType: IMessageType
     messageIsVisible: boolean
@@ -14,7 +14,7 @@ interface IMessageContext {
     showMessage: (timeout?: number) => void
 }
 
-interface ICartContext {
+export interface ICartContext {
     cart: ICartItem[]
     addToCart: (cartItem: IPlate, quantity?: number) => void
     updateQuantity: (plateId: string, quantity: number) => void
@@ -22,7 +22,7 @@ interface ICartContext {
     clearCart: () => void
 }
 
-interface IAuthContext extends IAuthState {
+export interface IAuthContext extends IAuthState {
     handleChangeAuthForm: (name: keyof IUserRegister, value: string) => void
     handleClearAuthForm: () => void
     handleClearAuthData: () => void
@@ -32,7 +32,7 @@ interface IAuthContext extends IAuthState {
     handleLogout: () => void
 }
 
-interface IOrdersContext extends IOrdersState {
+export interface IOrdersContext extends IOrdersState {
     handleSetOrderToEdit: (order: IOrder | null) => void
     handleChangeOrderFormFields: (name: keyof IOrderCreate | keyof IOrderUpdate, value: string | boolean | IPlate[]) => void
     handleClearOrdersData: () => void
@@ -46,25 +46,19 @@ interface IOrdersContext extends IOrdersState {
     handleDeleteOrder: (orderId: string) => Promise<void>
 }
 
-interface IPlatesContext extends IPlatesState {
-    handleChangeCategoryFormFields: (name: keyof ICategory, value: string) => void
-    handleChangePlateFormFields: (name: keyof IPlate, value: string | boolean) => void
-    handleClearPlatesData: () => void
-    handleClearCategoryFormFields: () => void
-    handleClearPlateFormFields: () => void
-    handleSetCategoryToEdit: (category: ICategory | null) => void
-    handleSetPlateToEdit: (plate: IPlate | null) => void
+export interface IPlatesContext extends IPlatesState {
     handleFetchCategories: () => Promise<void>
     handleFetchAvailableCategories: () => Promise<void>
     handleFetchPlates: () => Promise<void>
     handleFetchAvailablePlates: () => Promise<void>
+    handleFetchAvailablePlatesByCategory: (categoryId: string) => Promise<void>
     handleCreateCategory:() => Promise<void>
     handleUpdateCategory: (categoryId: string) => Promise<void>
     handleUpdatePlate: (plateId: string, image?: File | null) => Promise<void>
     handleDeleteCategory:(categoryId: string) => Promise<void>
 }
 
-interface IUsersContext extends IUsersState {
+export interface IUsersContext extends IUsersState {
     handleChangeUsersUpdateFormFields: (name: keyof IUserUpdate, value: string | boolean) => void
     handleClearUsersFormFields: () => void
     handleClearUsersData: () => void

@@ -1,22 +1,54 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Container from "../../../Container"
 import Divider from "../../../Divider"
 import styles from "./Plates.module.css"
-// import Trigger from "../../../Trigger"
-// import { PiEmpty } from "react-icons/pi"
 import Plate from "../Plate"
 import Carousel, { type ResponsiveType } from "react-multi-carousel"
 import { useWindowBehavior } from "../../../../hooks/window-behavior"
 import "react-multi-carousel/lib/styles.css"
 import SelectedPlate from "../SelectedPlate"
 import Modal from "../../../Modal"
+import { useAppContext } from "../../../../context/context"
+import Loading from "../../../Loading"
+import Trigger from "../../../Trigger"
+import { PiEmpty } from "react-icons/pi"
+import type { IPlate } from "../../../../types/plate"
 
 const Plates = () => {
     const { breakpointLarge, breakpointSmall } = useWindowBehavior()
     const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
+    const [plateToShow, setPlateToShow] = useState<IPlate | null>(null)
 
-    const handleAddPlate = () => {
+    const {
+        categories,
+        plates,
+        handleFetchAvailableCategories,
+        handleFetchAvailablePlates,
+        fetching,
+        fetchErrorMessage
+    } = useAppContext().plates
+
+    useEffect(() => {
+        const fetchData = async () => {
+            await handleFetchAvailableCategories()
+            await handleFetchAvailablePlates()
+        }
+
+        fetchData()
+    }, [handleFetchAvailableCategories, handleFetchAvailablePlates])
+
+    const platesByCategory = (categoryId: string) => {
+        return plates.filter(plate => plate.categoryId === categoryId)
+    }
+
+    const handleShowPlate = (plate: IPlate) => {
+        setModalIsOpen(true)
+        setPlateToShow(plate)
+    }
+
+    const handleAddPlate = (plate: IPlate) => {
         setModalIsOpen(false)
+        console.log(plate)
     }
 
     const carouselBreakpoints: ResponsiveType = {
@@ -61,36 +93,53 @@ const Plates = () => {
                     <Divider />
 
                     <div className={styles.plates__byCategory}>
-                        <article className={styles.plates__list}>
-                            <header className={styles.plates__listCategory}>
-                                <h3>Categoria</h3>
-                            </header>
+                        {fetching
+                            ? <Loading />
 
-                            <p className={styles.plates__listDescription}>
-                                Descrição da categoria
-                            </p>
+                            : fetchErrorMessage
+                                ? <Trigger type="error">{fetchErrorMessage}</Trigger>
 
-                            <Carousel
-                                draggable
-                                partialVisible
-                                responsive={carouselBreakpoints}
-                                itemClass={styles.plates__plate}
-                                className={styles.plates__carousel}>
-                                <Plate onOpen={() => setModalIsOpen(true)} />
-                            </Carousel>
-                        </article>
+                                : categories.length
+                                    ? categories.map(category => (
+                                        <article key={category._id} className={styles.plates__list}>
+                                            <header className={styles.plates__listCategory}>
+                                                <h3>{category.name}</h3>
+                                            </header>
 
-                        {/* <Trigger type="warning" icon={<PiEmpty />}>
-                            Ainda não há pratos.
-                        </Trigger> */}
+                                            <p className={styles.plates__listDescription}>
+                                                {category.description}
+                                            </p>
+                                            <Carousel
+                                                draggable
+                                                partialVisible
+                                                responsive={carouselBreakpoints}
+                                                itemClass={styles.plates__plate}
+                                                className={styles.plates__carousel}>
+                                                {platesByCategory(category._id).map(plate => (
+                                                    <Plate
+                                                        key={plate._id}
+                                                        plate={plate}
+                                                        onOpenModal={handleShowPlate} />
+                                                ))}
+                                            </Carousel>
+                                        </article>
+                                    ))
+
+                                    : <Trigger type="warning" icon={<PiEmpty />}>
+                                        Ainda não há pratos.
+                                    </Trigger>}
                     </div>
                 </Container>
             </section>
 
             <Modal
                 isOpen={modalIsOpen}
-                onRequestClose={() => setModalIsOpen(false)}>
-                <SelectedPlate onAddPlate={handleAddPlate} />
+                onRequestClose={() => setModalIsOpen(false)}
+                onAfterClose={() => setPlateToShow(null)}>
+                {plateToShow &&
+                    <SelectedPlate
+                        plate={plateToShow}
+                        onAddPlate={handleAddPlate} />}
             </Modal>
         </>
     )

@@ -153,6 +153,27 @@ const fetchAvailablePlates = async () => {
     }
 }
 
+const fetchAvailablePlatesByCategory = async (categoryId: string) => {
+    try {
+        const response = await fetch(`${platesUrl}/available/${categoryId}`, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" }
+        }).then(res => res.json())
+
+        return response as IPlatesFetchResponse
+    } catch (error) {
+        console.error(error)
+
+        return {
+            success: false,
+            statusCode: 500,
+            body: {
+                text: "Erro de rede ou comunicação com o servidor."
+            }
+        } as IErrorResponse
+    }
+}
+
 const createPlate = async (plateData: Partial<IPlate>) => {
     try {
         const response = await fetch(platesUrl, {
@@ -221,6 +242,7 @@ const platesServices = {
     fetchAvailableCategories,
     fetchPlates,
     fetchAvailablePlates,
+    fetchAvailablePlatesByCategory,
     createCategory,
     createPlate,
     updateCategory,

@@ -1,30 +1,37 @@
 import styles from "./Plate.module.css"
 import { useCurrency } from "../../../../hooks/currency"
+import type { IPlate } from "../../../../types/plate"
+import { uploadsURL } from "../../../../services/api"
 
 type Props = {
-    onOpen: () => void
+    onOpenModal: (plateToShow: IPlate) => void
+    plate: IPlate
 }
 
-const Plate = ({ onOpen }: Props) => {
+const Plate = ({ onOpenModal, plate }: Props) => {
     const currency = useCurrency()
 
     return (
         <article
             role="button"
             className={styles.plate}
-            onClick={onOpen}>
+            onClick={() => onOpenModal(plate)}>
             <img
-                src={"/images/no-image.jpg"}
-                alt={"Nome do prato"} />
+                src={
+                    plate.image
+                        ? `${uploadsURL}/plates/${plate.image}`
+                        : "/images/no-image.jpg"
+                }
+                alt={plate.name} />
 
             <div className={styles.plate__info}>
                 <header className={styles.plate__name}>
-                    <h4>Nome do prato</h4>
+                    <h4>{plate.name}</h4>
                 </header>
 
-                <p className={styles.plate__description}>Descrição do prato</p>
+                <p className={styles.plate__description}>{plate.description}</p>
 
-                <p className={styles.plate__price}>{currency(0)}</p>
+                <p className={styles.plate__price}>{currency(plate.price)}</p>
             </div>
         </article>
     )
