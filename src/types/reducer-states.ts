@@ -1,6 +1,6 @@
 import type { IOrder, IOrderCreate, IOrderItem, IOrderUpdate } from "./order"
 import type { ICategory, IPlate } from "./plate"
-import type { IUser, IUserRegister, IUserUpdate } from "./user"
+import type { IUser, IUserUpdate } from "./user"
 
 interface IReducerStates {
     loading: boolean
@@ -11,20 +11,17 @@ interface IReducerStates {
 
 // Auth
 export interface IAuthState extends IReducerStates {
-    authFormFields: Partial<IUserRegister>
     user: IUser | null
     token: string | null
 }
 
 export type IAuthActions =
-    | { type: "AUTH_FORM_FIELDS_CHANGE", payload: { name: keyof IUserRegister, value: string } }
-    | { type: "AUTH_CLEAR_FORM" }
-    | { type: "AUTH_CLEAR_DATA" }
     | { type: "AUTH_UPDATE_USER", payload: IUser }
     | { type: "AUTH_SUBMIT_START" }
     | { type: "AUTH_SUBMIT_SUCCESS", payload: { user: IUser, token: string, message: string } }
     | { type: "AUTH_SUBMIT_FAILURE", payload: string }
     | { type: "AUTH_LOGOUT" }
+    | { type: "AUTH_RESET" }
 
 // Orders
 export interface IOrdersState extends IReducerStates {

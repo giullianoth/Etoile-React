@@ -2,6 +2,7 @@ import { useCallback, useReducer } from "react";
 import type { IAuthActions, IAuthState } from "../types/reducer-states";
 import type { IUser, IUserRegister } from "../types/user";
 import { useValidateEmail } from "../hooks/validate-email";
+import type { IAuthContext } from "../types/context";
 import authServices from "../services/auth-service";
 
 const storagedAuth = () => localStorage.getItem("etoile-auth")
@@ -13,26 +14,10 @@ const initialState: IAuthState = {
     successMessage: null,
     user: storagedAuth() ? JSON.parse(storagedAuth()!).user as IUser : null,
     token: storagedAuth() ? JSON.parse(storagedAuth()!).token as string : null,
-    authFormFields: {
-        fullname: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-        role: "user"
-    }
 }
 
 const authReducerActions = (state: IAuthState, action: IAuthActions): IAuthState => {
     switch (action.type) {
-        case "AUTH_FORM_FIELDS_CHANGE":
-            return {
-                ...state,
-                errorMessage: null,
-                authFormFields: {
-                    ...state.authFormFields,
-                    [action.payload.name]: action.payload.value
-                }
-            }
 
         case "AUTH_SUBMIT_START":
             return {
@@ -69,15 +54,6 @@ const authReducerActions = (state: IAuthState, action: IAuthActions): IAuthState
                 user: action.payload
             }
 
-        case "AUTH_CLEAR_FORM":
-            return {
-                ...state,
-                loading: false,
-                successMessage: null,
-                errorMessage: null,
-                authFormFields: initialState.authFormFields
-            }
-
         case "AUTH_LOGOUT":
             return {
                 ...state,
@@ -86,7 +62,7 @@ const authReducerActions = (state: IAuthState, action: IAuthActions): IAuthState
                 token: null
             }
 
-        case "AUTH_CLEAR_DATA":
+        case "AUTH_RESET":
             return initialState
 
         default:
@@ -94,7 +70,7 @@ const authReducerActions = (state: IAuthState, action: IAuthActions): IAuthState
     }
 }
 
-export const useAuthReducer = () => {
+export const useAuthReducer = (): IAuthContext => {
     const [authState, dispatch] = useReducer<
         IAuthState,
         [action: IAuthActions]
@@ -102,16 +78,8 @@ export const useAuthReducer = () => {
 
     const validateEmail = useValidateEmail()
 
-    const handleChangeAuthForm = useCallback((name: keyof IUserRegister, value: string) => {
-        dispatch({ type: "AUTH_FORM_FIELDS_CHANGE", payload: { name, value } })
-    }, [])
-
-    const handleClearAuthForm = useCallback(() => {
-        dispatch({ type: "AUTH_CLEAR_FORM" })
-    }, [])
-
-    const handleClearAuthData = useCallback(() => {
-        dispatch({ type: "AUTH_CLEAR_DATA" })
+    const handleReset = useCallback(() => {
+        dispatch({ type: "AUTH_RESET" })
     }, [])
 
     const handleUpdateLoggedUser = useCallback((userData: IUser) => {
@@ -121,153 +89,122 @@ export const useAuthReducer = () => {
         })
     }, [])
 
-    const handleLogin = useCallback(async (toRestrictedArea?: boolean) => {
+    const handleLogin = useCallback(async (userData: Partial<IUser>) => {
         dispatch({ type: "AUTH_SUBMIT_START" })
 
-        if (!authState.authFormFields.email) {
+        if (!userData.email) {
             dispatch({
                 type: "AUTH_SUBMIT_FAILURE",
-                payload: "Digite o seu e-mail."
+                payload: "Preencha o e-mail"
             })
             return
         }
 
-        if (!validateEmail(authState.authFormFields.email)) {
+        if (!userData.password) {
             dispatch({
                 type: "AUTH_SUBMIT_FAILURE",
-                payload: "Digite um endereço de e-mail válido."
+                payload: "Preencha a senha"
             })
             return
         }
 
-        if (!authState.authFormFields.password) {
+        if (!validateEmail(userData.email)) {
             dispatch({
                 type: "AUTH_SUBMIT_FAILURE",
-                payload: "Digite a sua senha."
+                payload: "Formato de e-mail inválido"
             })
             return
         }
 
-        const response = await authServices.login({
-            email: authState.authFormFields.email,
-            password: authState.authFormFields.password
-        })
+        const response = await authServices.login(userData)
 
         if (!response.success) {
             dispatch({
                 type: "AUTH_SUBMIT_FAILURE",
-                payload: response.body.text ?? "Erro ao realizar login."
+                payload: response.body.text || "Erro ao realizar login."
             })
             return
         }
 
-        if (toRestrictedArea) {
-            const isAdmin = response.body.user.role === "admin"
-
-            if (!isAdmin) {
-                dispatch({
-                    type: "AUTH_SUBMIT_FAILURE",
-                    payload: "Acesso não permitido a este perfil."
-                })
-                return
-            }
-        }
-
-        localStorage.setItem("etoile-auth", JSON.stringify({
-            user: response.body.user,
-            token: response.body.token
-        }))
+        const { text, token, user } = response.body
+        localStorage.setItem("etoile-auth", JSON.stringify({ user, token }))
 
         dispatch({
             type: "AUTH_SUBMIT_SUCCESS",
-            payload: {
-                message: response.body.text ?? "Login efetuado com sucesso.",
-                user: response.body.user,
-                token: response.body.token
-            }
+            payload: { user, token, message: text }
         })
-    }, [authState.authFormFields, validateEmail])
+    }, [validateEmail])
 
-    const handleRegister = useCallback(async () => {
+    const handleRegister = useCallback(async (userData: Partial<IUserRegister>) => {
         dispatch({ type: "AUTH_SUBMIT_START" })
 
-        if (!authState.authFormFields.fullname) {
+        if (!userData.fullname) {
             dispatch({
                 type: "AUTH_SUBMIT_FAILURE",
-                payload: "Digite o seu nome."
+                payload: "Preencha o nome"
             })
             return
         }
 
-        if (!authState.authFormFields.email) {
+        if (!userData.email) {
             dispatch({
                 type: "AUTH_SUBMIT_FAILURE",
-                payload: "Digite o seu e-mail."
+                payload: "Preencha o e-mail"
             })
             return
         }
 
-        if (!validateEmail(authState.authFormFields.email)) {
+        if (!userData.password) {
             dispatch({
                 type: "AUTH_SUBMIT_FAILURE",
-                payload: "Digite um endereço de e-mail válido."
+                payload: "Preencha a senha"
             })
             return
         }
 
-        if (!authState.authFormFields.password) {
+        if (!userData.confirmPassword) {
             dispatch({
                 type: "AUTH_SUBMIT_FAILURE",
-                payload: "Digite a sua senha."
+                payload: "Confirme a senha"
             })
             return
         }
 
-        if (!authState.authFormFields.confirmPassword) {
+        if (!validateEmail(userData.email)) {
             dispatch({
                 type: "AUTH_SUBMIT_FAILURE",
-                payload: "Confirme a sua senha."
+                payload: "Formato de e-mail inválido"
             })
             return
         }
 
-        if (authState.authFormFields.password !== authState.authFormFields.confirmPassword) {
+        if (userData.password !== userData.confirmPassword) {
             dispatch({
                 type: "AUTH_SUBMIT_FAILURE",
-                payload: "As senhas digitadas não conferem."
+                payload: "As senhas não conferem"
             })
             return
         }
 
-        const response = await authServices.register({
-            fullname: authState.authFormFields.fullname,
-            email: authState.authFormFields.email,
-            password: authState.authFormFields.password,
-            role: authState.authFormFields.role
-        })
+        userData.role = "user"
+        const response = await authServices.register(userData)
 
         if (!response.success) {
             dispatch({
                 type: "AUTH_SUBMIT_FAILURE",
-                payload: response.body.text ?? "Erro ao realizar cadastro."
+                payload: response.body.text || "Erro ao realizar cadastro."
             })
             return
         }
 
-        localStorage.setItem("etoile-auth", JSON.stringify({
-            user: response.body.user,
-            token: response.body.token
-        }))
+        const { text, token, user } = response.body
+        localStorage.setItem("etoile-auth", JSON.stringify({ user, token }))
 
         dispatch({
             type: "AUTH_SUBMIT_SUCCESS",
-            payload: {
-                message: response.body.text ?? "Cadastro efetuado com sucesso.",
-                user: response.body.user,
-                token: response.body.token
-            }
+            payload: { user, token, message: text }
         })
-    }, [authState.authFormFields, validateEmail])
+    }, [validateEmail])
 
     const handleLogout = useCallback(() => {
         localStorage.removeItem("etoile-auth")
@@ -276,9 +213,7 @@ export const useAuthReducer = () => {
 
     return {
         ...authState,
-        handleChangeAuthForm,
-        handleClearAuthForm,
-        handleClearAuthData,
+        handleReset,
         handleUpdateLoggedUser,
         handleLogin,
         handleRegister,

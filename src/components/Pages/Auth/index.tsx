@@ -5,6 +5,10 @@ import Password from "../../Form/Password"
 import { PiSignIn } from "react-icons/pi"
 import type { IUserRegister } from "../../../types/user"
 import { useEffect, useState, type ChangeEvent, type FormEvent } from "react"
+import { useAppContext } from "../../../context/context"
+import Trigger from "../../Trigger"
+import Loading from "../../Loading"
+import { useNavigate } from "react-router-dom"
 
 type Props = {
     onChangeTitle: (titleValue: string) => void
@@ -13,11 +17,31 @@ type Props = {
 const Auth = ({ onChangeTitle }: Props) => {
     const [formType, setFormType] = useState<"login" | "register">("login")
     const [formData, setFormData] = useState<Partial<IUserRegister>>({})
+    const { addMessage } = useAppContext().message
+    const navigate = useNavigate()
+
+    const {
+        handleRegister,
+        handleLogin,
+        errorMessage,
+        handleReset,
+        loading,
+        success,
+        successMessage
+    } = useAppContext().auth
 
     useEffect(() => {
         onChangeTitle(formType === "login" ? "Login" : "Cadastro")
         setFormData({})
-    }, [formType, onChangeTitle])
+        handleReset()
+    }, [formType, onChangeTitle, handleReset])
+
+    useEffect(() => {
+        if (success && successMessage) {
+            addMessage(successMessage)
+            navigate("/perfil")
+        }
+    }, [addMessage, navigate, success, successMessage])
 
     const handleChangeFormType = () => {
         setFormType(formType === "login" ? "register" : "login")
@@ -32,7 +56,14 @@ const Auth = ({ onChangeTitle }: Props) => {
 
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault()
-        console.log(formData)
+
+        if (formType === "register") {
+            await handleRegister(formData)
+        }
+
+        if (formType === "login") {
+            await handleLogin(formData)
+        }
     }
 
     return (
@@ -58,7 +89,7 @@ const Auth = ({ onChangeTitle }: Props) => {
                     {formType === "login" &&
                         <>
                             <input
-                                required
+                                // required
                                 type="text"
                                 name="email"
                                 placeholder="E-mail *"
@@ -66,7 +97,7 @@ const Auth = ({ onChangeTitle }: Props) => {
                                 onChange={handleChangeFormData} />
 
                             <Password
-                                required
+                                // required
                                 name="password"
                                 placeholder="Senha *"
                                 value={formData.password || ""}
@@ -106,7 +137,7 @@ const Auth = ({ onChangeTitle }: Props) => {
                                 onChange={handleChangeFormData} />
                         </>}
 
-                    <button type="submit" className="button primary">
+                    <button type="submit" className="button primary" disabled={loading}>
                         {formType === "login" &&
                             <>
                                 <PiSignIn />
@@ -114,7 +145,11 @@ const Auth = ({ onChangeTitle }: Props) => {
                             </>}
 
                         {formType === "register" && "Cadastrar"}
+
+                        {loading && <Loading inButton />}
                     </button>
+
+                    {errorMessage && <Trigger type="error">{errorMessage}</Trigger>}
                 </form>
             </Container>
         </section>

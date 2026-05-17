@@ -23,12 +23,10 @@ export interface ICartContext {
 }
 
 export interface IAuthContext extends IAuthState {
-    handleChangeAuthForm: (name: keyof IUserRegister, value: string) => void
-    handleClearAuthForm: () => void
-    handleClearAuthData: () => void
+    handleReset: () => void
     handleUpdateLoggedUser: (userData: IUser) => void
-    handleLogin: (toRestrictedArea?: boolean) => Promise<void>
-    handleRegister: () => Promise<void>
+    handleLogin: (userData: Partial<IUser>) => Promise<void>
+    handleRegister: (userData: Partial<IUserRegister>) => Promise<void>
     handleLogout: () => void
 }
 
