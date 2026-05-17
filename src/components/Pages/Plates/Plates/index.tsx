@@ -18,6 +18,8 @@ const Plates = () => {
     const { breakpointLarge, breakpointSmall } = useWindowBehavior()
     const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
     const [plateToShow, setPlateToShow] = useState<IPlate | null>(null)
+    const { addToCart } = useAppContext().cart
+    const { addMessage } = useAppContext().message
 
     const {
         categories,
@@ -48,7 +50,8 @@ const Plates = () => {
 
     const handleAddPlate = (plate: IPlate) => {
         setModalIsOpen(false)
-        console.log(plate)
+        addToCart(plate)
+        addMessage("Prato adicionado ao carrinho.")
     }
 
     const carouselBreakpoints: ResponsiveType = {

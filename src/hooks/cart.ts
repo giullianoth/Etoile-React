@@ -1,10 +1,11 @@
 import { useCallback, useState } from "react"
 import type { ICartItem } from "../types/cart"
 import type { IPlate } from "../types/plate"
+import type { ICartContext } from "../types/context"
 
 const storagedCart = () => localStorage.getItem("etoile-cart")
 
-export const useCart = () => {
+export const useCart = (): ICartContext => {
     const [cart, setCart] = useState<ICartItem[]>(
         storagedCart() ? JSON.parse(storagedCart()!) : []
     )
