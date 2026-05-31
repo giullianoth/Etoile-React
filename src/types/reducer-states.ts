@@ -1,4 +1,4 @@
-import type { IOrder, IOrderCreate, IOrderItem, IOrderUpdate } from "./order"
+import type { IOrder, IOrderItem } from "./order"
 import type { ICategory, IPlate } from "./plate"
 import type { IUser } from "./user"
 
@@ -27,7 +27,6 @@ export type IAuthActions =
 export interface IOrdersState extends IReducerStates {
     orders: IOrder[]
     currentOrder: IOrder | null
-    orderFormFields: Partial<IOrderCreate & IOrderUpdate>
     fetching: boolean
     cancellingOrderItem: boolean
     fetchErrorMessage: string | null
@@ -37,7 +36,6 @@ export type IOrdersActions =
     | { type: "ORDERS_FETCH_START" }
     | { type: "ORDERS_FETCH_SUCCESS", payload: IOrder[] }
     | { type: "ORDERS_FETCH_FAILURE", payload: string }
-    | { type: "ORDERS_CHANGE_FORM_FIELDS", payload: { name: keyof IOrderCreate | keyof IOrderUpdate, value: string | boolean | IPlate[] } }
     | { type: "ORDERS_CREATE_START" }
     | { type: "ORDERS_CREATE_SUCCESS", payload: { order: IOrder, message: string } }
     | { type: "ORDERS_CREATE_FAILURE", payload: string }
@@ -51,8 +49,7 @@ export type IOrdersActions =
     | { type: "ORDERS_DELETE_START" }
     | { type: "ORDERS_DELETE_SUCCESS", payload: { orderId: string, message: string } }
     | { type: "ORDERS_DELETE_FAILURE", payload: string }
-    | { type: "ORDERS_CLEAR_FORM_FIELDS" }
-    | { type: "ORDERS_CLEAR_DATA" }
+    | { type: "ORDERS_RESET" }
 
 // Plates & Categories
 export interface IPlatesState extends IReducerStates {

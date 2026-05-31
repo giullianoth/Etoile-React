@@ -1,19 +1,21 @@
 import styles from "./Order.module.css"
 import type { IMessageType } from "../../../../types/message"
-import { PiArrowsClockwise, PiCheckCircle, PiClock, PiTrash, PiWarningCircle } from "react-icons/pi"
+import { PiArrowsClockwise, PiCheckCircle, PiClock, PiNotePencil, PiTrash, PiWarningCircle, PiX } from "react-icons/pi"
 import Trigger from "../../../Trigger"
 import { useEffect, useState } from "react"
 import { useDateFormats } from "../../../../hooks/date-formats"
+import type { IOrder } from "../../../../types/order"
+import { uploadsURL } from "../../../../services/api"
 
 type Props = {
     onOpenUpdate: () => void
     onOpenCancel: () => void
     onOpenReorder: () => void
     onOpenDeleteOrder: () => void
+    order: IOrder
 }
 
 type UpdateAction = "update" | "reorder"
-
 type DeleteAction = "cancel" | "delete"
 
 const statusConfig = {
@@ -31,22 +33,22 @@ const statusConfig = {
     }
 }
 
-const Order = ({ onOpenUpdate, onOpenCancel, onOpenReorder, onOpenDeleteOrder }: Props) => {
-    const currentStatus = statusConfig.Pendente
+const Order = ({ order, onOpenUpdate, onOpenCancel, onOpenReorder, onOpenDeleteOrder }: Props) => {
+    const currentStatus = statusConfig[order.status]
     const [cancelledMessage, setCancelledMessage] = useState<boolean>(false)
     const [cancelledConfirm] = useState<boolean>(false)
     const { timeFormat, dateFormat } = useDateFormats()
 
     const actionButton = {
-        label: "Pedir de novo",
-        icon: <PiArrowsClockwise />,
-        action: "update" as UpdateAction
+        label: order.status === "Pendente" ? "Editar" : "Pedir de novo",
+        icon: order.status === "Pendente" ? <PiNotePencil /> : <PiArrowsClockwise />,
+        action: order.status === "Pendente" ? "update" as UpdateAction : "reorder" as UpdateAction
     }
 
     const deleteButton = {
-        label: "Excluir",
-        icon: <PiTrash />,
-        action: "cancel" as DeleteAction
+        label: order.status === "Pendente" ? "Cancelar Pedido" : "Excluir",
+        icon: order.status === "Pendente" ? <PiX /> : <PiTrash />,
+        action: order.status === "Pendente" ? "cancel" as DeleteAction : "delete" as DeleteAction
     }
 
     useEffect(() => {
@@ -79,38 +81,43 @@ const Order = ({ onOpenUpdate, onOpenCancel, onOpenReorder, onOpenDeleteOrder }:
         <article className={styles.order}>
             <div className={styles.order__status}>
                 <Trigger type={currentStatus.type} icon={currentStatus.icon} bullet>
-                    Status
+                    {order.status}
                 </Trigger>
             </div>
 
             <div className={styles.order__date}>
                 <p>
-                    <strong>{timeFormat(new Date())}</strong>
+                    <strong>{timeFormat(order.time)}</strong>
                 </p>
 
                 <p>
                     Presença confirmada às{" "}
-                    <strong>{dateFormat(new Date())}</strong>
+                    <strong>{dateFormat(order.time)}</strong>
                 </p>
             </div>
 
-            <article className={styles.order__item}>
-                <div className={styles.order__itemImage}>
-                    <img
-                        src={`/images/no-image.jpg`}
-                        alt={"Nome do prato"} />
-                </div>
+            {order.orderItems.map(item => (
+                <article key={item._id} className={styles.order__item}>
+                    <div className={styles.order__itemImage}>
+                        <img
+                            src={item.itemDetails.image
+                                ? `${uploadsURL}/plates/${item.itemDetails.image}`
+                                : "/images/no-image.jpg"
+                            }
+                            alt={item.itemDetails.name} />
+                    </div>
 
-                <div className={styles.order__itemInfo}>
-                    <header className={styles.order__itemName}>
-                        <h3>{"Nome do prato"}</h3>
-                    </header>
+                    <div className={styles.order__itemInfo}>
+                        <header className={styles.order__itemName}>
+                            <h3>{item.itemDetails.name}</h3>
+                        </header>
 
-                    <p className={styles.order__itemPortions}>
-                        <strong>Porções: 2</strong>
-                    </p>
-                </div>
-            </article>
+                        <p className={styles.order__itemPortions}>
+                            <strong>Porções: {item.quantity}</strong>
+                        </p>
+                    </div>
+                </article>
+            ))}
 
             <div className={styles.order__actions}>
                 <div

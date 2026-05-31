@@ -1,6 +1,6 @@
 import type { ICartItem } from "./cart";
 import type { IMessageType } from "./message";
-import type { IOrder, IOrderCreate, IOrderUpdate } from "./order";
+import type { IOrder } from "./order";
 import type { IPlate } from "./plate";
 import type { IAuthState, IOrdersState, IPlatesState, IUsersState } from "./reducer-states";
 import type { IUser, IUserRegister, IUserUpdate } from "./user";
@@ -32,16 +32,8 @@ export interface IAuthContext extends IAuthState {
 
 export interface IOrdersContext extends IOrdersState {
     handleSetOrderToEdit: (order: IOrder | null) => void
-    handleChangeOrderFormFields: (name: keyof IOrderCreate | keyof IOrderUpdate, value: string | boolean | IPlate[]) => void
-    handleClearOrdersData: () => void
-    handleClearOrderFormFields: () => void
-    handleFetchOrders: () => Promise<void>
+    handleResetOrders: () => void
     handleFetchOrdersByUser: (userId: string) => Promise<void>
-    handleCreateOrder: (orderItems: IOrderCreate["items"], orderDate: Date | null, userId?: string) => Promise<void>
-    handleUpdateOrder: (orderDate: Date | null) => Promise<void>
-    handleCancelOrderItem: (orderItemId: string) => Promise<void>
-    handleCancelOrder: (orderId: string) => Promise<void>
-    handleDeleteOrder: (orderId: string) => Promise<void>
 }
 
 export interface IPlatesContext extends IPlatesState {
@@ -50,14 +42,14 @@ export interface IPlatesContext extends IPlatesState {
     handleFetchPlates: () => Promise<void>
     handleFetchAvailablePlates: () => Promise<void>
     handleFetchAvailablePlatesByCategory: (categoryId: string) => Promise<void>
-    handleCreateCategory:() => Promise<void>
+    handleCreateCategory: () => Promise<void>
     handleUpdateCategory: (categoryId: string) => Promise<void>
     handleUpdatePlate: (plateId: string, image?: File | null) => Promise<void>
-    handleDeleteCategory:(categoryId: string) => Promise<void>
+    handleDeleteCategory: (categoryId: string) => Promise<void>
 }
 
 export interface IUsersContext extends IUsersState {
-    handleReset: () => void
+    handleResetUsers: () => void
     handleSetUserToEdit: (userData: IUser | null) => void
     handleUpdateUser: (userData: Partial<IUserUpdate>) => Promise<void>
     handleUpdateUserPhoto: (photo: File) => Promise<void>

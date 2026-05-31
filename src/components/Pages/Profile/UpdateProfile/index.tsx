@@ -25,7 +25,7 @@ const UpdateProfile = ({ onCloseUpdateUser, user }: Props) => {
         errorMessage,
         success,
         successMessage,
-        handleReset
+        handleResetUsers
     } = useAppContext().users
 
     useEffect(() => {
@@ -43,10 +43,10 @@ const UpdateProfile = ({ onCloseUpdateUser, user }: Props) => {
     useEffect(() => {
         if (success && successMessage) {
             addMessage(successMessage)
-            handleReset()
+            handleResetUsers()
             onCloseUpdateUser()
         }
-    }, [addMessage, success, successMessage, onCloseUpdateUser, handleReset])
+    }, [addMessage, success, successMessage, onCloseUpdateUser, handleResetUsers])
 
     const handleChangeFormData = (event: ChangeEvent<HTMLInputElement>) => {
         setFormData(prevData => ({

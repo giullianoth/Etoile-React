@@ -72,7 +72,7 @@ export const useUsersReducer = (handleUpdateLoggedUser: (userData: IUser) => voi
         [action: IUsersActions]
     >(usersReducerActions, initialState)
 
-    const handleReset = useCallback(() => {
+    const handleResetUsers = useCallback(() => {
         dispatch({ type: "USERS_RESET" })
     }, [])
 
@@ -237,7 +237,7 @@ export const useUsersReducer = (handleUpdateLoggedUser: (userData: IUser) => voi
 
     return {
         ...usersState,
-        handleReset,
+        handleResetUsers,
         handleSetUserToEdit,
         handleUpdateUser,
         handleUpdateUserPhoto

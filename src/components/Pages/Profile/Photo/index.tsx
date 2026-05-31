@@ -23,7 +23,8 @@ const Photo = ({ className, user }: Props) => {
         loading,
         success,
         successMessage,
-        errorMessage
+        errorMessage,
+        handleResetUsers
     } = useAppContext().users
 
     useEffect(() => {
@@ -31,8 +32,11 @@ const Photo = ({ className, user }: Props) => {
             handleSetUserToEdit(user)
         }
 
-        return () => handleSetUserToEdit(null)
-    }, [handleSetUserToEdit, user])
+        return () => {
+            handleSetUserToEdit(null)
+            handleResetUsers()
+        }
+    }, [handleSetUserToEdit, user, handleResetUsers])
 
     useEffect(() => {
         if (errorMessage) {
@@ -42,7 +46,9 @@ const Photo = ({ className, user }: Props) => {
         if (success && successMessage) {
             addMessage(successMessage)
         }
-    }, [addMessage, errorMessage, success, successMessage])
+
+        handleResetUsers()
+    }, [addMessage, errorMessage, success, successMessage, handleResetUsers])
 
     const handleChangePhoto = (event: ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0]
