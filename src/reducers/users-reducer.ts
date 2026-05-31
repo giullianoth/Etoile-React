@@ -9,15 +9,7 @@ const initialState: IUsersState = {
     success: false,
     errorMessage: null,
     successMessage: null,
-    currentUser: null,
-    userUpdateFormFields: {
-        fullname: "",
-        phone: "",
-        changePassword: false,
-        password: "",
-        newPassword: "",
-        confirmPassword: ""
-    }
+    currentUser: null
 }
 
 const usersReducerActions = (state: IUsersState, action: IUsersActions): IUsersState => {
@@ -49,37 +41,13 @@ const usersReducerActions = (state: IUsersState, action: IUsersActions): IUsersS
                 successMessage: null
             }
 
-        case "USERS_UPDATE_CHANGE_FORM_FIELDS":
-            return {
-                ...state,
-                errorMessage: null,
-                userUpdateFormFields: {
-                    ...state.userUpdateFormFields,
-                    [action.payload.name]: action.payload.value
-                }
-            }
-
         case "SET_USER_TO_EDIT":
             return {
                 ...state,
-                currentUser: action.payload,
-                userUpdateFormFields: {
-                    ...state.userUpdateFormFields,
-                    fullname: action.payload?.fullname ?? "",
-                    phone: action.payload?.phone ?? ""
-                }
+                currentUser: action.payload
             }
 
-        case "USERS_CLEAR_FORM_FIELDS":
-            return {
-                ...state,
-                success: false,
-                errorMessage: null,
-                successMessage: null,
-                userUpdateFormFields: initialState.userUpdateFormFields
-            }
-
-        case "USERS_CLEAR_DATA":
+        case "USERS_RESET":
             return initialState
 
         default:
@@ -104,19 +72,8 @@ export const useUsersReducer = (handleUpdateLoggedUser: (userData: IUser) => voi
         [action: IUsersActions]
     >(usersReducerActions, initialState)
 
-    const handleChangeUsersUpdateFormFields = useCallback((name: keyof IUserUpdate, value: string | boolean) => {
-        dispatch({
-            type: "USERS_UPDATE_CHANGE_FORM_FIELDS",
-            payload: { name, value }
-        })
-    }, [])
-
-    const handleClearUsersFormFields = useCallback(() => {
-        dispatch({ type: "USERS_CLEAR_FORM_FIELDS" })
-    }, [])
-
-    const handleClearUsersData = useCallback(() => {
-        dispatch({ type: "USERS_CLEAR_DATA" })
+    const handleReset = useCallback(() => {
+        dispatch({ type: "USERS_RESET" })
     }, [])
 
     const handleSetUserToEdit = useCallback((userData: IUser | null) => {
@@ -126,10 +83,10 @@ export const useUsersReducer = (handleUpdateLoggedUser: (userData: IUser) => voi
         })
     }, [])
 
-    const handleUpdateUser = useCallback(async () => {
+    const handleUpdateUser = useCallback(async (userData: Partial<IUserUpdate>) => {
         dispatch({ type: "USERS_UPDATE_START" })
 
-        if (!usersState.currentUser?._id) {
+        if (!usersState.currentUser) {
             dispatch({
                 type: "USERS_UPDATE_FAILURE",
                 payload: "Erro inesperado ao atualizar perfil."
@@ -137,7 +94,7 @@ export const useUsersReducer = (handleUpdateLoggedUser: (userData: IUser) => voi
             return
         }
 
-        if (!usersState.userUpdateFormFields.fullname) {
+        if (!userData.fullname) {
             dispatch({
                 type: "USERS_UPDATE_FAILURE",
                 payload: "Preencha o nome."
@@ -145,77 +102,66 @@ export const useUsersReducer = (handleUpdateLoggedUser: (userData: IUser) => voi
             return
         }
 
-        if (usersState.userUpdateFormFields.changePassword) {
-            if (!usersState.userUpdateFormFields.password) {
+        if (userData.changePassword) {
+            if (!userData.password) {
                 dispatch({
                     type: "USERS_UPDATE_FAILURE",
-                    payload: "Digite a sua senha atual."
+                    payload: "Preencha a senha."
                 })
                 return
             }
 
-            if (!usersState.userUpdateFormFields.newPassword) {
+            if (!userData.newPassword) {
                 dispatch({
                     type: "USERS_UPDATE_FAILURE",
-                    payload: "Digite a sua nova senha."
+                    payload: "Preencha a nova senha."
                 })
                 return
             }
 
-            if (!usersState.userUpdateFormFields.confirmPassword) {
+            if (!userData.confirmPassword) {
                 dispatch({
                     type: "USERS_UPDATE_FAILURE",
-                    payload: "Confirme a sua nova senha."
+                    payload: "Confirme a nova senha."
                 })
                 return
             }
 
-            if (usersState.userUpdateFormFields.newPassword !== usersState.userUpdateFormFields.confirmPassword) {
+            if (userData.newPassword !== userData.confirmPassword) {
                 dispatch({
                     type: "USERS_UPDATE_FAILURE",
-                    payload: "As senhas digitadas não conferem."
+                    payload: "As senhas não conferem."
                 })
                 return
             }
 
             const checkPassword = await authServices.login({
-                email: usersState.currentUser?.email,
-                password: usersState.userUpdateFormFields.password
+                email: usersState.currentUser.email,
+                password: userData.password
             })
 
             if (!checkPassword.success) {
                 dispatch({
                     type: "USERS_UPDATE_FAILURE",
-                    payload: "Senha atual incorreta."
+                    payload: "Senha incorreta."
                 })
                 return
             }
+            
+            const password = userData.newPassword
+            userData.password = password
+            delete userData.newPassword
+            delete userData.confirmPassword
         }
 
-        const { changePassword, ...userDataRest } = usersState.userUpdateFormFields
+        delete userData.changePassword
 
-        if (!userDataRest.phone) {
-            delete userDataRest.phone
-        }
-
-        if (changePassword) {
-            userDataRest.password = userDataRest.newPassword
-        } else {
-            delete userDataRest.password
-        }
-
-        delete userDataRest.newPassword
-        delete userDataRest.confirmPassword
-
-        const response = await usersServices.updateUser(
-            userDataRest,
-            usersState.currentUser?._id
-        )
+        const response = await usersServices.updateUser(userData, usersState.currentUser._id)
 
         if (!response.success) {
             dispatch({
                 type: "USERS_UPDATE_FAILURE",
-                payload: "Erro ao atualizar perfil."
+                payload: response.body.text || "Erro ao atualizar perfil."
             })
             return
         }
@@ -227,7 +173,7 @@ export const useUsersReducer = (handleUpdateLoggedUser: (userData: IUser) => voi
             type: "USERS_UPDATE_SUCCESS",
             payload: "Perfil atualizado com sucesso."
         })
-    }, [usersState.userUpdateFormFields, handleUpdateLoggedUser, usersState.currentUser?._id, usersState.currentUser?.email])
+    }, [usersState.currentUser, handleUpdateLoggedUser])
 
     const handleUpdateUserPhoto = useCallback(async (photo: File) => {
         dispatch({ type: "USERS_UPDATE_START" })
@@ -291,9 +237,7 @@ export const useUsersReducer = (handleUpdateLoggedUser: (userData: IUser) => voi
 
     return {
         ...usersState,
-        handleChangeUsersUpdateFormFields,
-        handleClearUsersFormFields,
-        handleClearUsersData,
+        handleReset,
         handleSetUserToEdit,
         handleUpdateUser,
         handleUpdateUserPhoto

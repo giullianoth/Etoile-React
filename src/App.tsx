@@ -3,7 +3,7 @@ import "./App.css"
 import Header from "./components/Header"
 import Footer from "./components/Footer"
 import Trigger from "./components/Trigger"
-import { useAppContext } from "./context/context"
+import { useAppContext } from "./context/app-context"
 import { useEffect } from "react"
 
 function App() {

@@ -5,7 +5,7 @@ import ConfirmRemove from "../ConfirmRemove"
 import Modal from "../../../Modal"
 import type { ICartItem } from "../../../../types/cart"
 import { uploadsURL } from "../../../../services/api"
-import { useAppContext } from "../../../../context/context"
+import { useAppContext } from "../../../../context/app-context"
 
 type Props = {
     cartItem: ICartItem

@@ -8,7 +8,7 @@ import CartItem from "../CartItem"
 import { useState } from "react"
 import ConfirmOrder from "../ConfirmOrder"
 import Modal from "../../../Modal"
-import { useAppContext } from "../../../../context/context"
+import { useAppContext } from "../../../../context/app-context"
 
 const Cart = () => {
     const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)

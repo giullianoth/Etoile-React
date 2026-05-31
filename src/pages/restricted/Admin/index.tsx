@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom"
 import Dashboard from "../../../components/Dashboard"
 import { useEffect, useState } from "react"
 import Auth from "../Auth"
-import { useAppContext } from "../../../context/context"
+import { useAppContext } from "../../../context/app-context"
 import Trigger from "../../../components/Trigger"
 
 const Admin = () => {

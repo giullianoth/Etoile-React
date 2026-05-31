@@ -1,6 +1,6 @@
 import type { IOrder, IOrderCreate, IOrderItem, IOrderUpdate } from "./order"
 import type { ICategory, IPlate } from "./plate"
-import type { IUser, IUserUpdate } from "./user"
+import type { IUser } from "./user"
 
 interface IReducerStates {
     loading: boolean
@@ -92,14 +92,11 @@ export type IPlatesActions =
 // Users
 export interface IUsersState extends IReducerStates {
     currentUser: IUser | null
-    userUpdateFormFields: Partial<IUserUpdate>
 }
 
 export type IUsersActions =
-    | { type: "USERS_UPDATE_CHANGE_FORM_FIELDS", payload: { name: keyof IUserUpdate, value: string | boolean } }
     | { type: "SET_USER_TO_EDIT", payload: IUser | null }
     | { type: "USERS_UPDATE_START" }
     | { type: "USERS_UPDATE_SUCCESS", payload: string }
     | { type: "USERS_UPDATE_FAILURE", payload: string }
-    | { type: "USERS_CLEAR_FORM_FIELDS" }
-    | { type: "USERS_CLEAR_DATA" }
+    | { type: "USERS_RESET" }

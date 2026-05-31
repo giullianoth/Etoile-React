@@ -6,7 +6,8 @@ import logoAlt from "/images/logo-alt.svg"
 import { PiList, PiShoppingCartSimple, PiSignOut, PiUserCircle, PiX } from "react-icons/pi"
 import { useEffect, useRef, useState } from "react"
 import { useWindowBehavior } from "../../hooks/window-behavior"
-import { useAppContext } from "../../context/context"
+import { useAppContext } from "../../context/app-context"
+import { useFirstName } from "../../hooks/first-name"
 
 const Header = () => {
     const [menuIsOpen, setMenuIsOpen] = useState<boolean>(false)
@@ -16,14 +17,18 @@ const Header = () => {
     const { pathname } = useLocation()
     const navigate = useNavigate()
     const { cart } = useAppContext().cart
+    const { user, token, success: authenticated, handleLogout } = useAppContext().auth
+    const firstName = useFirstName()
 
     useEffect(() => {
         setIsAuthenticated(
-            pathname.includes("perfil")
+            pathname.includes("perfil") && authenticated && user && token
+                ? true : false
         )
-    }, [pathname])
+    }, [pathname, authenticated, user, token])
 
     const handleLogoutAccount = () => {
+        handleLogout()
         navigate("/autenticacao")
     }
 
@@ -72,9 +77,9 @@ const Header = () => {
                             </Link>
                         </div>
 
-                        {isAuthenticated &&
+                        {isAuthenticated && user &&
                             <p className={styles.header__welcome}>
-                                Bem-vindo, <strong>Usuário</strong>!
+                                Bem-vindo, <strong>{firstName(user.fullname)}</strong>!
                             </p>}
 
                         {!isAuthenticated &&

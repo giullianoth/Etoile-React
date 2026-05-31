@@ -5,7 +5,7 @@ import Password from "../../Form/Password"
 import { PiSignIn } from "react-icons/pi"
 import type { IUserRegister } from "../../../types/user"
 import { useEffect, useState, type ChangeEvent, type FormEvent } from "react"
-import { useAppContext } from "../../../context/context"
+import { useAppContext } from "../../../context/app-context"
 import Trigger from "../../Trigger"
 import Loading from "../../Loading"
 import { useNavigate } from "react-router-dom"
@@ -89,15 +89,15 @@ const Auth = ({ onChangeTitle }: Props) => {
                     {formType === "login" &&
                         <>
                             <input
-                                // required
-                                type="text"
+                                required
+                                type="email"
                                 name="email"
                                 placeholder="E-mail *"
                                 value={formData.email || ""}
                                 onChange={handleChangeFormData} />
 
                             <Password
-                                // required
+                                required
                                 name="password"
                                 placeholder="Senha *"
                                 value={formData.password || ""}

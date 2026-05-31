@@ -57,11 +57,9 @@ export interface IPlatesContext extends IPlatesState {
 }
 
 export interface IUsersContext extends IUsersState {
-    handleChangeUsersUpdateFormFields: (name: keyof IUserUpdate, value: string | boolean) => void
-    handleClearUsersFormFields: () => void
-    handleClearUsersData: () => void
+    handleReset: () => void
     handleSetUserToEdit: (userData: IUser | null) => void
-    handleUpdateUser: () => Promise<void>
+    handleUpdateUser: (userData: Partial<IUserUpdate>) => Promise<void>
     handleUpdateUserPhoto: (photo: File) => Promise<void>
 }
 

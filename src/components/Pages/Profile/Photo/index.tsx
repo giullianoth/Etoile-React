@@ -3,12 +3,15 @@ import styles from "./Photo.module.css"
 import avatar from "/images/user.png"
 import { useState, type ChangeEvent, type FormEvent } from "react"
 import Trigger from "../../../Trigger"
+import { uploadsURL } from "../../../../services/api"
 
 type Props = {
     className?: string
+    photo?: string
+    userName: string
 }
 
-const Photo = ({ className }: Props) => {
+const Photo = ({ className, userName, photo }: Props) => {
     const [previewImage, setPreviewImage] = useState<File | null>(null)
 
     const handleChangePhoto = (event: ChangeEvent<HTMLInputElement>) => {
@@ -28,11 +31,13 @@ const Photo = ({ className }: Props) => {
             onSubmit={handleSubmit}>
             <img
                 src={
-                    previewImage
-                        ? URL.createObjectURL(previewImage)
+                    previewImage || photo
+                        ? previewImage
+                            ? URL.createObjectURL(previewImage)
+                            : `${uploadsURL}/users/${photo}`
                         : avatar
                 }
-                alt={"Nome"} />
+                alt={userName} />
 
             <label className={styles.photo__change} title="Alterar foto de perfil">
                 <PiCameraBold />

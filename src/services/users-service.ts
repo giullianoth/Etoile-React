@@ -1,10 +1,10 @@
 import type { IErrorResponse, IUserUpdateResponse } from "../types/response"
-import type { IUserRegister } from "../types/user"
+import type { IUserUpdate } from "../types/user"
 import { apiURL } from "./api"
 
 const url = `${apiURL}/users`
 
-const updateUser = async (userData: Partial<IUserRegister>, userId: string) => {
+const updateUser = async (userData: Partial<IUserUpdate>, userId: string) => {
     try {
         const response = await fetch(`${url}/${userId}`, {
             method: "PUT",
