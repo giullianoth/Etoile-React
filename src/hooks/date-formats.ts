@@ -1,5 +1,4 @@
 import { useCallback } from "react"
-import type { IOrderCreate } from "../types/order"
 
 export const useDateFormats = () => {
     const dateFormat = useCallback((date: Date | string) => {
@@ -33,7 +32,7 @@ export const useDateFormats = () => {
         return `${year}-${month}-${day}`
     }, [])
 
-    const combineDateAndTime = useCallback((date: Date | null, time: IOrderCreate["time"]) => {
+    const combineDateAndTime = useCallback((date: Date | null, time: Date | string) => {
         if (!date) {
             return null
         }

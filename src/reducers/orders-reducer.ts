@@ -173,7 +173,7 @@ export const useOrdersReducer = () => {
         [action: IOrdersActions]
     >(ordersReducerActions, initialState)
 
-    const { isPastDate } = useDateFormats()
+    const { isPastDate, combineDateAndTime, defaultDateFormat, timeFormat } = useDateFormats()
 
     const handleSetOrderToEdit = useCallback((order: IOrder | null) => {
         dispatch({ type: "SET_ORDER_TO_EDIT", payload: order })
@@ -203,7 +203,7 @@ export const useOrdersReducer = () => {
         if (!response.success) {
             dispatch({
                 type: "ORDERS_FETCH_FAILURE",
-                payload: "Erro inesperado ao buscar pedidos."
+                payload: response.body.text || "Erro inesperado ao buscar pedidos."
             })
             return
         }
@@ -214,9 +214,62 @@ export const useOrdersReducer = () => {
         })
     }, [])
 
-    const handleCreateOrder = useCallback(async (orderItems: IOrderCreate["items"], orderDate: Date | null, userId?: string) => {
+    const handleCreateOrder = useCallback(async (
+        orderItems: IOrderCreate["items"],
+        orderDate: Date,
+        orderTime: string,
+        userId: string
+    ) => {
+        dispatch({ type: "ORDERS_CREATE_START" })
 
-    }, [])
+        if (!orderItems || !orderItems.length || !orderDate || !userId) {
+            dispatch({
+                type: "ORDERS_CREATE_FAILURE",
+                payload: "Erro inesperado ao registrar pedido."
+            })
+            return
+        }
+
+        if (!orderTime) {
+            dispatch({
+                type: "ORDERS_CREATE_FAILURE",
+                payload: "Preencha corretamente o horário."
+            })
+            return
+        }
+
+        const currentDate = combineDateAndTime(orderDate, orderTime)
+
+        if (isPastDate(currentDate!)) {
+            dispatch({
+                type: "ORDERS_CREATE_FAILURE",
+                payload: "Data / horário inválido."
+            })
+            return
+        }
+
+        const response = await ordersServices.createOrder({
+            userId,
+            time: `${defaultDateFormat(currentDate!)} ${timeFormat(currentDate!)}`,
+            items: orderItems
+        })
+
+        if (!response.success) {
+            dispatch({
+                type: "ORDERS_CREATE_FAILURE",
+                payload: response.body.text || "Erro ao registrar pedido."
+            })
+            return
+        }
+
+        dispatch({
+            type: "ORDERS_CREATE_SUCCESS",
+            payload: {
+                order: response.body,
+                message: "Pedido registrado com sucesso."
+            }
+        })
+    }, [isPastDate, combineDateAndTime, defaultDateFormat, timeFormat])
 
     const handleUpdateOrder = useCallback(async (orderDate: Date | null) => {
 
@@ -239,5 +292,6 @@ export const useOrdersReducer = () => {
         handleSetOrderToEdit,
         handleResetOrders,
         handleFetchOrdersByUser,
+        handleCreateOrder,
     }
 }
