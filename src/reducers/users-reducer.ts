@@ -205,7 +205,7 @@ export const useUsersReducer = (handleUpdateLoggedUser: (userData: IUser) => voi
         if (photo.size > 5 * 1024 * 1024) {
             dispatch({
                 type: "USERS_UPDATE_FAILURE",
-                payload: "Tamanho da imagem excede o limite de 5MB."
+                payload: "O tamanho da foto deve ser até 5MB."
             })
             return
         }

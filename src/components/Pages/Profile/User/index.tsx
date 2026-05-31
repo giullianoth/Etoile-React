@@ -24,8 +24,7 @@ const User = () => {
                 <Container className={styles.user__container}>
                     <Photo
                         className={styles.user__photo}
-                        photo={user?.photo}
-                        userName={user?.fullname as string} />
+                        user={user!} />
 
                     <div className={styles.user__info}>
                         <header className={styles.user__name}>
