@@ -1,6 +1,6 @@
 import { useCallback, useReducer } from "react";
 import type { IOrdersActions, IOrdersState } from "../types/reducer-states";
-import type { IOrder, IOrderCreate } from "../types/order";
+import type { IOrder, IOrderCreate, IOrderItem, IOrderUpdate } from "../types/order";
 import { useDateFormats } from "../hooks/date-formats";
 import ordersServices from "../services/orders-services";
 
@@ -159,6 +159,14 @@ const ordersReducerActions = (state: IOrdersState, action: IOrdersActions): IOrd
                 errorMessage: action.payload
             }
 
+        case "ORDERS_RESET_MESSAGE":
+            return {
+                ...state,
+                errorMessage: null,
+                successMessage: null,
+                success: false
+            }
+
         case "ORDERS_RESET":
             return initialState
 
@@ -177,6 +185,10 @@ export const useOrdersReducer = () => {
 
     const handleSetOrderToEdit = useCallback((order: IOrder | null) => {
         dispatch({ type: "SET_ORDER_TO_EDIT", payload: order })
+    }, [])
+
+    const handleResetOrdersMessage = useCallback(() => {
+        dispatch({ type: "ORDERS_RESET_MESSAGE" })
     }, [])
 
     const handleResetOrders = useCallback(() => {
@@ -271,16 +283,138 @@ export const useOrdersReducer = () => {
         })
     }, [isPastDate, combineDateAndTime, defaultDateFormat, timeFormat])
 
-    const handleUpdateOrder = useCallback(async (orderDate: Date | null) => {
+    const handleUpdateOrder = useCallback(async (orderId: string, orderData: Partial<IOrderUpdate>) => {
+        dispatch({ type: "ORDERS_UPDATE_START" })
 
-    }, [])
+        if (!orderId) {
+            dispatch({
+                type: "ORDERS_UPDATE_FAILURE",
+                payload: "Erro inesperado ao atualizar pedido."
+            })
+            return
+        }
+
+        if (!orderData.time) {
+            dispatch({
+                type: "ORDERS_UPDATE_FAILURE",
+                payload: "Preencha corretamente o horário."
+            })
+            return
+        }
+
+        if (isPastDate(orderData.time)) {
+            dispatch({
+                type: "ORDERS_UPDATE_FAILURE",
+                payload: "Horário inválido."
+            })
+            return
+        }
+
+        if (isPastDate(orderData.time, ordersState.currentOrder?.time)) {
+            dispatch({
+                type: "ORDERS_UPDATE_FAILURE",
+                payload: "Não é possível selecionar horário anterior ao já selecionado."
+            })
+            return
+        }
+
+        if (orderData.orderReceived) {
+            orderData.status = "Concluído"
+        }
+
+        const orderTime = combineDateAndTime(
+            new Date(ordersState.currentOrder?.time as string),
+            orderData.time
+        )
+
+        if (!orderTime) {
+            dispatch({
+                type: "ORDERS_UPDATE_FAILURE",
+                payload: "Erro inesperado ao converter as datas."
+            })
+            return
+        }
+
+        orderData.time = orderTime
+
+        delete orderData.orderReceived
+        const response = await ordersServices.updateOrder(orderData, orderId)
+
+        if (!response.success) {
+            dispatch({
+                type: "ORDERS_UPDATE_FAILURE",
+                payload: response.body.text || "Erro ao atualizar pedido."
+            })
+            return
+        }
+
+        dispatch({
+            type: "ORDERS_UPDATE_SUCCESS",
+            payload: {
+                orderResult: response.body as IOrder,
+                message: "Pedido atualizado com sucesso."
+            }
+        })
+    }, [isPastDate, combineDateAndTime, ordersState.currentOrder])
 
     const handleCancelOrderItem = useCallback(async (orderItemId: string) => {
+        dispatch({ type: "ORDERS_CANCEL_ITEM_START" })
 
+        if (!orderItemId) {
+            dispatch({
+                type: "ORDERS_CANCEL_ITEM_FAILURE",
+                payload: "Erro inesperado ao cancelar item do pedido."
+            })
+            return
+        }
+
+        const response = await ordersServices.cancelOrderItem(orderItemId)
+
+        if (!response.success) {
+            dispatch({
+                type: "ORDERS_CANCEL_ITEM_FAILURE",
+                payload: response.body.text || "Erro ao cancelar item do pedido."
+            })
+            return
+        }
+
+        dispatch({
+            type: "ORDERS_CANCEL_ITEM_SUCCESS",
+            payload: {
+                orderResult: response.body as IOrderItem,
+                message: "Item cancelado com sucesso."
+            }
+        })
     }, [])
 
     const handleCancelOrder = useCallback(async (orderId: string) => {
+        dispatch({ type: "ORDERS_UPDATE_START" })
 
+        if (!orderId) {
+            dispatch({
+                type: "ORDERS_UPDATE_FAILURE",
+                payload: "Erro inesperado ao cancelar pedido."
+            })
+            return
+        }
+
+        const response = await ordersServices.cancelOrder(orderId)
+
+        if (!response.success) {
+            dispatch({
+                type: "ORDERS_UPDATE_FAILURE",
+                payload: response.body.text || "Erro ao cancelar pedido."
+            })
+            return
+        }
+
+        dispatch({
+            type: "ORDERS_UPDATE_SUCCESS",
+            payload: {
+                orderResult: response.body as IOrder,
+                message: "Pedido cancelado com sucesso."
+            }
+        })
     }, [])
 
     const handleDeleteOrder = useCallback(async (orderId: string) => {
@@ -290,8 +424,12 @@ export const useOrdersReducer = () => {
     return {
         ...ordersState,
         handleSetOrderToEdit,
+        handleResetOrdersMessage,
         handleResetOrders,
         handleFetchOrdersByUser,
         handleCreateOrder,
+        handleUpdateOrder,
+        handleCancelOrderItem,
+        handleCancelOrder,
     }
 }

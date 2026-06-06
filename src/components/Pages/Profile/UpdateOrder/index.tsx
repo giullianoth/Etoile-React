@@ -2,8 +2,13 @@ import { PiCheckBold, PiTrash, PiX } from "react-icons/pi"
 import Checkbox from "../../../Form/Checkbox"
 import Popup from "../../../Popup"
 import styles from "../../../Popup/Popup.module.css"
-import { useState, type FormEvent } from "react"
-// import Trigger from "../../../Trigger"
+import { useEffect, useState, type FormEvent } from "react"
+import { useAppContext } from "../../../../context/app-context"
+import { uploadsURL } from "../../../../services/api"
+import { useDateFormats } from "../../../../hooks/date-formats"
+import Trigger from "../../../Trigger"
+import type { IOrderItem } from "../../../../types/order"
+import Loading from "../../../Loading"
 
 type Props = {
   onCloseUpdate: () => void
@@ -14,26 +19,72 @@ const UpdateOrder = ({ onCloseUpdate }: Props) => {
   const [cancelOrderIsOpen, setCancelOrderIsOpen] = useState<boolean>(false)
   const [time, setTime] = useState<string>("")
   const [orderReceived, setOrderReceived] = useState<boolean>(false)
+  const [itemToCancel, setItemToCancel] = useState<IOrderItem | null>(null)
+  const { timeFormat } = useDateFormats()
+  const { addMessage } = useAppContext().message
+
+  const {
+    currentOrder,
+    handleCancelOrderItem,
+    cancellingOrderItem,
+    success,
+    successMessage,
+    errorMessage,
+    handleResetOrdersMessage,
+    loading,
+    handleCancelOrder,
+    handleUpdateOrder,
+  } = useAppContext().orders
+
+  useEffect(() => {
+    return () => handleResetOrdersMessage()
+  }, [handleResetOrdersMessage])
+
+  useEffect(() => {
+    if (currentOrder) {
+      setTime(timeFormat(currentOrder.time))
+    }
+  }, [currentOrder, timeFormat])
+
+  useEffect(() => {
+    if (success && successMessage) {
+      addMessage(successMessage)
+    }
+  }, [addMessage, success, successMessage])
 
   const handleCloseCancel = () => {
     setCancelItemIsOpen(false)
+    setItemToCancel(null)
   }
 
-  const handleSetItemToCancel = () => {
+  const handleSetItemToCancel = (orderItem: IOrderItem) => {
     setCancelItemIsOpen(true)
+    setItemToCancel(orderItem)
   }
 
-  const handleCancelItem = async () => {
+  const handleCancelItem = async (orderItemId: string) => {
+    await handleCancelOrderItem(orderItemId)
     setCancelItemIsOpen(false)
+    setItemToCancel(null)
   }
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault()
+
+    if (!currentOrder) {
+      return
+    }
+
+    await handleUpdateOrder(currentOrder._id, { orderReceived, time })
     onCloseUpdate()
-    console.log({ time, orderReceived })
   }
 
   const handleCancelCurrentOrder = async () => {
+    if (!currentOrder) {
+      return
+    }
+
+    await handleCancelOrder(currentOrder._id)
     onCloseUpdate()
   }
 
@@ -43,54 +94,71 @@ const UpdateOrder = ({ onCloseUpdate }: Props) => {
         <h2>Editar pedido</h2>
       </div>
 
-      <div className={styles.popup_list}>
-        <div
-          className={styles.popup__listItem}>
-          <div className={styles.popup__listImage}>
-            <img src={`/images/no-image.jpg`} alt={"Nome do prato"} />
-          </div>
-
-          <div className={styles.popup__listInfo}>
-            <p className={styles.popup__listName}>
-              <strong>{"Nome do prato"}</strong>
-            </p>
-
-            <p className={styles.popup__listDetails}>
-              <strong>Porções:</strong>{" "}
-              2
-            </p>
-          </div>
-
-          <div className={styles.popup__listAction}>
-            {cancelItemIsOpen
-              ? <div className={styles.popup__action}>
-                <button
-                  type="button"
-                  className="button clear"
-                  title="Voltar"
-                  onClick={handleCloseCancel}>
-                  <PiX />
-                </button>
-
-                <button
-                  type="button"
-                  className="button clear"
-                  title="Cancelar este item"
-                  onClick={handleCancelItem}>
-                  <PiCheckBold />
-                </button>
+      {currentOrder && currentOrder.orderItems.length > 0 &&
+        <div className={styles.popup_list}>
+          {currentOrder.orderItems.map(orderItem => (
+            <div
+              key={orderItem._id}
+              className={styles.popup__listItem}>
+              <div className={styles.popup__listImage}>
+                <img
+                  src={
+                    orderItem.itemDetails.image
+                      ? `${uploadsURL}/plates/${orderItem.itemDetails.image}`
+                      : "/images/no-image.jpg"
+                  }
+                  alt={orderItem.itemDetails.name} />
               </div>
 
-              : <button
-                type="button"
-                className="button primary clear"
-                title="Cancelar este item"
-                onClick={handleSetItemToCancel}>
-                <PiTrash />
-              </button>}
-          </div>
-        </div>
-      </div>
+              <div className={styles.popup__listInfo}>
+                <p className={styles.popup__listName}>
+                  <strong>{orderItem.itemDetails.name}</strong>
+                </p>
+
+                <p className={styles.popup__listDetails}>
+                  <strong>Porções:</strong>{" "}
+                  {orderItem.quantity}
+                </p>
+              </div>
+
+              {currentOrder.orderItems.length > 1 &&
+                <div className={styles.popup__listAction}>
+                  {cancellingOrderItem && itemToCancel?._id === orderItem._id
+                    ? <Loading small />
+
+                    : cancelItemIsOpen && itemToCancel?._id === orderItem._id
+                      ? <div className={styles.popup__action}>
+                        <button
+                          type="button"
+                          className="button clear"
+                          title="Voltar"
+                          onClick={handleCloseCancel}
+                          disabled={cancelOrderIsOpen || cancellingOrderItem || loading}>
+                          <PiX />
+                        </button>
+
+                        <button
+                          type="button"
+                          className="button clear"
+                          title="Cancelar este item"
+                          onClick={() => handleCancelItem(orderItem._id)}
+                          disabled={cancelOrderIsOpen || cancellingOrderItem || loading}>
+                          <PiCheckBold />
+                        </button>
+                      </div>
+
+                      : <button
+                        type="button"
+                        className="button primary clear"
+                        title="Cancelar este item"
+                        onClick={() => handleSetItemToCancel(orderItem)}
+                        disabled={cancelOrderIsOpen || cancellingOrderItem || loading}>
+                        <PiTrash />
+                      </button>}
+                </div>}
+            </div>
+          ))}
+        </div>}
 
       <form className={styles.popup__form} onSubmit={handleSubmit}>
         <div className={`${styles.popup__action} ${styles.popup__stretched}`}>
@@ -99,7 +167,7 @@ const UpdateOrder = ({ onCloseUpdate }: Props) => {
             name="time"
             value={time || ""}
             onChange={event => setTime(event.target.value)}
-            disabled={cancelOrderIsOpen} />
+            disabled={cancelOrderIsOpen || cancellingOrderItem || loading} />
 
           <p>
             <strong className={styles.popup__strongDetached}>Atenção:</strong>{" "}
@@ -112,7 +180,7 @@ const UpdateOrder = ({ onCloseUpdate }: Props) => {
             name="orderReceived"
             checked={orderReceived}
             onChange={event => setOrderReceived(event.target.checked)}
-            disabled={cancelOrderIsOpen} />
+            disabled={cancelOrderIsOpen || cancellingOrderItem || loading} />
 
           <span>Recebi meu pedido</span>
         </label>
@@ -123,15 +191,17 @@ const UpdateOrder = ({ onCloseUpdate }: Props) => {
             <button
               type="button"
               className="button primary outline"
-              onClick={onCloseUpdate}>
+              onClick={onCloseUpdate}
+              disabled={cancelOrderIsOpen || cancelItemIsOpen || cancellingOrderItem || loading}>
               Voltar
             </button>
 
             <button
               type="submit"
               className="button primary"
-              disabled={cancelOrderIsOpen}>
+              disabled={cancelOrderIsOpen || cancelItemIsOpen || cancellingOrderItem || loading}>
               Atualizar
+              {loading && <Loading inButton />}
             </button>
           </div>
 
@@ -140,27 +210,35 @@ const UpdateOrder = ({ onCloseUpdate }: Props) => {
               ? <>
                 <span className={styles.popup__subtitle}>Tem certeza?</span>
 
-                <button
-                  type="button"
-                  className="button clear"
-                  title="Voltar"
-                  onClick={() => setCancelOrderIsOpen(false)}>
-                  <PiX />
-                </button>
+                {loading
+                  ? <Loading small />
 
-                <button
-                  type="button"
-                  className="button clear"
-                  title="Cancelar pedido"
-                  onClick={handleCancelCurrentOrder}>
-                  <PiCheckBold />
-                </button>
+                  : <>
+                    <button
+                      type="button"
+                      className="button clear"
+                      title="Voltar"
+                      onClick={() => setCancelOrderIsOpen(false)}
+                      disabled={cancelItemIsOpen || cancellingOrderItem || loading}>
+                      <PiX />
+                    </button>
+
+                    <button
+                      type="button"
+                      className="button clear"
+                      title="Cancelar pedido"
+                      onClick={handleCancelCurrentOrder}
+                      disabled={cancelItemIsOpen || cancellingOrderItem || loading}>
+                      <PiCheckBold />
+                    </button>
+                  </>}
               </>
 
               : <button
                 type="button"
                 className="button primary clear"
-                onClick={() => setCancelOrderIsOpen(true)}>
+                onClick={() => setCancelOrderIsOpen(true)}
+                disabled={cancelItemIsOpen || cancellingOrderItem || loading}>
                 <PiTrash />
                 Cancelar pedido
               </button>}
@@ -168,7 +246,7 @@ const UpdateOrder = ({ onCloseUpdate }: Props) => {
         </div>
       </form>
 
-      {/* <Trigger type="error">Erro ao carregar pedido.</Trigger> */}
+      {errorMessage && <Trigger type="error">{errorMessage}</Trigger>}
     </Popup>
   )
 }

@@ -15,6 +15,7 @@ import { Link } from "react-router-dom"
 import { PiEmpty } from "react-icons/pi"
 import { usePendingOrder } from "../../../../hooks/pending-order"
 import { useDateFormats } from "../../../../hooks/date-formats"
+import type { IOrder } from "../../../../types/order"
 
 const Orders = () => {
     const [createdPendingOrder, setCreatedPendingOrder] = useState<boolean>(false)
@@ -38,7 +39,9 @@ const Orders = () => {
         fetching,
         fetchErrorMessage,
         orders,
-        handleResetOrders
+        handleResetOrders,
+        handleSetOrderToEdit,
+        currentOrder
     } = useAppContext().orders
 
     useEffect(() => {
@@ -84,7 +87,8 @@ const Orders = () => {
         pendingOrderNotCreated
     ])
 
-    const handleOpenUpdate = () => {
+    const handleOpenUpdate = (orderToEdit: IOrder) => {
+        handleSetOrderToEdit(orderToEdit)
         setUpdateIsOpen(true)
     }
 
@@ -120,7 +124,7 @@ const Orders = () => {
                                         <Order
                                             key={order._id}
                                             order={order}
-                                            onOpenUpdate={handleOpenUpdate}
+                                            onOpenUpdate={() => handleOpenUpdate(order)}
                                             onOpenCancel={handleOpenCancel}
                                             onOpenReorder={handleOpenReorder}
                                             onOpenDeleteOrder={handleOpenDeleteOrder} />
@@ -138,8 +142,10 @@ const Orders = () => {
 
             <Modal
                 isOpen={updateIsOpen}
-                onRequestClose={() => setUpdateIsOpen(false)}>
-                <UpdateOrder onCloseUpdate={() => setUpdateIsOpen(false)} />
+                onRequestClose={() => setUpdateIsOpen(false)}
+                onAfterClose={() => handleSetOrderToEdit(null)}>
+                {currentOrder &&
+                    <UpdateOrder onCloseUpdate={() => setUpdateIsOpen(false)} />}
             </Modal>
 
             <Modal

@@ -1,6 +1,6 @@
 import type { ICartItem } from "./cart";
 import type { IMessageType } from "./message";
-import type { IOrder, IOrderCreate } from "./order";
+import type { IOrder, IOrderCreate, IOrderUpdate } from "./order";
 import type { IPlate } from "./plate";
 import type { IAuthState, IOrdersState, IPlatesState, IUsersState } from "./reducer-states";
 import type { IUser, IUserRegister, IUserUpdate } from "./user";
@@ -32,9 +32,13 @@ export interface IAuthContext extends IAuthState {
 
 export interface IOrdersContext extends IOrdersState {
     handleSetOrderToEdit: (order: IOrder | null) => void
+    handleResetOrdersMessage: () => void
     handleResetOrders: () => void
     handleFetchOrdersByUser: (userId: string) => Promise<void>
     handleCreateOrder: (orderItems: IOrderCreate["items"], orderDate: Date, orderTime: string, userId: string) => Promise<void>
+    handleUpdateOrder: (orderId: string, orderData: Partial<IOrderUpdate>) => Promise<void>
+    handleCancelOrderItem: (orderItemId: string) => Promise<void>
+    handleCancelOrder: (orderId: string) => Promise<void>
 }
 
 export interface IPlatesContext extends IPlatesState {

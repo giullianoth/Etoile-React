@@ -49,6 +49,7 @@ export type IOrdersActions =
     | { type: "ORDERS_DELETE_START" }
     | { type: "ORDERS_DELETE_SUCCESS", payload: { orderId: string, message: string } }
     | { type: "ORDERS_DELETE_FAILURE", payload: string }
+    | { type: "ORDERS_RESET_MESSAGE" }
     | { type: "ORDERS_RESET" }
 
 // Plates & Categories
