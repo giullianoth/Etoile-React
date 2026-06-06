@@ -19,6 +19,7 @@ const Auth = ({ onChangeTitle }: Props) => {
     const [formData, setFormData] = useState<Partial<IUserRegister>>({})
     const { addMessage } = useAppContext().message
     const navigate = useNavigate()
+    const { user, token, success: authenticated } = useAppContext().auth
 
     const {
         handleRegister,
@@ -29,6 +30,12 @@ const Auth = ({ onChangeTitle }: Props) => {
         success,
         successMessage
     } = useAppContext().auth
+
+    useEffect(() => {
+        if (authenticated && user && token) {
+            navigate("/perfil")
+        }
+    }, [authenticated, navigate, token, user])
 
     useEffect(() => {
         onChangeTitle(formType === "login" ? "Login" : "Cadastro")

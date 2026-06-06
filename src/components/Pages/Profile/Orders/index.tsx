@@ -1,8 +1,5 @@
 import Container from "../../../Container"
 import styles from "./Orders.module.css"
-// import { Link } from "react-router-dom"
-// import Trigger from "../../../Trigger"
-// import { PiEmpty } from "react-icons/pi"
 import Order from "../Order"
 import Grid from "../../../Grid"
 import { useEffect, useState } from "react"
@@ -16,19 +13,32 @@ import Loading from "../../../Loading"
 import Trigger from "../../../Trigger"
 import { Link } from "react-router-dom"
 import { PiEmpty } from "react-icons/pi"
+import { usePendingOrder } from "../../../../hooks/pending-order"
+import { useDateFormats } from "../../../../hooks/date-formats"
 
 const Orders = () => {
+    const [createdPendingOrder, setCreatedPendingOrder] = useState<boolean>(false)
     const [updateIsOpen, setUpdateIsOpen] = useState<boolean>(false)
     const [cancelIsOpen, setCancelIsOpen] = useState<boolean>(false)
     const [reorderIsOpen, setReorderIsOpen] = useState<boolean>(false)
     const [deleteOrderIsOpen, setDeleteOrderIsOpen] = useState<boolean>(false)
     const { user } = useAppContext().auth
+    const { addMessage } = useAppContext().message
+    const { pendingOrder, removePendingOrder } = usePendingOrder()
+    const { timeFormat } = useDateFormats()
+    const { clearCart } = useAppContext().cart
 
     const {
         handleFetchOrdersByUser,
+        handleCreateOrder,
+        loading: creatingPendingOrder,
+        success: pendingOrderCreated,
+        successMessage: pendingOrderCreatedMessage,
+        errorMessage: pendingOrderNotCreated,
         fetching,
         fetchErrorMessage,
         orders,
+        handleResetOrders
     } = useAppContext().orders
 
     useEffect(() => {
@@ -36,6 +46,43 @@ const Orders = () => {
             handleFetchOrdersByUser(user._id)
         }
     }, [handleFetchOrdersByUser, user])
+
+    useEffect(() => {
+        const createPendingOrder = async () => {
+            if (pendingOrder && user) {
+                await handleCreateOrder(
+                    pendingOrder.items!,
+                    pendingOrder.time as Date,
+                    timeFormat(pendingOrder.time as Date),
+                    user._id
+                )
+                removePendingOrder()
+                setCreatedPendingOrder(true)
+            }
+        }
+
+        if (!createdPendingOrder) {
+            createPendingOrder()
+        }
+    }, [handleCreateOrder, pendingOrder, timeFormat, user, removePendingOrder, createdPendingOrder])
+
+    useEffect(() => {
+        if (pendingOrderCreated && pendingOrderCreatedMessage) {
+            addMessage(pendingOrderCreatedMessage)
+            clearCart()
+        }
+
+        if (pendingOrderNotCreated) {
+            addMessage("Seu pedido não foi registrado. Tente de novo.", "warning")
+        }
+    }, [
+        addMessage,
+        clearCart,
+        handleResetOrders,
+        pendingOrderCreated,
+        pendingOrderCreatedMessage,
+        pendingOrderNotCreated
+    ])
 
     const handleOpenUpdate = () => {
         setUpdateIsOpen(true)
@@ -61,34 +108,31 @@ const Orders = () => {
                         <h2>Meus pedidos</h2>
                     </header>
 
-                    {!user
-                        ? <Trigger type="error">Erro inesperado ao buscar pedidos.</Trigger>
+                    {fetching || creatingPendingOrder
+                        ? <Loading />
 
-                        : fetching
-                            ? <Loading />
+                        : fetchErrorMessage
+                            ? <Trigger type="error">{fetchErrorMessage}</Trigger>
 
-                            : fetchErrorMessage
-                                ? <Trigger type="error">{fetchErrorMessage}</Trigger>
+                            : orders.length
+                                ? <Grid columns={3} gap={20}>
+                                    {orders.map(order => (
+                                        <Order
+                                            key={order._id}
+                                            order={order}
+                                            onOpenUpdate={handleOpenUpdate}
+                                            onOpenCancel={handleOpenCancel}
+                                            onOpenReorder={handleOpenReorder}
+                                            onOpenDeleteOrder={handleOpenDeleteOrder} />
+                                    ))}
+                                </Grid>
 
-                                : orders.length
-                                    ? <Grid columns={3} gap={20}>
-                                        {orders.map(order => (
-                                            <Order
-                                                key={order._id}
-                                                order={order}
-                                                onOpenUpdate={handleOpenUpdate}
-                                                onOpenCancel={handleOpenCancel}
-                                                onOpenReorder={handleOpenReorder}
-                                                onOpenDeleteOrder={handleOpenDeleteOrder} />
-                                        ))}
-                                    </Grid>
-
-                                    : <Trigger type="warning" icon={<PiEmpty />}>
-                                        <span>
-                                            Você ainda não tem pedidos.{" "}
-                                            <Link to="/pratos">Clique aqui e veja nossas espeialidades</Link>!
-                                        </span>
-                                    </Trigger>}
+                                : <Trigger type="warning" icon={<PiEmpty />}>
+                                    <span>
+                                        Você ainda não tem pedidos.{" "}
+                                        <Link to="/pratos">Clique aqui e veja nossas espeialidades</Link>!
+                                    </span>
+                                </Trigger>}
                 </Container>
             </section>
 

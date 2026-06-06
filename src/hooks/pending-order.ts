@@ -18,5 +18,9 @@ export const usePendingOrder = () => {
         setPendingOrder(null)
     }, [])
 
-    return { pendingOrder, addPendingOrder, removePendingOrder }
+    return {
+        pendingOrder,
+        addPendingOrder,
+        removePendingOrder,
+    }
 }

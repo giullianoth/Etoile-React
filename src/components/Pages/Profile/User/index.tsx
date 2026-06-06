@@ -22,9 +22,10 @@ const User = () => {
         <>
             <section className={styles.user}>
                 <Container className={styles.user__container}>
-                    <Photo
-                        className={styles.user__photo}
-                        user={user!} />
+                    {user &&
+                        <Photo
+                            className={styles.user__photo}
+                            user={user} />}
 
                     <div className={styles.user__info}>
                         <header className={styles.user__name}>
