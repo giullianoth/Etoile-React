@@ -1,0 +1,41 @@
+.plateRow {
+    transition: var(--transition);
+    cursor: pointer;
+}
+
+.plateRow:hover {
+    background-color: var(--color-battleship-gray-overlay);
+}
+
+.plateRow__actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.plateRow__image {
+    display: flex;
+    width: fit-content;
+}
+
+.plateRow__image img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+}
+
+.plateRow__available {
+    color: var(--color-success-text);
+}
+
+.plateRow__notAvailable {
+    color: var(--color-error-text);
+}
+
+span:has(.plateRow__checkbox) {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-color: var(--color-white-smoke);
+}

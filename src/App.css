@@ -1,0 +1,120 @@
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+#root > main {
+  flex-grow: 1;
+  position: relative;
+}
+
+.button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  column-gap: 10px;
+  padding: 12px 24px;
+  background-color: var(--color-battleship-gray);
+  cursor: pointer;
+  border: 1px solid transparent;
+  font-family: var(--font-cinzel);
+  font-size: 1.1em;
+  color: var(--color-white-smoke);
+  transition: var(--transition);
+  vertical-align: middle;
+}
+
+.button:hover {
+  background-color: var(--color-white-smoke) !important;
+}
+
+.button.primary {
+  background-color: var(--color-murrey);
+  border-color: var(--color-murrey);
+}
+
+.button.primary:hover, .button.primary.outline, .button.primary.clear {
+  color: var(--color-murrey);
+}
+
+.button.secondary {
+  background-color: var(--color-old-gold);
+  color: var(--color-night);
+}
+
+.button.secondary:hover {
+  color: var(--color-old-gold);
+}
+
+.button.outline {
+  background-color: transparent;
+}
+
+.button.small {
+  padding: 6px;
+  font-size: 0.8em;
+}
+
+.button.clear, .button.clear:hover {
+  padding: 0;
+  background: none !important;
+  border: none !important;
+  color: var(--color-murrey);
+}
+
+.app-loading {
+  width: 100%;
+  height: 100%;
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.section-heading {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.section-heading h2 {
+  font-size: 1.4em;
+}
+
+.loading-page {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.ReactModal__Overlay {
+    opacity: 0;
+    transition: var(--transition);
+}
+
+.ReactModal__Overlay--after-open{
+    opacity: 1;
+}
+
+.ReactModal__Overlay--before-close{
+    opacity: 0;
+}
+
+@media screen and (min-width: 768px) {
+  .section-heading h2 {
+    font-size: 1.6em;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .section-heading {
+    text-align: left;
+  }
+
+  .section-heading h2 {
+    font-size: 1.8em;
+  }
+}

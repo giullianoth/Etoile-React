@@ -1,0 +1,32 @@
+.dashboard__link {
+    display: block;
+    background-color: var(--color-murrey);
+    color: var(--color-white-smoke);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    font-family: var(--font-cinzel);
+    font-size: 1.4em;
+    transition: var(--transition)
+}
+
+.dashboard__link:hover {
+    background-color: var(--color-claret);
+}
+
+.dashboard__link svg {
+    font-size: 2.2em;
+}
+
+@media screen and (min-width: 992px) {
+    .dashboard__links {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        max-width: 768px;
+        margin-inline: auto;
+    }
+}

@@ -1,0 +1,35 @@
+.orders__title {
+    margin-bottom: 40px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    row-gap: 20px;
+}
+
+.orders__list {
+    border: none;
+}
+
+span:has(.order__checkbox) {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-color: var(--color-white-smoke);
+}
+
+.orders__actions {
+    margin-top: 20px;
+    padding: 7px;
+    background-color: var(--color-lavender-blush);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 40px;
+}
+
+@media screen and (min-width: 768px) {
+    .orders__title {
+        align-items: center;
+        flex-direction: row;
+    }
+}

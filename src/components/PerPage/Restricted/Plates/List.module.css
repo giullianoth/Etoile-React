@@ -1,0 +1,43 @@
+.plates {
+    margin-bottom: 80px;
+}
+
+.plates__title {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+    row-gap: 20px;
+}
+
+.plates__title button {
+    width: 100%;
+}
+
+span:has(.plate__checkbox) {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-color: var(--color-white-smoke);
+}
+
+.plates__actions {
+    margin-top: 20px;
+    padding: 7px;
+    background-color: var(--color-lavender-blush);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 40px;
+}
+
+@media screen and (min-width: 576px) {
+    .plates__title {
+        flex-direction: row;
+    }
+
+    .plates__title button {
+        width: auto;
+    }
+}

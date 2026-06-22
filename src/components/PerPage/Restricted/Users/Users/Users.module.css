@@ -1,0 +1,32 @@
+.users__title {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+    row-gap: 20px;
+}
+
+.users__title button {
+    width: 100%;
+}
+
+.users__actions {
+    margin-top: 20px;
+    padding: 7px;
+    background-color: var(--color-lavender-blush);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 40px;
+}
+
+@media screen and (min-width: 576px) {
+    .users__title {
+        flex-direction: row;
+    }
+
+    .users__title button {
+        width: auto;
+    }
+}

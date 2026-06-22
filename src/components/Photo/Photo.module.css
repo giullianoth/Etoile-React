@@ -1,0 +1,68 @@
+.photo {
+    width: 120px;
+    height: 120px;
+    border: 3px solid var(--color-claret);
+    overflow: hidden;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.photo:not(:has(.photo__confirm)):hover .photo__change {
+    visibility: visible;
+    opacity: 1;
+}
+
+.photo img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    object-position: center;
+}
+
+.photo__change {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: var(--transition);
+    font-size: 1.6em;
+    color: var(--color-white-smoke);
+    background-image: var(--color-night-gradient-2);
+    visibility: hidden;
+    opacity: 0;
+}
+
+.photo__confirm {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-night-overlay);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.photo__confirm span ,
+.photo__confirm button {
+    display: block;
+}
+
+.photo__confirm span > *,
+.photo__confirm button > * {
+    padding: 0 !important;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    opacity: 0.9;
+    border-radius: 50%;
+}

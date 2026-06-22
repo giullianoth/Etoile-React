@@ -1,0 +1,10 @@
+.heading {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+@media screen and (min-width: 992px) {
+    .heading {
+        text-align: left;
+    }
+}

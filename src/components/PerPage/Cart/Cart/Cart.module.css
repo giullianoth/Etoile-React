@@ -1,0 +1,17 @@
+.cart {
+    width: 100%;
+}
+
+.cart__list {
+    margin-bottom: 40px;
+}
+
+.cart__action button {
+    width: 100%;
+}
+
+@media screen and (min-width: 576px) {
+    .cart__action button {
+        width: auto;
+    }
+}

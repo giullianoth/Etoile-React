@@ -1,0 +1,35 @@
+.orderRow {
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.order__pending {
+    background-color: var(--color-warning-overlay) !important;
+}
+
+.order__completed {
+    background-color: var(--color-success-overlay) !important;
+}
+
+.order__cancelled {
+    background-color: var(--color-error-overlay) !important;
+}
+
+.order__pending:hover, .order__pending.selected {
+    background-color: var(--color-warning) !important;
+}
+
+.order__completed:hover, .order__completed.selected {
+    background-color: var(--color-success) !important;
+}
+
+.order__cancelled:hover, .order__cancelled.selected {
+    background-color: var(--color-error) !important;
+}
+
+span:has(.orderRow__checkbox) {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-color: var(--color-white-smoke);
+}

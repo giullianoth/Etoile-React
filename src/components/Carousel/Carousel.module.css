@@ -1,0 +1,36 @@
+.carousel {
+    width: 100%;
+    position: relative;
+}
+
+.carousel__viewport {
+    width: 100%;
+    overflow: hidden;
+}
+
+.carousel__container {
+    display: flex;
+    touch-action: pan-y pinch-zoom;
+}
+
+.carousel__container > * {
+    min-width: 0;
+}
+
+.carousel__navigation {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 0;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.carousel__navigation.prev {
+    left: 5px;
+}
+
+.carousel__navigation.next {
+    right: 5px;
+}

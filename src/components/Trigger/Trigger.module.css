@@ -1,0 +1,50 @@
+.trigger {
+    padding: 12px;
+    background-color: var(--color-battleship-gray);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    column-gap: 12px;
+    border: none;
+    font-weight: var(--font-weight-text-bold);
+}
+
+.trigger.bullet {
+    padding: 1px 6px;
+    display: inline-flex;
+    column-gap: 4px;
+    font-size: 0.8em;
+}
+
+.trigger.floating {
+    position: fixed;
+    top: 90px;
+    right: 20px;
+    z-index: 200;
+    transition: var(--transition);
+}
+
+.trigger.fading {
+    visibility: hidden;
+    opacity: 0;
+}
+
+.trigger.success {
+    background-color: var(--color-success);
+    color: var(--color-success-text);
+}
+
+.trigger.info {
+    background-color: var(--color-info);
+    color: var(--color-info-text);
+}
+
+.trigger.warning {
+    background-color: var(--color-warning);
+    color: var(--color-warning-text);
+}
+
+.trigger.error {
+    background-color: var(--color-error);
+    color: var(--color-error-text);
+}
